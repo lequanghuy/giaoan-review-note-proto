@@ -480,7 +480,7 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
         <div class="block nested"><div class="block-header"><span class="block-label">a) Mục tiêu</span></div>
           <div class="block-body" contenteditable="true"><p>HS vận dụng tính chất vào tình huống thực tế quanh trường, nhà.</p></div></div>
         <div class="block nested"><div class="block-header"><span class="block-label">b) Nội dung</span></div>
-          <div class="block-body" contenteditable="true"><p>Tìm một hình ảnh có hai đường song song bị một đường thẳng cắt (lan can, vạch kẻ đường, khung cửa sổ); đo một góc, suy ra các góc còn lại và giải thích.</p><p><span class="sus" data-flag="hd4-num" data-bad="Ví dụ: thanh chéo tạo với thanh ngang phía trên một góc 50° thì góc đồng vị với nó ở thanh ngang phía dưới bằng 130°." data-good="Ví dụ: thanh chéo tạo với thanh ngang phía trên một góc 50° thì góc đồng vị với nó ở thanh ngang phía dưới cũng bằng 50°.">Ví dụ: thanh chéo tạo với thanh ngang phía trên một góc 50° thì góc đồng vị với nó ở thanh ngang phía dưới cũng bằng 50°.</span></p></div></div>
+          <div class="block-body" contenteditable="true"><p><span class="sus" data-flag="hd4-content" data-bad="Tìm một hình ảnh có hai đường song song bị một đường thẳng cắt (lan can, vạch kẻ đường, khung cửa sổ); đo một góc, suy ra các góc còn lại và giải thích vì sao hai góc trong cùng phía không bằng nhau." data-good="Tìm một hình ảnh có hai đường song song bị một đường thẳng cắt (lan can, vạch kẻ đường, khung cửa sổ); đo một góc, suy ra các góc còn lại và giải thích.">Tìm một hình ảnh có hai đường song song bị một đường thẳng cắt (lan can, vạch kẻ đường, khung cửa sổ); đo một góc, suy ra các góc còn lại và giải thích.</span></p><p><span class="sus" data-flag="hd4-num" data-bad="Ví dụ: thanh chéo tạo với thanh ngang phía trên một góc 50° thì góc đồng vị với nó ở thanh ngang phía dưới bằng 130°." data-good="Ví dụ: thanh chéo tạo với thanh ngang phía trên một góc 50° thì góc đồng vị với nó ở thanh ngang phía dưới cũng bằng 50°.">Ví dụ: thanh chéo tạo với thanh ngang phía trên một góc 50° thì góc đồng vị với nó ở thanh ngang phía dưới cũng bằng 50°.</span></p></div></div>
         <div class="block nested"><div class="block-header"><span class="block-label">c) Sản phẩm</span></div>
           <div class="block-body" contenteditable="true"><p>Ảnh chụp hoặc hình vẽ kèm số đo và lời giải thích ngắn.</p></div></div>
         <div class="block nested"><div class="block-header"><span class="block-label">d) Tổ chức thực hiện</span></div>
@@ -615,6 +615,7 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
     <button class="d" type="button" data-s="two" onclick="setState('two')">Số liệu HĐ2 + nội dung HĐ3</button>
     <button class="d" type="button" data-s="three" onclick="setState('three')">Số liệu · HĐ2, 3, 4</button>
     <button class="d" type="button" data-s="mixed" onclick="setState('mixed')">Số liệu HĐ2 + câu chữ Phẩm chất</button>
+    <button class="d" type="button" data-s="mixed3" onclick="setState('mixed3')">Số liệu HĐ2, 3 + nội dung HĐ4 + câu chữ Phẩm chất</button>
     <button class="d" type="button" data-s="phamchat" onclick="setState('phamchat')">Câu chữ · Phẩm chất</button>
     <button class="d" type="button" data-s="nopos" onclick="setState('nopos')">Chỉ chip · HĐ2 (không có vị trí câu)</button>
     <button class="d" type="button" data-s="reviewed" onclick="setState('reviewed')">Đã soát xong</button>
@@ -638,7 +639,7 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
       <li><b>Ba loại:</b> “số liệu” (R2–R4, có số đo), “nội dung” (khẳng định không có số, vd. trong cùng phía “không bằng nhau”), “câu chữ” (R1, chữ lọt từ hệ thống). Không hiện mã quy tắc.</li>
       <li><b>Dòng tóm tắt:</b> “Nên soát lại [số liệu | nội dung | câu chữ] ở [Hoạt động n | mục X]”. Tên vị trí đúng như tiêu đề trong giáo án.</li>
       <li><b>Nhiều vị trí cùng loại:</b> 2 chỗ “Hoạt động 2 và 3”, từ 3 chỗ “Hoạt động 2, 3 và 4”. Mỗi số là một nút riêng.</li>
-      <li><b>Nhiều loại:</b> gộp một câu theo thứ tự số liệu → nội dung → câu chữ, vd. “Nên soát lại số liệu ở Hoạt động 2 và câu chữ ở mục Phẩm chất”. Câu tự cập nhật khi soát từng chỗ.</li>
+      <li><b>Nhiều loại:</b> gộp một câu theo thứ tự số liệu → nội dung → câu chữ, vd. “Nên soát lại số liệu ở Hoạt động 2 và câu chữ ở mục Phẩm chất”. Nếu một cụm vị trí đã có “và” thì nối các loại bằng dấu phẩy: “Nên soát lại số liệu ở Hoạt động 2 và 3, câu chữ ở mục Phẩm chất” (BA chốt Q-BA2). Câu tự cập nhật khi soát từng chỗ.</li>
       <li><b>Dòng phụ:</b> “Hệ thống đã tự kiểm tra và còn chỗ chưa chắc chắn. Thầy cô xem nhanh trước khi dùng.”</li>
       <li><b>Kiểu:</b> nền amber-50, viền 1px amber-200, icon amber-700, chữ slate, bo 12. Không đỏ, không rung, icon + chữ. role="note".</li>
       <li><b>Nút vị trí:</b> cuộn mượt, focus, viền amber nhẹ 2 giây. Khi bật giảm chuyển động: nhảy thẳng, không hiệu ứng.</li>
@@ -683,11 +684,12 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
     two:      {id:'toan7-goc-b', flags:['hd2-num','hd3-content']},
     three:    {id:'toan7-goc-e', flags:['hd2-num','hd3-num','hd4-num']},
     mixed:    {id:'toan7-goc-f', flags:['hd2-num','pc-text']},
+    mixed3:   {id:'toan7-goc-h', flags:['hd2-num','hd3-num','hd4-content','pc-text']},   // Q-BA2: comma between type groups
     phamchat: {id:'toan7-goc-c', flags:['pc-text']},
     reviewed: {id:'toan7-goc-d', flags:['hd2-num'], demoAllReviewed:true},
     nopos:    {id:'toan7-goc-g', flags:['hd2-num'], noPos:true}   // BE sent no span: chip only, no underline
   };
-  var STATES = ['one','two','three','mixed','phamchat','nopos','reviewed','home','export'];
+  var STATES = ['one','two','three','mixed','mixed3','phamchat','nopos','reviewed','home','export'];
 
   var planKey = 'one', reviewed = new Set(), revised = new Set(), fadeT = null, hideT = null, curState = 'one';
 
@@ -718,22 +720,20 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
     return '<button type="button" class="rv-link' + (isNum ? ' num' : '') + '" data-go="' + loc + '"' +
       (isNum ? ' aria-label="' + LOCS[loc].name + '"' : '') + '>' + label + '</button>';
   }
-  /* "Hoạt động 2" · "Hoạt động 2 và 3" · "Hoạt động 2, 3 và 4" · "mục Phẩm chất" */
+  /* Q-BA2 (BA locked): ONE flat list per type, joined with joinVa.
+     First activity "Hoạt động n", later activities number only; first section "mục <tên>", later sections name only.
+     "Hoạt động 2" · "Hoạt động 2 và 3" · "Hoạt động 2, 3 và 4" · "mục Phẩm chất" · "Hoạt động 2, 3 và mục Phẩm chất" */
   function locPhrase(locs, linked){
     var acts = locs.filter(function(l){ return LOCS[l].kind === 'act'; });
     var mucs = locs.filter(function(l){ return LOCS[l].kind === 'muc'; });
-    var parts = [];
-    if (acts.length){
-      var items = acts.map(function(l, i){
-        var label = i === 0 ? LOCS[l].name : String(LOCS[l].n);
-        return linked ? link(l, label, i > 0) : label;
-      });
-      parts.push(joinVa(items));
-    }
-    if (mucs.length){
-      parts.push('mục ' + joinVa(mucs.map(function(l){ return linked ? link(l, LOCS[l].name) : LOCS[l].name; })));
-    }
-    return parts.join(' và ');
+    var items = acts.map(function(l, i){
+      var label = i === 0 ? LOCS[l].name : String(LOCS[l].n);
+      return linked ? link(l, label, i > 0) : label;
+    }).concat(mucs.map(function(l, i){
+      var name = linked ? link(l, LOCS[l].name) : LOCS[l].name;
+      return i === 0 ? 'mục ' + name : name;
+    }));
+    return joinVa(items);
   }
 
   function applyContent(){
@@ -771,11 +771,14 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
     var types = [];
     rem.forEach(function(k){ var t = F(k).type; if (types.indexOf(t) < 0) types.push(t); });
     types.sort(function(a, b){ return TYPES[a].order - TYPES[b].order; });
+    var hasVa = false;
     var groups = types.map(function(t){
       var keys = rem.filter(function(k){ return F(k).type === t; });
+      if (uniqLocs(keys).length > 1) hasVa = true;   // this location phrase contains "và"
       return TYPES[t].word + ' ở ' + locPhrase(uniqLocs(keys), linked);
     });
-    return 'Nên soát lại ' + joinVa(groups);
+    /* Q-BA2: if any location phrase already has "và", join type groups with commas; else joinVa (approved lines unchanged) */
+    return 'Nên soát lại ' + (hasVa ? groups.join(', ') : joinVa(groups));
   }
 
   function summary(opts){

@@ -1,8 +1,10 @@
 # Spec FE: Dòng nhắc soát lại (post-generation review note)
 
-GiaoAnBuddy / GiaoAn AI · UI UX Designer · 26/09/2026
+GiaoAnBuddy / GiaoAn AI · UI UX Designer · **v1.1**, 26/09/2026
 Trạng thái thiết kế: **Huy đã duyệt prototype**. Hành vi xoá nhắc đã chỉnh theo **AC v2.1** (xem §0).
 Người nhận: Dev FE (`apps/web`, Next.js).
+
+> **v1.1 (26/09/2026).** Gộp trả lời của BE (Q-BE1, 2, 3, 6, 7), UX (Q-UX1) và BA (Q-BA2, 3, 5). Luật nối vị trí mới theo Q-BA2 (§3.2, §3.3, C21), prototype cập nhật theo và có thêm `?state=mixed3`. Quy tắc cho ticket lưu chỉnh tay (§0, §5.1). Đếm "chỗ" theo nhóm (§3.1). Home dùng `postgenSummary`, phase 2 (§2.2, §4.5, C15). `span.field` đổi thành đường dẫn field thật và bỏ thuật toán đổi offset (§2.6, §2.7). Revise luôn đặt `postgenWarnings = carried.kept` (§2.8). Thêm dòng báo khi ack lỗi mạng (§2.3, §3.4, §4.2, E14, C22). §11 tách thành "đã chốt" và "còn mở". Q-BA4 vẫn mở, E17 giữ nguyên.
 
 | Nguồn | Đường dẫn |
 | --- | --- |
@@ -22,9 +24,16 @@ Người nhận: Dev FE (`apps/web`, Next.js).
 - Prototype cũ coi việc gõ sửa trong phần được nhắc là đã soát. **Đã bỏ hành vi này.** Gõ sửa tay (chưa lưu) KHÔNG làm mất nhắc, chip hay dòng tóm tắt.
 - Đã thêm state `?state=nopos`: BE không trả vị trí câu, nên chỉ hiện chip, không gạch chân.
 - Đã thêm nút demo "Mô phỏng soạn lại (HĐ đang nhắc đổi nội dung)" trong panel Demo. Nút này mô phỏng quy tắc (b): revise làm đổi hoạt động thì nhắc của hoạt động đó mất.
+- **v1.1 (Q-BA2):** đổi cách nối vị trí khi một loại có từ 2 vị trí trở lên và còn loại khác, hoặc khi có cả hoạt động và mục (§3.2). Mọi câu đã duyệt trong §3.3 giữ nguyên chữ. Thêm state `?state=mixed3` (HĐ2, HĐ3 số liệu + HĐ4 nội dung + Phẩm chất câu chữ).
 - Mọi thứ khác giữ nguyên như bản Huy đã duyệt.
 
-**Chỉnh tay có lưu:** hiện chưa có. `LessonPlanEditor` chỉ đổi state cục bộ, không có endpoint lưu. Theo AC v2.1, khi có tính năng lưu thì áp cùng quy tắc với revise: lưu xong mà nội dung hoạt động hoặc mục đổi thì BE bỏ các nhắc ở đó (`carryOverWarnings`). FE chỉ cần hiển thị lại theo `postgenWarnings` mới. Ticket đó làm riêng, xem Q-BA3.
+**Chỉnh tay có lưu:** hiện chưa có. `LessonPlanEditor` chỉ đổi state cục bộ, không có endpoint lưu. Quy tắc dưới đây dành cho **ticket lưu chỉnh tay sau này, không thuộc PR #24**. BA đã chốt (Q-BA3), thay cho câu "áp cùng quy tắc với revise":
+- Hoạt động có thay đổi **không** đủ để xoá mọi nhắc của hoạt động đó, vì sửa chỗ khác không chứng tỏ GV đã soát câu bị nhắc.
+- **Nhắc có span:** chỉ mất khi đoạn văn bản của span bị đổi hoặc bị xoá. Nếu đoạn còn nguyên thì giữ nhắc và BE tính lại offset theo văn bản mới.
+- **Nhắc không có span:** giữ tới khi GV bấm "Đã soát".
+- BE log `postgen_warning_cleared_by_edit` kèm lý do (`reason: "span_changed"`).
+- Test của ticket đó: (1) sửa một câu khác trong hoạt động có nhắc thì nhắc còn; (2) sửa đúng câu bị nhắc thì nhắc mất; (3) nhắc không có span vẫn còn sau khi lưu.
+- FE chỉ cần hiển thị lại theo `postgenWarnings` mà BE trả sau khi lưu.
 
 ---
 
@@ -35,7 +44,7 @@ Người nhận: Dev FE (`apps/web`, Next.js).
 2. Chip tại chỗ ("Nên soát …") và nút "Đã soát" ở từng hoạt động hoặc mục.
 3. Gạch chân chấm cho câu cần soát, kèm tooltip "Nên soát lại câu này", khi BE có `span` hợp lệ.
 4. Dòng "Đã soát xong các chỗ được nhắc", tự mất sau khoảng 4 giây.
-5. Dòng phụ ở Home (thẻ hoặc hàng giáo án).
+5. Dòng phụ ở Home (thẻ hoặc hàng giáo án). **Phase 2**, cần field `postgenSummary` trên `GET /jobs` (§4.5).
 6. Dòng nhắc ở màn Xuất file.
 7. Gọi `POST /plans/:id/warnings/:warningId/ack` và đọc `plan.postgenWarnings`.
 
@@ -52,6 +61,8 @@ Người nhận: Dev FE (`apps/web`, Next.js).
 ## 2. Hợp đồng API (PR #24, head `becaec0`)
 
 > PR #24 còn **draft**. Tên field dưới đây lấy nguyên văn từ code trong PR. Type nằm ở `packages/shared/src/postgen-warning.ts` và được export từ `@giaoan/shared`.
+>
+> **Q-BE7 (BE đã trả lời):** khi merge, #24 không đổi tên field nào. Sau đó chỉ có hai thay đổi đã biết: (1) giá trị `span.field` đổi sang đường dẫn field thật, shape `PostgenSpan` giữ nguyên (§2.6); (2) item của `GET /jobs` có thêm field `postgenSummary` (§2.2).
 
 ### 2.1 Type
 
@@ -88,7 +99,7 @@ postgenWarnings?: PostgenWarning[]  // "Absent on plans saved before this field,
 | --- | --- | --- |
 | `GET /plans/:id` | `{ plan: LessonPlan, jobId }`, trong đó có `plan.postgenWarnings?` | Cột DB `lesson_plans.postgen_warnings` (jsonb, nullable, migration `0002_postgen_warnings.sql`) thắng bản trong `document`. **Mảng rỗng thì field bị bỏ.** |
 | `GET /jobs/:id` (job `generatePlan` / `revisePlan` đã xong) | `result: LessonPlan`, có `result.postgenWarnings?` | Khi ack, BE cập nhật cả `ai_jobs.result` nếu job đó đúng là phiên bản head (`samePlanResult`). |
-| `GET /jobs` (danh sách Home, `RecentJobSummary`) | **Không có** thông tin cảnh báo | PR #24 không đổi `RecentJobSummary`. Xem Q-BE1. |
+| `GET /jobs` (danh sách Home, `RecentJobSummary`) | PR #24: **không có**. Dự kiến thêm `postgenSummary?: { openCount: number, places: { location: PostgenLocation, category: PostgenCategory }[] }` | Q-BE1: làm trong PR BE riêng, ngay sau khi #24 merge. `places` không trùng, theo thứ tự trong giáo án. Không còn nhắc mở thì bỏ field. `openCount` = số cặp `(location, category)` còn mở, trùng cách đếm "chỗ" (Q-BA5, §3.1). **Tên field là dự kiến, xác nhận khi merge.** Home dùng field này ở phase 2 (§4.5). |
 | Export (`POST` export, body `{ lessonPlanId, version?, format? }`) | Server render từ phiên bản đã lưu | PR #24 không đụng renderer, nên cảnh báo không vào file. |
 
 - `location.index` là **chỉ số 0-based** trong `plan.activities`. Tên hiển thị là `Hoạt động ${index + 1}`, khớp heading `Hoạt động {index + 1}` trong `activity-editor.tsx`.
@@ -106,7 +117,7 @@ postgenWarnings?: PostgenWarning[]  // "Absent on plans saved before this field,
 | 200 lần sau (idempotent) | `{ warning }` với `acknowledgedAt` cũ | Như trên. BE không log lần hai. |
 | 400 | `{ error: "Mã cảnh báo không hợp lệ" }` (id không khớp `/^[a-f0-9]{16}$/`) | Không được xảy ra. Log lỗi dev, giữ chip. |
 | 404 | `{ error: "Không tìm thấy cảnh báo" }` (không có plan, hoặc id không nằm ở phiên bản **head**) | Gọi lại `GET /plans/:id`, render lại theo head. |
-| Lỗi mạng / 5xx | – | Giữ chip, bật lại nút, xem §7.4. |
+| Lỗi mạng / 5xx | – | Giữ chip, bật lại nút, hiện dòng nhỏ dưới chip "Chưa lưu được, thầy cô bấm lại giúp nhé" (`aria-live="polite"`, không toast). Xem Q-UX1, §4.2, §7.4. |
 
 Ack chỉ tác động lên **phiên bản head**. BE ghi log `postgen_warning_ack` (warningId, ruleCode, category, planId). FE **không** tự log và **không** lưu ack vào localStorage. Nguồn sự thật là server.
 
@@ -142,76 +153,35 @@ Ack chỉ tác động lên **phiên bản head**. BE ghi log `postgen_warning_a
 | `section` `teachingAids` | `mục Thiết bị dạy học và học liệu` | `Thiết bị dạy học và học liệu` | khối II | như trên |
 | `section` `adjustments` | `mục Điều chỉnh sau bài dạy` | `Điều chỉnh sau bài dạy` | khối IV | như trên |
 
-Tên vị trí phải "ghi đúng như tiêu đề trong giáo án" (Copy 1). Cảnh báo có `span.field = "subActivities.{k}"` vẫn thuộc **hoạt động cha** (`location.kind = "activity"`). Chip đặt ở hoạt động cha, gạch chân đặt trong hoạt động con k.
+Tên vị trí phải "ghi đúng như tiêu đề trong giáo án" (Copy 1). Cảnh báo ở hoạt động con (`span.field` bắt đầu bằng `subActivities.{k}.`, ví dụ `subActivities.0.products`) vẫn thuộc **hoạt động cha** (`location.kind = "activity"`). Chip đặt ở hoạt động cha, gạch chân đặt trong field tương ứng của hoạt động con k.
 
 **Dự phòng vị trí:** nếu `index` nằm ngoài `plan.activities`, `key` không có trong bảng, hoặc `kind` lạ, thì **bỏ qua** cảnh báo đó trong UI (không đếm, không link) và `console.warn`. Xem Q-BE4.
 
-### 2.6 `span` (vị trí câu). Quan trọng: offset tính trên chuỗi nào
+### 2.6 `span` (vị trí câu)
 
-PR #24 dùng **offset ký tự** (`start`, `end`, end loại trừ, đơn vị code unit UTF-16, vì BE lấy bằng `String.indexOf` trong Node). Không dùng chỉ số câu. Giá trị `span.field` có trong code hiện tại:
+**Hợp đồng (Q-BE2, BE đã chốt):** `span.field` là **đường dẫn tới một field thật** của hoạt động hoặc mục. `start` và `end` là offset ký tự **trong chính field đó** (end loại trừ, đơn vị code unit UTF-16, vì BE lấy bằng `String.indexOf` trong Node). Không dùng chỉ số câu. Chuỗi tổng hợp `"activity"` (`activityBlock`) bị bỏ, nên FE không phải chép định dạng nhãn `**…**` nào và cũng không cần thuật toán đổi offset.
 
-| `span.field` | Offset tính trên chuỗi | Nguồn |
+| `location` | Ví dụ `span.field` | Offset tính trên |
 | --- | --- | --- |
-| `"activity"` | chuỗi **tổng hợp** `activityBlock(activity)` (`apps/api/src/ai/postgen/activity-text.ts`), không phải một field thật | R1 + R2/R3/R4 ở hoạt động |
-| `"subActivities.{k}"` | chuỗi tổng hợp `subActivityBlock(activity.subActivities[k])` | R1–R4 ở hoạt động con |
-| `"products"` | `activity.products`, offset trực tiếp | R4 đáp số ghép cặp (Toán 7) |
-| `"objectives.knowledge"` / `"objectives.competencies"` / `"objectives.qualities"` / `"teachingAids"` | `plan.<mảng>.join("\n")` | R1 ở mục |
-| `"adjustments"` | `plan.adjustments ?? ""` | R1 ở mục |
+| `activity` | `content`, `objectives`, `products`, `organization.assignTask`, `organization.performTask`, `organization.reportDiscussion`, `organization.conclude` | `plan.activities[index].<field>` |
+| `activity` (hoạt động con k) | `subActivities.0.products`, `subActivities.1.content`, … | `plan.activities[index].subActivities[k].<field>` |
+| `section` (mảng) | `objectives.knowledge`, `objectives.competencies`, `objectives.qualities`, `teachingAids` | `plan.<mảng>.join("\n")`, như PR #24 hiện tại (xem Q-BE8) |
+| `section` | `adjustments` | `plan.adjustments ?? ""` |
 
-`activityBlock` ghép như sau (nối bằng `"\n"`):
-```
-**Mục tiêu.** {objectives}
-**Nội dung.** {content}
-**Sản phẩm.** {products}
-**Tổ chức thực hiện.**
-- Giao nhiệm vụ: {organization.assignTask}
-- Thực hiện nhiệm vụ: {organization.performTask}
-- Báo cáo thảo luận: {organization.reportDiscussion}
-- Kết luận/nhận định: {organization.conclude}
-```
-`subActivityBlock` có cùng dạng, dùng field của hoạt động con.
+**Tiến độ:** việc đổi sang đường dẫn field thật nằm trong ticket tiếp theo (thu hẹp span R4) và **phải ship trước UI dòng nhắc**. PR #24 hiện vẫn trả `"activity"` / `"subActivities.{k}"` (offset trên chuỗi ghép) và `"products"`.
 
-**Thuật toán FE đổi span về field thật** (chỉ tạm dùng tới khi BE trả offset theo field thật, xem Q-BE2):
+**Điều kiện gạch chân.** Chỉ gạch chân khi cả ba điều đều đúng. Sai một điều thì chỉ hiện chip (không gạch chân; chip và tóm tắt giữ nguyên):
+1. Có `span`, và `span.field` trỏ tới một field **có thật** trên hoạt động, hoạt động con hoặc mục đó.
+2. `start`, `end` là số nguyên và `0 ≤ start < end ≤ text.length`, với `text` là giá trị field (mảng thì `join("\n")`).
+3. `text` **chưa đổi** so với lúc tải từ server. Nếu GV đã gõ sửa field đó (chưa lưu) thì bỏ gạch chân của field đó.
 
-```ts
-type Seg = { path: string; prefix: string; value: string }
-function blockSegments(a: TeachingActivity | TeachingSubActivity): Seg[] {
-  return [
-    { path: "objectives", prefix: "**Mục tiêu.** ", value: a.objectives },
-    { path: "content", prefix: "**Nội dung.** ", value: a.content },
-    { path: "products", prefix: "**Sản phẩm.** ", value: a.products },
-    { path: "", prefix: "**Tổ chức thực hiện.**", value: "" },
-    { path: "organization.assignTask", prefix: "- Giao nhiệm vụ: ", value: a.organization.assignTask },
-    { path: "organization.performTask", prefix: "- Thực hiện nhiệm vụ: ", value: a.organization.performTask },
-    { path: "organization.reportDiscussion", prefix: "- Báo cáo thảo luận: ", value: a.organization.reportDiscussion },
-    { path: "organization.conclude", prefix: "- Kết luận/nhận định: ", value: a.organization.conclude },
-  ]
-}
-/** Trả về field thật + offset trong field đó, hoặc null (chỉ hiện chip). */
-function locateInBlock(segs: Seg[], start: number, end: number) {
-  let pos = 0
-  for (const s of segs) {
-    const valueStart = pos + s.prefix.length
-    const valueEnd = valueStart + s.value.length
-    if (s.path && start >= valueStart && end <= valueEnd) {
-      return { path: s.path, start: start - valueStart, end: end - valueStart }
-    }
-    pos = valueEnd + 1 // "\n"
-  }
-  return null
-}
-```
-Với field dạng mảng (`objectives.*`, `teachingAids`), duyệt từng phần tử và cộng `length + 1` cho mỗi `"\n"`. Chỉ nhận khi đoạn nằm trọn trong **một** phần tử.
+**Span kiểu cũ:** nếu nhận `span.field = "activity"` hoặc `"subActivities.{k}"` (offset trên chuỗi ghép, từ trước khi ticket thu hẹp span ship) thì **chỉ hiện chip**, không đổi offset.
 
-**Điều kiện span hợp lệ.** Chỉ gạch chân khi tất cả đều đúng, sai một điều thì chỉ hiện chip (nhãn ở hoạt động, không gạch chân):
-1. Có `span`; `start`, `end` là số nguyên; `0 ≤ start < end ≤ độ dài chuỗi gốc`.
-2. `span.field` là một trong các giá trị ở bảng trên, và field đó tồn tại (ví dụ `subActivities[k]` có thật).
-3. Sau khi đổi, đoạn nằm trọn trong phần giá trị của một field thật (không dính nhãn `**…**`, không vắt qua `"\n"` giữa hai field).
-4. Giá trị hiện tại của field đó **trùng** giá trị server đã trả. Nếu GV đã gõ sửa field (chưa lưu), offset có thể lệch, nên **bỏ gạch chân của field đó** nhưng **giữ chip và tóm tắt**.
+**Field mảng:** với mục, offset hiện tính trên `join("\n")`. Chỉ gạch chân khi đoạn nằm trọn trong một phần tử (không vắt qua `"\n"`). Nếu BE chuyển sang trỏ tới từng phần tử (ví dụ `objectives.qualities.0`, offset tính trong phần tử) thì cách hiển thị không đổi. Nên viết `resolveSpan` nhận được cả hai dạng cho tới khi Q-BE8 có câu trả lời.
 
 ### 2.7 JSON ví dụ (`GET /plans/:id`)
 
-Id và offset dưới đây tính đúng theo thuật toán của PR (`postgenWarningId`, `activityBlock`) trên dữ liệu mẫu.
+Id tính đúng theo `postgenWarningId` của PR (sha256 của `JSON.stringify({ location, ruleCode, span })`, lấy 16 ký tự hex đầu) trên dữ liệu mẫu, với span theo hợp đồng field thật (§2.6).
 
 ```json
 {
@@ -226,11 +196,11 @@ Id và offset dưới đây tính đúng theo thuật toán của PR (`postgenWa
     "activities": ["… 4 hoạt động …"],
     "postgenWarnings": [
       {
-        "id": "c8ef9d1fce6c6ff0",
+        "id": "150fff5f51bee797",
         "location": { "kind": "activity", "index": 1 },
         "category": "so_lieu",
         "ruleCode": "R4",
-        "span": { "field": "activity", "start": 261, "end": 350 }
+        "span": { "field": "content", "start": 80, "end": 169 }
       },
       {
         "id": "80c31392d32a8147",
@@ -250,7 +220,9 @@ Id và offset dưới đây tính đúng theo thuật toán của PR (`postgenWa
   }
 }
 ```
-Kết quả trên UI: tóm tắt "Nên soát lại số liệu ở **Hoạt động 2** và nội dung ở **Hoạt động 3**". Phẩm chất đã soát nên bị lọc. HĐ2 có chip và gạch chân: offset 261 thuộc `content` (tiền tố tới `content` dài 181, vậy offset trong `content` là 80). HĐ3 chỉ có chip vì không có `span`.
+Kết quả trên UI: tóm tắt "Nên soát lại số liệu ở **Hoạt động 2** và nội dung ở **Hoạt động 3**". Phẩm chất đã soát nên bị lọc. HĐ2 có chip và gạch chân: span `content` [80, 169) là câu "Biết Â₁ = 65° thì B̂₁ (đồng vị với Â₁) bằng 110°, B̂₂ (trong cùng phía với Â₁) bằng 115°." trong `activities[1].content`. HĐ3 chỉ có chip vì không có `span`.
+
+Id phụ thuộc vào span, nên cùng cảnh báo đó trên PR #24 hiện tại (span kiểu cũ `activity` 261–350) có id `c8ef9d1fce6c6ff0`. Luôn dùng id do server trả, không tự tính và không lưu id phía client.
 
 ### 2.8 Sau revise (`POST /jobs/revise-plan`, body `{ lessonPlanId, version, instructions }`)
 
@@ -259,7 +231,7 @@ Theo `process.ts` → `runRevisePlan`, BE làm như sau:
 - Hoạt động không đổi: giữ cảnh báo, giữ nguyên `id`, `span` và `acknowledgedAt`.
 - Hoạt động đổi, hoặc chỉ số không còn: bỏ cảnh báo, log `postgen_warning_cleared_by_edit`.
 - Phiên bản mới **không** được chạy lại R1–R4 (AC S5, ghi chú phạm vi). Revise không bao giờ thêm cảnh báo mới.
-- Bị bỏ hết thì phiên bản mới không có field `postgenWarnings`.
+- **Q-BE6 (BE đã nhận):** BE luôn đặt tường minh `postgenWarnings = carried.kept` cho phiên bản mới, kể cả trên stub. Bị bỏ hết thì phiên bản mới không có field `postgenWarnings`. Sửa này vào #24 nếu Techlead đồng ý, không thì vào PR tiếp theo. Trước khi sửa vào code, trên stub các cảnh báo lẽ ra đã bị bỏ vẫn lọt sang bản mới, nên chưa kiểm hành vi revise trên stub được.
 
 FE: khi job revise xong, đọc `result.postgenWarnings` (hoặc `GET /plans/:id`) rồi tính lại. Nếu số nhắc mở giảm từ > 0 xuống 0 **trong phiên làm việc này** thì hiện dòng "Đã soát xong các chỗ được nhắc" (§4.4).
 
@@ -271,20 +243,47 @@ FE: khi job revise xong, đọc `result.postgenWarnings` (hoặc `GET /plans/:id
 
 1. `open = postgenWarnings.filter(w => !w.acknowledgedAt && locationHợpLệ(w))`
 2. **Nhóm** theo `(location, category)`. Mỗi nhóm là **một "chỗ"**, **một chip** và **một nút "Đã soát"**. Bấm nút thì ack **mọi** `id` còn mở trong nhóm. Nhiều span trong cùng nhóm thì gạch chân từng span.
+   **Q-BA5 (BA chốt):** số "chỗ" = số chip = số lần bấm "Đã soát". Mỗi lần bấm, số giảm đúng một. Hai loại ở cùng HĐ2 hiện "Nên soát 2 chỗ · HĐ2". Cách đếm này trùng `postgenSummary.openCount` (§2.2).
 3. Sắp xếp loại theo thứ tự `so_lieu` → `noi_dung` → `cau_chu`. Trong một loại, hoạt động đứng trước (index tăng dần), sau đó tới mục theo thứ tự giáo án: Kiến thức, Năng lực, Phẩm chất, Thiết bị dạy học và học liệu, Điều chỉnh sau bài dạy.
 
-### 3.2 Nối vị trí (hàm `joinVa`, giữ đúng theo prototype)
+### 3.2 Nối vị trí (BA chốt Q-BA2)
 
+**`joinVa`:**
 - 1 phần tử: `A`
 - 2 phần tử: `A và B`
 - 3 phần tử trở lên: `A, B và C` (dấu phẩy, "và" trước phần tử cuối, không có dấu phẩy trước "và")
 
-**Cụm vị trí của một loại** (`locPhrase`):
-- Hoạt động: phần tử đầu ghi đầy đủ `Hoạt động n`, các phần tử sau **chỉ ghi số** (`2 và 3`, `2, 3 và 4`).
-- Mục: `mục ` + joinVa(tên mục), ví dụ `mục Phẩm chất`, `mục Kiến thức và Phẩm chất`.
-- Có cả hoạt động và mục: `[cụm hoạt động] và [cụm mục]` (đúng như prototype, xem Q-BA2).
+**Cụm vị trí của một loại** (`locPhrase`) là **một danh sách phẳng**, nối bằng `joinVa`:
+- Hoạt động đứng trước (index tăng dần), sau đó tới mục (theo thứ tự giáo án, §3.1).
+- Hoạt động đầu ghi đầy đủ `Hoạt động n`, các hoạt động sau **chỉ ghi số**.
+- Mục đầu tiên ghi `mục <tên>`, các mục sau **chỉ ghi tên**.
 
-**Câu tóm tắt:** `"Nên soát lại " + joinVa( các nhóm theo loại: "<từ loại> ở <cụm vị trí>" )`
+| Vị trí trong một loại | Cụm vị trí |
+| --- | --- |
+| HĐ2 | Hoạt động 2 |
+| HĐ2, HĐ3 | Hoạt động 2 và 3 |
+| HĐ2, HĐ3, HĐ4 | Hoạt động 2, 3 và 4 |
+| Phẩm chất | mục Phẩm chất |
+| Kiến thức, Phẩm chất | mục Kiến thức và Phẩm chất |
+| HĐ2, Phẩm chất | Hoạt động 2 và mục Phẩm chất |
+| HĐ2, HĐ3, Phẩm chất | Hoạt động 2, 3 và mục Phẩm chất |
+| HĐ2, Kiến thức, Phẩm chất | Hoạt động 2, mục Kiến thức và Phẩm chất |
+
+**Câu tóm tắt:** mỗi loại là một nhóm `"<từ loại> ở <cụm vị trí>"`, theo thứ tự loại.
+- Nếu **có ít nhất một cụm vị trí chứa "và"** (tức một loại có từ 2 vị trí trở lên), nối các nhóm loại bằng `", "`.
+- Nếu không, nối các nhóm loại bằng `joinVa`. Nhờ vậy các câu đã duyệt giữ nguyên.
+
+```ts
+const parts = groups.map(g => `${g.word} ở ${locPhrase(g.places)}`)
+const hasVa = groups.some(g => g.places.length > 1)   // cụm vị trí của nhóm này có "và"
+return "Nên soát lại " + (hasVa ? parts.join(", ") : joinVa(parts))
+```
+
+**Xuất file:** một cụm vị trí duy nhất theo cùng luật `locPhrase`, gồm mọi vị trí không trùng, không ghi loại và không có link. Ví dụ "Còn 3 chỗ nên soát ở Hoạt động 2, 3 và mục Phẩm chất".
+
+**AC (Q-BA2):** không câu tóm tắt hay dòng Xuất file nào được có chữ "và" ở hai cấp khác nhau (vừa trong cụm vị trí, vừa giữa các nhóm loại). Mỗi cụm vị trí có tối đa một chữ "và" dùng để nối. Kiểm bằng bảng §3.3 (C21).
+
+**Lưu ý:** chữ "và" nằm sẵn trong tên mục ("Thiết bị dạy học và học liệu") là một phần của tiêu đề, không phải chữ nối. Nó không tính khi xét "cụm có chứa và" và không tính trong C21. Điều kiện dùng dấu phẩy là **có một loại có từ 2 vị trí trở lên** (`places.length > 1`), không phải tìm chuỗi "và" trong câu.
 
 ### 3.3 Bảng ví dụ (thước đo khi test)
 
@@ -296,16 +295,22 @@ FE: khi job revise xong, đọc `result.postgenWarnings` (hoặc `GET /plans/:id
 | HĐ2 số liệu + HĐ3 nội dung | Nên soát lại số liệu ở Hoạt động 2 và nội dung ở Hoạt động 3 | HĐ2 số liệu; HĐ3 nội dung | Nên soát 2 chỗ · HĐ2, HĐ3 | Còn 2 chỗ nên soát ở Hoạt động 2 và 3 · Xem lại |
 | HĐ2 số liệu + Phẩm chất câu chữ | Nên soát lại số liệu ở Hoạt động 2 và câu chữ ở mục Phẩm chất | HĐ2 số liệu; Phẩm chất câu chữ | Nên soát 2 chỗ · HĐ2, Phẩm chất | Còn 2 chỗ nên soát ở Hoạt động 2 và mục Phẩm chất · Xem lại |
 | Phẩm chất · câu chữ | Nên soát lại câu chữ ở mục Phẩm chất | Nên soát câu chữ | Nên soát câu chữ · Phẩm chất | Còn 1 chỗ nên soát ở mục Phẩm chất · Xem lại |
-| HĐ2 số liệu + HĐ3 nội dung + Phẩm chất câu chữ | Nên soát lại số liệu ở Hoạt động 2, nội dung ở Hoạt động 3 và câu chữ ở mục Phẩm chất | 3 chip | Nên soát 3 chỗ · HĐ2, HĐ3, Phẩm chất | Còn 3 chỗ nên soát ở Hoạt động 2 và 3 và mục Phẩm chất · Xem lại (luật prototype, xem Q-BA2) |
+| HĐ2 số liệu + HĐ3 nội dung + Phẩm chất câu chữ | Nên soát lại số liệu ở Hoạt động 2, nội dung ở Hoạt động 3 và câu chữ ở mục Phẩm chất (không đổi) | 3 chip | Nên soát 3 chỗ · HĐ2, HĐ3, Phẩm chất | Còn 3 chỗ nên soát ở Hoạt động 2, 3 và mục Phẩm chất · Xem lại (**v1.1**) |
+| HĐ2, HĐ3 số liệu + Phẩm chất câu chữ (**v1.1**) | Nên soát lại số liệu ở Hoạt động 2 và 3, câu chữ ở mục Phẩm chất | 3 chip | Nên soát 3 chỗ · HĐ2, HĐ3, Phẩm chất | Còn 3 chỗ nên soát ở Hoạt động 2, 3 và mục Phẩm chất · Xem lại |
+| HĐ2, HĐ3 số liệu + HĐ4 nội dung + Phẩm chất câu chữ (**v1.1**, `mixed3`) | Nên soát lại số liệu ở Hoạt động 2 và 3, nội dung ở Hoạt động 4, câu chữ ở mục Phẩm chất | 4 chip | Nên soát 4 chỗ · HĐ2, HĐ3, HĐ4, Phẩm chất | Còn 4 chỗ nên soát ở Hoạt động 2, 3, 4 và mục Phẩm chất · Xem lại |
+| Kiến thức + Phẩm chất · câu chữ (**v1.1**) | Nên soát lại câu chữ ở mục Kiến thức và Phẩm chất | 2 chip | Nên soát 2 chỗ · Kiến thức, Phẩm chất | Còn 2 chỗ nên soát ở mục Kiến thức và Phẩm chất · Xem lại |
+| HĐ2 số liệu + Kiến thức, Phẩm chất câu chữ (**v1.1**) | Nên soát lại số liệu ở Hoạt động 2, câu chữ ở mục Kiến thức và Phẩm chất | 3 chip | Nên soát 3 chỗ · HĐ2, Kiến thức, Phẩm chất | Còn 3 chỗ nên soát ở Hoạt động 2, mục Kiến thức và Phẩm chất · Xem lại |
 | HĐ2 số liệu + HĐ2 nội dung | Nên soát lại số liệu ở Hoạt động 2 và nội dung ở Hoạt động 2 | HĐ2: 2 chip | Nên soát 2 chỗ · HĐ2 | Còn 2 chỗ nên soát ở Hoạt động 2 · Xem lại |
 | HĐ2 · số liệu, không có span | Nên soát lại số liệu ở Hoạt động 2 | chip, không gạch chân | Nên soát số liệu · HĐ2 | Còn 1 chỗ nên soát ở Hoạt động 2 · Xem lại |
 | 0 nhắc mở (lúc tải trang) | (không hiện gì) | – | (không có dòng phụ) | (không có dòng) |
 | từ ≥1 xuống 0 trong phiên | Đã soát xong các chỗ được nhắc (khoảng 4 giây rồi mất) | – | – | – |
 
+Các câu đã duyệt (dòng 1–6, câu tóm tắt dòng 7, dòng "HĐ2 số liệu + HĐ2 nội dung", "không có span", 0 nhắc, soát xong) **giữ nguyên từng chữ**. v1.1 chỉ đổi cột Xuất file của dòng 7 và thêm các dòng có đánh dấu **v1.1**. Prototype có dữ liệu cho `one`, `two`, `three`, `mixed`, `phamchat`, `nopos`, `mixed3`. Dòng "HĐ2, HĐ3 số liệu + Phẩm chất câu chữ" chính là `mixed3` sau khi bấm "Đã soát" ở HĐ4. Hai dòng có mục Kiến thức suy ra từ luật, prototype không có dữ liệu cho chúng.
+
 Quy tắc Home và Xuất file:
 - **Home:** đúng 1 chỗ thì `Nên soát {từ loại} · {tên ngắn}`. Từ 2 chỗ trở lên thì `Nên soát {N} chỗ · {các tên ngắn, không trùng, nối bằng ", "}`.
-- **Xuất file:** `Còn {N} chỗ nên soát ở {cụm vị trí không trùng, không có loại, không link}` + ` · ` + nút `Xem lại`. Cụm vị trí dùng cùng luật §3.2, ví dụ "Hoạt động 2 và mục Phẩm chất".
-- `N` = số nhóm `(location, category)` còn mở.
+- **Xuất file:** `Còn {N} chỗ nên soát ở {cụm vị trí không trùng, không có loại, không link}` + ` · ` + nút `Xem lại`. Cụm vị trí dùng cùng luật §3.2, ví dụ "Hoạt động 2 và mục Phẩm chất", "Hoạt động 2, 3 và mục Phẩm chất".
+- `N` = số nhóm `(location, category)` còn mở (Q-BA5), bằng `postgenSummary.openCount`.
 
 ### 3.4 Copy cố định (nguyên văn)
 
@@ -315,6 +320,7 @@ Quy tắc Home và Xuất file:
 | Nút | Đã soát |
 | Tooltip / mô tả của câu gạch chân | Nên soát lại câu này |
 | Soát xong | Đã soát xong các chỗ được nhắc |
+| Ack lỗi mạng / 5xx (dòng nhỏ dưới chip, Q-UX1) | Chưa lưu được, thầy cô bấm lại giúp nhé |
 | aria-label nút "Đã soát" | `Đã soát, {Hoạt động n | Phẩm chất …}` |
 | aria-label link chỉ có số | `Hoạt động n` |
 | Dòng helper (có sẵn, giữ nguyên) | theo khung Phụ lục IV · GV tự thẩm định |
@@ -367,6 +373,7 @@ Icon check (nút "Đã soát"): `<path d="M5 12.5l4.5 4.5L19 7.5"/>`, stroke 2.5
   - Ở khối mục: `padding:8px 14px 0`, dưới nhãn khối.
 - **Chip:** `inline-flex; gap:6px; padding:3px 4px 3px 9px; border-radius:20px; background:#FFFBEB; border:1px solid #FDE68A; color:#92400E; 12px/600; line-height:1.4`. Icon `i-look` 13px, màu #B45309. Chữ: "Nên soát số liệu" / "Nên soát nội dung" / "Nên soát câu chữ".
 - **Nút "Đã soát"** (nằm trong chip): `<button type="button">`, `inline-flex; gap:4px; padding:2px 9px; min-height:24px; border-radius:20px; background:#fff; border:1px solid #FDE68A; color:#334155; 12px/600`. Icon check 12px, màu #059669. Hover: nền #F9FAFB, viền #FCD34D. Trong lúc chờ API: `disabled` + `aria-busy="true"`.
+- **Dòng báo khi ack lỗi** (Q-UX1): `<p class="rv-ackfail" aria-live="polite">` nằm trong hàng chip, ngay dưới chip (`flex-basis:100%`). Style: `margin:0; font-size:12px; font-weight:500; line-height:1.4; color:#92400E` (7.09:1 trên nền trắng), không icon, không nền. Copy: "Chưa lưu được, thầy cô bấm lại giúp nhé". Phần tử luôn có trong DOM (rỗng) để aria-live hoạt động. Chỉ đổ chữ khi ack lỗi mạng hoặc 5xx. Bấm "Đã soát" lại thì xoá chữ ngay; nếu lại lỗi thì đổ chữ lại sau một tick để trình đọc màn hình đọc lại. Ack thành công thì chip và dòng này cùng mất. Không toast. Prototype **không có** state lỗi mạng, nên dòng này chỉ mô tả ở spec.
 
 ### 4.3 Gạch chân và tooltip (`ReviewUnderline`)
 - **Style:** `text-decoration: underline dotted #D97706; text-decoration-thickness:2px; text-underline-offset:4px; text-decoration-skip-ink:none; cursor:help; border-radius:2px`. Hover: nền #FFFBEB.
@@ -388,7 +395,11 @@ Icon check (nút "Đã soát"): `<path d="M5 12.5l4.5 4.5L19 7.5"/>`, stroke 2.5
 - **Style:** `display:flex; align-items:center; gap:5px; margin-top:3px; 12px/500; color:#B45309; line-height:1.3`. Icon `i-look` 13px.
 - Đặt dưới tên tiết. Badge **vẫn là "Đã soạn"**. Nếu job `status === "flagged"` (guardrail SGK) thì badge "Cần xem lại" được ưu tiên, **dòng phụ vẫn hiện**.
 - Nút mở hàng có `aria-describedby` trỏ tới chữ của dòng phụ. Mở từ hàng này thì vào editor và focus dòng tóm tắt.
-- **Thiếu dữ liệu:** `GET /jobs` không trả cảnh báo (Q-BE1). Chưa có field thì không hiện dòng phụ.
+- **Nguồn dữ liệu (phase 2, phụ thuộc PR BE `postgenSummary`, Q-BE1):** lấy từ `postgenSummary` trên item của `GET /jobs` (§2.2).
+  - `places.length === 1`: `Nên soát {từ loại} · {tên ngắn}`, ví dụ "Nên soát số liệu · HĐ2", "Nên soát câu chữ · Phẩm chất" (tên ngắn theo §2.5).
+  - `places.length ≥ 2`: `Nên soát {openCount} chỗ · {tên ngắn không trùng, theo thứ tự của places, nối ", "}`, ví dụ "Nên soát 2 chỗ · HĐ2, HĐ3", "Nên soát 2 chỗ · HĐ2" (hai loại cùng HĐ2).
+  - Không có `postgenSummary`: không có dòng phụ.
+- **Trước khi PR BE đó merge, Home KHÔNG hiện dòng phụ.** Không gọi `GET /plans/:id` cho từng hàng để bù.
 
 ### 4.6 Dòng Xuất file (`ReviewExportLine`)
 - **Style:** `display:flex; align-items:center; flex-wrap:wrap; gap:6px 8px; margin:0 0 12px; padding:8px 12px; background:#fff; border:1px solid #E5E7EB; border-radius:8px; 13px; color:#475569`. Rộng bằng khung xem trước (794px, `max-width:100%`).
@@ -412,8 +423,12 @@ Icon check (nút "Đã soát"): `<path d="M5 12.5l4.5 4.5L19 7.5"/>`, stroke 2.5
  Gõ sửa tay chưa lưu        → không đổi gì (vẫn open)
  Tải lại trang / xuất file  → không đổi gì
  revise KHÔNG đổi HĐ/mục đó → giữ nguyên (open hoặc acknowledged được mang sang, cùng id)
- Lưu chỉnh tay (chưa có)    → khi có: như revise (ticket riêng)
+ Lưu chỉnh tay (chưa có, ticket riêng, Q-BA3):
+   nhắc có span     → [cleared] chỉ khi đoạn của span bị đổi/xoá; còn nguyên thì giữ, BE tính lại offset
+   nhắc không span  → giữ tới khi bấm "Đã soát"
 ```
+
+Quy tắc lưu chỉnh tay ở trên thay cho câu "áp cùng quy tắc với revise" của AC v2.1 và dành cho ticket sau, không thuộc PR #24. Chi tiết, log `postgen_warning_cleared_by_edit` (`reason: "span_changed"`) và 3 test nằm ở §0.
 
 ### 5.2 Dòng tóm tắt (client)
 
@@ -439,8 +454,8 @@ Chuyển trạng thái: `showing` sang `showing` khi ack một phần hoặc rev
 | Hành động | Kết quả |
 | --- | --- |
 | Bấm link vị trí trong tóm tắt | Mở hoạt động nếu đang thu gọn (`aria-expanded="true"`). Cuộn `scrollIntoView({block:"start", behavior: reduced ? "auto" : "smooth"})`, `scroll-margin-top` 16px (khối mục 48px). `focus({preventScroll:true})` vào khung đích (`tabindex="-1"`). Viền nhấn: `border-color:#F59E0B; box-shadow:0 0 0 4px rgba(251,191,36,.45)` trong 2000ms, transition .35s (tắt khi reduced motion). |
-| Bấm "Đã soát" | Nút `disabled` + `aria-busy`. Gọi ack cho mọi id của nhóm (song song). Thành công thì bỏ chip và gạch chân của nhóm, tính lại tóm tắt, Home và Xuất file. Focus chuyển về khung hoạt động hoặc mục đó (`tabindex=-1`, `preventScroll`) để không mất focus. Hết nhắc thì sang `done`. |
-| Gõ sửa trong field được nhắc | **Không đổi trạng thái nhắc.** Chỉ bỏ gạch chân của field vừa sửa (offset có thể lệch, §2.6 điều 4). Chip và tóm tắt giữ nguyên. |
+| Bấm "Đã soát" | Nút `disabled` + `aria-busy`. Gọi ack cho mọi id của nhóm (song song). Thành công thì bỏ chip và gạch chân của nhóm, tính lại tóm tắt, Home và Xuất file. Focus chuyển về khung hoạt động hoặc mục đó (`tabindex=-1`, `preventScroll`) để không mất focus. Hết nhắc thì sang `done`. Lỗi mạng hoặc 5xx: giữ chip và gạch chân, bật lại nút (focus vẫn ở nút), hiện "Chưa lưu được, thầy cô bấm lại giúp nhé" dưới chip (§4.2). |
+| Gõ sửa trong field được nhắc | **Không đổi trạng thái nhắc.** Chỉ bỏ gạch chân của field vừa sửa (offset có thể lệch, §2.6 điều 3). Chip và tóm tắt giữ nguyên. |
 | Revise xong | Tính lại từ `postgenWarnings` mới. Không toast mới. Hết nhắc thì sang `done`. |
 | Bấm hàng Home có dòng phụ | Mở editor và focus dòng tóm tắt. |
 | "Xem lại" ở Xuất file | Như trên. |
@@ -453,7 +468,7 @@ Chuyển trạng thái: `showing` sang `showing` khi ack một phần hoặc rev
 1. **`role="note"`** cho dòng tóm tắt, `aria-labelledby` trỏ tới tiêu đề. Không dùng `role="alert"`, không tự đọc lúc tải trang.
 2. **Bàn phím:** mọi link vị trí và nút "Đã soát" là `<button>` thật, Tab tới được theo thứ tự DOM, Enter/Space kích hoạt. Không có bẫy focus.
 3. **Focus-visible:** `outline:2px solid #2563EB; outline-offset:2px; border-radius:4px` (tương phản 5.17:1 trên nền trắng). Khung tóm tắt có `tabindex=-1`: `:focus` không outline, `:focus-visible` có outline.
-4. **aria-live:** một vùng `role="status" aria-live="polite"` ẩn (`sr-only`) luôn có trong DOM. Chỉ đẩy "Đã soát xong các chỗ được nhắc" vào đó.
+4. **aria-live:** một vùng `role="status" aria-live="polite"` ẩn (`sr-only`) luôn có trong DOM. Chỉ đẩy "Đã soát xong các chỗ được nhắc" vào đó. Riêng dòng "Chưa lưu được, thầy cô bấm lại giúp nhé" (ack lỗi) có `aria-live="polite"` của chính nó, nằm cạnh chip (§4.2, Q-UX1).
 5. **Tooltip:** không chỉ hiện khi hover. Phải có khi focus hoặc khi con trỏ nằm trong đoạn (§4.3), `role="tooltip"`, nối qua `aria-describedby`, Esc để ẩn.
 6. **Tương phản** (đã đo):
 
@@ -466,6 +481,7 @@ Chuyển trạng thái: `showing` sang `showing` khi ack một phần hoặc rev
 | Chữ "Đã soát" #334155 / #FFFFFF | 10.35:1 |
 | Dòng phụ Home #B45309 / #FFFFFF | 5.02:1 (trên nền hover #EFF6FF: 4.61:1) |
 | Dòng Xuất file #475569 / #FFFFFF | 7.58:1 |
+| Dòng ack lỗi #92400E / #FFFFFF | 7.09:1 |
 | Gạch chân chấm #D97706 / #FFFFFF (không phải chữ) | 3.19:1 (≥ 3:1) |
 | Icon amber #B45309 / #FFFBEB | 4.84:1 |
 | Icon check #059669 / #FFFFFF | 3.77:1 |
@@ -494,24 +510,25 @@ Chuyển trạng thái: `showing` sang `showing` khi ack một phần hoặc rev
 | --- | --- | --- |
 | E1 | Không có `postgenWarnings` hoặc mảng rỗng | Không render gì. Plan cũ trước migration được coi như không có cảnh báo. |
 | E2 | Tất cả đã `acknowledgedAt` lúc tải | Không render (không hiện "Đã soát xong"). |
-| E3 | `span` thiếu, sai kiểu, `start ≥ end`, vượt độ dài, vắt qua hai field, dính nhãn, `field` lạ | Chỉ hiện chip, không gạch chân. |
-| E4 | GV gõ sửa field có gạch chân (chưa lưu) | Bỏ gạch chân của field đó. Chip và tóm tắt giữ nguyên. Tải lại thì text server về như cũ và gạch chân quay lại. |
+| E3 | `span` thiếu, sai kiểu, `start ≥ end`, vượt độ dài, `field` không tồn tại, đoạn vắt qua hai phần tử của mục dạng mảng, hoặc span kiểu cũ `activity` / `subActivities.{k}` (§2.6) | Chỉ hiện chip, không gạch chân. |
+| E4 | GV gõ sửa field có gạch chân (chưa lưu) | Text field khác bản server nên bỏ gạch chân của field đó (§2.6 điều 3). Chip và tóm tắt giữ nguyên. Tải lại thì text server về như cũ và gạch chân quay lại. |
 | E5 | `category` lạ | Coi như `noi_dung`, `console.warn` (Q-BA1). |
 | E6 | `location` lạ hoặc ngoài phạm vi | Bỏ qua, `console.warn` (Q-BE4). |
 | E7 | Nhiều cảnh báo cùng `(location, category)` | Một chip, gạch chân từng span. "Đã soát" ack tất cả id trong nhóm. |
 | E8 | Hai loại ở cùng một hoạt động | Hai chip trong cùng hàng, theo thứ tự loại. Tóm tắt lặp lại vị trí (xem bảng §3.3). |
-| E9 | Cảnh báo nằm trong hoạt động con | Chip ở hoạt động cha, gạch chân trong hoạt động con k. |
+| E9 | Cảnh báo nằm trong hoạt động con (`span.field = "subActivities.{k}.<field>"`) | Chip ở hoạt động cha, gạch chân trong field đó của hoạt động con k. |
 | E10 | Hoạt động đang thu gọn | Chip vẫn thấy. Bấm link thì hoạt động mở ra. |
 | E11 | Job `flagged` (SGK) và có nhắc | Banner flagged và dòng tóm tắt cùng hiện. Home: badge "Cần xem lại", dòng phụ vẫn có. |
 | E12 | Job `blocked` | Không có nội dung giáo án, nên không hiện nhắc. |
 | E13 | Ack bị 404 | Tải lại `GET /plans/:id` rồi render lại. |
-| E14 | Ack lỗi mạng hoặc 5xx | Giữ chip, bật lại nút. Không toast (Q-UX1). |
-| E15 | Ack một phần trong nhóm nhiều id bị lỗi | Giữ chip với các id còn mở. Bấm lại chỉ gửi các id đó. |
+| E14 | Ack lỗi mạng hoặc 5xx | Giữ chip, bật lại nút, hiện "Chưa lưu được, thầy cô bấm lại giúp nhé" dưới chip (`aria-live="polite"`). Không toast (Q-UX1). |
+| E15 | Ack một phần trong nhóm nhiều id bị lỗi | Giữ chip với các id còn mở và hiện cùng dòng báo như E14. Bấm lại chỉ gửi các id đó. |
 | E16 | Revise bỏ hết nhắc | Hiện "Đã soát xong…" nếu đang ở editor lúc job xong. |
 | E17 | Revise viết lại gần như cả giáo án (instructions chung) | Mọi hoạt động đổi fingerprint, nên mọi nhắc đều mất, kể cả chỗ GV chưa xem (Q-BA4). |
 | E18 | Đang xem phiên bản cũ | Ẩn "Đã soát" (ack chỉ tác động lên head). Chỉ đọc. |
 | E19 | `check_error` ở BE | `postgenWarnings` rỗng, không có nhắc (đường lỗi hiếm, đã có log). |
 | E20 | Nhiều tab | Tab kia chỉ cập nhật khi focus lại hoặc tải lại (đọc từ server). |
+| E21 | `GET /jobs` chưa có `postgenSummary` (trước PR BE của Q-BE1) | Home không có dòng phụ. Editor và Xuất file vẫn đủ. |
 
 ---
 
@@ -533,41 +550,52 @@ Chuyển trạng thái: `showing` sang `showing` khi ack một phần hoặc rev
 | C12 | Tải Word/PDF: file không có nhắc hay gạch chân. Quay lại editor thì nhắc vẫn còn | S5, Copy 6 |
 | C13 | Không có nút X hay nút đóng | S5 |
 | C14 | Soát hết thì hiện "Đã soát xong các chỗ được nhắc", tự mất sau khoảng 4 giây, được đọc qua aria-live | Copy 4 |
-| C15 | Home: badge "Đã soạn" + dòng phụ đúng dạng. Guardrail SGK thì badge "Cần xem lại" và dòng phụ vẫn hiện | Copy 5 |
+| C15 | **Phase 2 (sau PR BE `postgenSummary`):** Home có badge "Đã soạn" + dòng phụ lấy từ `postgenSummary`, đúng dạng §4.5. Guardrail SGK thì badge "Cần xem lại" và dòng phụ vẫn hiện. **Trước đó:** Home không có dòng phụ | Copy 5 |
 | C16 | Xuất file: "Còn N chỗ nên soát ở … · Xem lại" (chỉ vị trí, không loại). "Xem lại" focus vào tóm tắt | Copy 6 |
 | C17 | Không có toast mới, không nhắc hạn mức hay lượt | Q2, S6 |
 | C18 | Quét copy: không có từ cấm (§3.4) | Copy 3 + quy ước sản phẩm |
 | C19 | 375px: vùng chạm ≥ 44px, không tràn ngang, khớp ảnh `mobile-*` | thiết kế đã duyệt |
 | C20 | Bàn phím + trình đọc màn hình: đi hết vòng Tab tóm tắt → chip → "Đã soát", focus không mất sau ack | thiết kế đã duyệt |
+| C21 | Không câu tóm tắt hay dòng Xuất file nào có chữ "và" ở hai cấp khác nhau. Mỗi cụm vị trí có tối đa một "và". Đúng từng dòng bảng §3.3, kể cả các dòng **v1.1** | Q-BA2 |
+| C22 | Ack lỗi mạng hoặc 5xx: chip còn, nút bật lại, dòng "Chưa lưu được, thầy cô bấm lại giúp nhé" hiện dưới chip và được đọc qua aria-live polite. Không toast. Bấm lại thành công thì dòng mất cùng chip | Q-UX1 |
+| C23 | Mỗi lần bấm "Đã soát", số "chỗ" ở Xuất file (và ở Home khi có `postgenSummary`) giảm đúng một | Q-BA5 |
 
 ---
 
-## 11. Câu hỏi mở
+## 11. Câu hỏi
 
-**Cho BE (PR #24)**
-- **Q-BE1 (chặn Home).** `GET /jobs` (`RecentJobSummary`) không có thông tin cảnh báo, nên Home không hiện được "Nên soát … · HĐ2" nếu không gọi `GET /plans/:id` cho từng hàng. Đề nghị BE thêm một field tóm tắt cảnh báo còn mở vào mỗi item (tên field do BE chọn), gồm số chỗ, `category` và `location` không trùng. Có được không, và làm trong PR #24 hay ticket khác?
-- **Q-BE2.** `span.field = "activity"` / `"subActivities.{k}"` là offset trên chuỗi tổng hợp `activityBlock`, không phải field thật. FE phải chép lại định dạng nhãn, nên BE đổi nhãn là gãy. Đề nghị BE trả `span.field` là đường dẫn field thật (ví dụ `content`, `organization.assignTask`, `subActivities.0.products`) kèm offset trong field đó, hoặc export hàm `activityBlock`/segment từ `@giaoan/shared`. Nếu giữ nguyên, BE cam kết giữ định dạng và báo trước khi đổi.
-- **Q-BE3.** Với field mảng (`objectives.*`, `teachingAids`), xác nhận offset tính trên `join("\n")` là hợp đồng lâu dài.
+### 11.1 Đã chốt (v1.1)
+
+| # | Câu hỏi | Trả lời | Ghi vào |
+| --- | --- | --- | --- |
+| Q-BE1 | Home không có dữ liệu cảnh báo trên `GET /jobs` | PR BE riêng ngay sau khi #24 merge: `postgenSummary?: { openCount, places: { location, category }[] }`, không trùng, theo thứ tự giáo án, bỏ khi không còn nhắc. Tên field dự kiến. Home dùng ở phase 2, trước đó không có dòng phụ | §2.2, §4.5, C15, E21 |
+| Q-BE2 | `span.field` là chuỗi tổng hợp `activityBlock` | `span.field` là đường dẫn field thật, offset trong field. Làm ở ticket thu hẹp span R4, ship trước UI. Span kiểu cũ thì chỉ hiện chip | §2.6, §2.7, E3, §12 |
+| Q-BE3 | Offset field mảng tính trên `join("\n")` | Đóng. PR hiện tại giữ `join("\n")` cho `objectives.*` / `teachingAids`. Còn một câu nhỏ, chuyển sang Q-BE8 | §2.6 |
+| Q-BE6 | Stub mang `postgenWarnings` của head sang bản revise | BE nhận: luôn đặt `postgenWarnings = carried.kept`, kể cả trên stub. Vào #24 nếu Techlead đồng ý, không thì PR sau | §2.8 |
+| Q-BE7 | Merge #24 có đổi tên field không | Không. Về sau chỉ đổi giá trị `span.field` (shape giữ nguyên) và thêm `postgenSummary` vào `GET /jobs` | §2 |
+| Q-UX1 | Ack lỗi mạng | Giữ chip, bật lại nút, dòng nhỏ dưới chip "Chưa lưu được, thầy cô bấm lại giúp nhé", `aria-live="polite"`, không toast | §2.3, §3.4, §4.2, §6, §7, E14, E15, C22 |
+| Q-BA2 | Hai chữ "và" khi nhiều vị trí và nhiều loại | Cụm vị trí trong một loại là một danh sách phẳng. Có cụm chứa "và" thì nối các loại bằng dấu phẩy, không thì giữ `joinVa`. Xuất file dùng cùng luật cụm vị trí | §3.2, §3.3, C21, prototype `mixed3` |
+| Q-BA3 | Lưu chỉnh tay xoá mọi nhắc của hoạt động? | Không. Nhắc có span chỉ mất khi đoạn của span bị đổi hoặc xoá (còn nguyên thì giữ, tính lại offset). Nhắc không span giữ tới khi bấm "Đã soát". Log `postgen_warning_cleared_by_edit` kèm lý do. Dành cho ticket lưu chỉnh tay, không thuộc #24 | §0, §5.1 |
+| Q-BA5 | Đếm "chỗ" theo nhóm hay theo vị trí | Theo nhóm `(vị trí, loại)`. Số chỗ = số chip = số lần bấm "Đã soát". "Nên soát 2 chỗ · HĐ2" giữ nguyên. Trùng `postgenSummary.openCount` | §3.1, §3.3, C23 |
+
+### 11.2 Còn mở
+
+**Cho BE**
 - **Q-BE4.** Có thể phát sinh `location.kind` hoặc `key` khác 5 key hiện có không? FE đang bỏ qua giá trị lạ.
 - **Q-BE5.** Ack chỉ tác động lên head. Nếu GV mở bản cũ, FE đang ẩn "Đã soát". Có muốn cho ack trên bản cũ không?
-- **Q-BE6.** `revisePlan` của stub (`apps/api/src/ai/stub.ts`) trả `{ ...plan, … }`, tức là mang theo `postgenWarnings` của head. Trong `runRevisePlan`, khi `carried.kept` rỗng thì `saved = next`, nên trên stub các cảnh báo đáng lẽ đã bị bỏ vẫn lọt sang phiên bản mới. Bản Grok dựng plan mới nên không bị. Đề nghị BE luôn đặt hoặc bỏ `postgenWarnings` một cách tường minh theo `carried.kept`, để FE test trên stub cho đúng.
-- **Q-BE7.** PR #24 còn draft. Khi merge có đổi tên field nào không? FE sẽ code theo `@giaoan/shared` của nhánh `cursor/postgen-check-repair` @ `becaec0`.
+- **Q-BE8 (mới, từ Q-BE3).** Với mục dạng danh sách (`objectives.*`, `teachingAids`), sau ticket thu hẹp span, path sẽ trỏ tới từng phần tử (ví dụ `objectives.qualities.0`, offset tính trong phần tử) hay giữ `objectives.qualities` với offset trên `join("\n")`? FE sẽ nhận được cả hai (§2.6).
+- **Tên `postgenSummary`:** xác nhận tên và shape khi PR BE của Q-BE1 merge.
 
 **Cho BA / Huy**
 - **Q-BA1.** `category` lạ: đang hiện như "nội dung". Hay nên ẩn?
-- **Q-BA2.** Copy khi một loại có ≥ 2 hoạt động **và** có thêm loại khác, hoặc có cả hoạt động và mục. Theo luật đã duyệt, câu sẽ là "Nên soát lại số liệu ở Hoạt động 2 và 3 và câu chữ ở mục Phẩm chất" (hai chữ "và"). Giữ như vậy, hay đổi dấu nối giữa các loại thành dấu phẩy, ví dụ "…Hoạt động 2 và 3, câu chữ ở mục Phẩm chất"? Tương tự ở Xuất file: "Còn 3 chỗ nên soát ở Hoạt động 2 và 3 và mục Phẩm chất". Đề xuất gộp hoạt động và mục thành một danh sách: "ở Hoạt động 2, 3 và mục Phẩm chất". FE làm theo luật của prototype đã duyệt cho tới khi có quyết định.
-- **Q-BA3.** Khi có tính năng lưu chỉnh tay: AC v2.1 nói "áp cùng quy tắc". Theo `carryOverWarnings`, **bất kỳ** thay đổi nào trong hoạt động đều xoá mọi nhắc của hoạt động đó, kể cả khi GV sửa chỗ khác. Chấp nhận?
-- **Q-BA4.** Revise với yêu cầu chung thường viết lại cả giáo án, nên fingerprint mọi hoạt động đổi và mọi nhắc mất, trong khi bản mới không được chạy lại R1–R4. Chấp nhận rủi ro này cho MVP?
-- **Q-BA5.** "Chỗ" ở Home và Xuất file đang đếm theo nhóm `(vị trí, loại)`: 2 loại ở HĐ2 là "2 chỗ · HĐ2". Hay đếm theo vị trí?
-
-**Cho UX (tôi)**
-- **Q-UX1.** Ack lỗi mạng: hiện chỉ giữ chip và bật lại nút, không có copy báo lỗi (không thêm toast, tránh chữ "lỗi"). Nếu cần sẽ bổ sung một dòng nhỏ cạnh chip, gửi Huy duyệt riêng.
+- **Q-BA4 (đang chờ Huy chốt qua Captain).** Revise với yêu cầu chung thường viết lại cả giáo án, nên fingerprint mọi hoạt động đổi và mọi nhắc mất, trong khi bản mới không được chạy lại R1–R4. BA khuyến nghị chạy lại R1–R4 (chỉ tầng code, không gọi thêm LLM) trên các hoạt động hoặc mục bị đổi sau revise, và không hiện "Đã soát xong…" khi bản revise có nhắc mới (chi tiết trong `fe-spec-qba-answers.md`). Tới khi chốt, E17 giữ nguyên.
 
 ---
 
 ## 12. Ghi chú cài đặt (gợi ý)
 
-- Hàm thuần (có unit test): `openWarnings(plan)`, `groupWarnings(open)`, `summaryParts(groups)` (trả mảng text + link để render), `homeHint(groups)`, `exportLine(groups)`, `resolveSpan(plan, warning, currentFields)`. Test bằng đúng bảng §3.3 và các span sai ở E3.
+- Hàm thuần (có unit test): `openWarnings(plan)`, `groupWarnings(open)`, `locPhrase(places)` (danh sách phẳng, §3.2), `summaryParts(groups)` (trả mảng text + link để render, nối bằng dấu phẩy khi có cụm chứa "và"), `homeHint(postgenSummary)`, `exportLine(groups)`, `resolveSpan(plan, warning, currentFields)`. Test bằng đúng bảng §3.3 (kể cả các dòng v1.1 và kiểm C21) và các span sai ở E3.
+- `resolveSpan`: tách `span.field` theo dấu chấm và đọc giá trị thật trên hoạt động (`content`, `organization.assignTask`, `subActivities.0.products`) hoặc mục (mảng thì `join("\n")`, hoặc một phần tử nếu path có chỉ số, xem Q-BE8). Trả `null` (chỉ chip) khi field không có, offset sai, text đã đổi so với bản server, hoặc span kiểu cũ `activity` / `subActivities.{k}`. Không có thuật toán đổi offset.
 - Component: `ReviewSummaryNote`, `ReviewChipRow`, `ReviewUnderlineTextarea` (backdrop), `ReviewHint`, `ReviewExportLine`, và một vùng `aria-live` dùng chung trong editor.
 - API client: `ackPostgenWarning(planId, warningId)` → `POST /plans/${planId}/warnings/${warningId}/ack`.
 - Không đụng `lib/wait-copy.ts` / toast xong.
@@ -576,7 +604,7 @@ Chuyển trạng thái: `showing` sang `showing` khi ack một phần hoặc rev
 
 ## 13. Ảnh chụp và URL prototype
 
-Ảnh chụp từ prototype đã cập nhật bằng headless Chrome (1280×800 desktop; 375×812 @2x mobile; `&embed=1` để ẩn panel review). URL prototype nên mở kèm `&embed=1` nếu muốn ẩn panel Demo.
+Ảnh chụp từ prototype đã cập nhật bằng headless Chrome (1280×800 desktop; 375×812 @2x mobile; `&embed=1` để ẩn panel review). v1.1 chụp lại cả bộ. Ảnh của các câu đã duyệt không đổi, có thêm 6 ảnh `mixed3`. URL prototype nên mở kèm `&embed=1` nếu muốn ẩn panel Demo.
 
 Gốc ảnh: `https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/`
 Gốc prototype: `https://lequanghuy.github.io/giaoan-review-note-proto/`
@@ -588,6 +616,9 @@ Gốc prototype: `https://lequanghuy.github.io/giaoan-review-note-proto/`
 | 2 loại · HĐ2 số liệu + HĐ3 nội dung | [desktop-two.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/desktop-two.png) | [?state=two](https://lequanghuy.github.io/giaoan-review-note-proto/?state=two) |
 | 3 vị trí · "Hoạt động 2, 3 và 4" | [desktop-three.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/desktop-three.png) | [?state=three](https://lequanghuy.github.io/giaoan-review-note-proto/?state=three) |
 | Nhiều loại · HĐ2 + mục Phẩm chất | [desktop-mixed.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/desktop-mixed.png) | [?state=mixed](https://lequanghuy.github.io/giaoan-review-note-proto/?state=mixed) |
+| **v1.1 dấu phẩy (Q-BA2)** · HĐ2, 3 số liệu + HĐ4 nội dung + Phẩm chất câu chữ | [desktop-mixed3.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/desktop-mixed3.png) | [?state=mixed3](https://lequanghuy.github.io/giaoan-review-note-proto/?state=mixed3) |
+| mixed3: chip "Nên soát nội dung" + gạch chân tại HĐ4 | [desktop-mixed3-hd4.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/desktop-mixed3-hd4.png) | [?state=mixed3](https://lequanghuy.github.io/giaoan-review-note-proto/?state=mixed3) (cuộn tới HĐ4) |
+| mixed3 sau "Đã soát" HĐ4: "…Hoạt động 2 và 3, câu chữ ở mục Phẩm chất" | [desktop-mixed3-after-ack-hd4.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/desktop-mixed3-after-ack-hd4.png) | [?state=mixed3](https://lequanghuy.github.io/giaoan-review-note-proto/?state=mixed3) → "Đã soát" ở HĐ4 |
 | Câu chữ · mục Phẩm chất | [desktop-phamchat.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/desktop-phamchat.png) | [?state=phamchat](https://lequanghuy.github.io/giaoan-review-note-proto/?state=phamchat) |
 | **Chỉ chip, không có vị trí câu** (tóm tắt) | [desktop-nopos.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/desktop-nopos.png) | [?state=nopos](https://lequanghuy.github.io/giaoan-review-note-proto/?state=nopos) |
 | **Chỉ chip** tại HĐ2 (không gạch chân) | [desktop-nopos-chip.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/desktop-nopos-chip.png) | [?state=nopos](https://lequanghuy.github.io/giaoan-review-note-proto/?state=nopos) |
@@ -601,15 +632,18 @@ Gốc prototype: `https://lequanghuy.github.io/giaoan-review-note-proto/`
 | Revise đổi HĐ2: câu đã viết lại, hết chip | [desktop-two-after-revise-hd2-section.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/desktop-two-after-revise-hd2-section.png) | như trên |
 | **Soát xong** (ngay sau "Đã soát" cuối cùng) | [desktop-done-message.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/desktop-done-message.png) | [?state=one](https://lequanghuy.github.io/giaoan-review-note-proto/?state=one) → "Đã soát" |
 | Soát xong (state demo) | [desktop-reviewed.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/desktop-reviewed.png) | [?state=reviewed](https://lequanghuy.github.io/giaoan-review-note-proto/?state=reviewed) |
-| Home · 1 chỗ + hàng guardrail "Cần xem lại" | [desktop-home.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/desktop-home.png) | [?state=home&plan=one](https://lequanghuy.github.io/giaoan-review-note-proto/?state=home&plan=one) |
-| Home · dạng đếm "Nên soát 2 chỗ · HĐ2, HĐ3" | [desktop-home-two.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/desktop-home-two.png) | [?state=home&plan=two](https://lequanghuy.github.io/giaoan-review-note-proto/?state=home&plan=two) |
+| Home · 1 chỗ + hàng guardrail "Cần xem lại" (phase 2) | [desktop-home.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/desktop-home.png) | [?state=home&plan=one](https://lequanghuy.github.io/giaoan-review-note-proto/?state=home&plan=one) |
+| Home · dạng đếm "Nên soát 2 chỗ · HĐ2, HĐ3" (phase 2) | [desktop-home-two.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/desktop-home-two.png) | [?state=home&plan=two](https://lequanghuy.github.io/giaoan-review-note-proto/?state=home&plan=two) |
 | Xuất file · 1 chỗ | [desktop-export.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/desktop-export.png) | [?state=export&plan=one](https://lequanghuy.github.io/giaoan-review-note-proto/?state=export&plan=one) |
 | Xuất file · HĐ2 + mục Phẩm chất | [desktop-export-mixed.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/desktop-export-mixed.png) | [?state=export&plan=mixed](https://lequanghuy.github.io/giaoan-review-note-proto/?state=export&plan=mixed) |
+| Home · mixed3 "Nên soát 4 chỗ · HĐ2, HĐ3, HĐ4, Phẩm chất" (phase 2) | [desktop-home-mixed3.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/desktop-home-mixed3.png) | [?state=home&plan=mixed3](https://lequanghuy.github.io/giaoan-review-note-proto/?state=home&plan=mixed3) |
+| Xuất file · mixed3 "Còn 4 chỗ nên soát ở Hoạt động 2, 3, 4 và mục Phẩm chất" | [desktop-export-mixed3.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/desktop-export-mixed3.png) | [?state=export&plan=mixed3](https://lequanghuy.github.io/giaoan-review-note-proto/?state=export&plan=mixed3) |
 | Ghi chú thiết kế (panel) | [desktop-design-notes.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/desktop-design-notes.png) | [?state=one&notes=1](https://lequanghuy.github.io/giaoan-review-note-proto/?state=one&notes=1) |
 | Mobile 375 · `one` đầu trang | [mobile-one-top.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/mobile-one-top.png) | [?state=one&embed=1](https://lequanghuy.github.io/giaoan-review-note-proto/?state=one&embed=1) (khung 375) hoặc [?state=one&mobile=1](https://lequanghuy.github.io/giaoan-review-note-proto/?state=one&mobile=1) |
 | Mobile 375 · `one` tóm tắt | [mobile-one.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/mobile-one.png) | như trên |
 | Mobile 375 · `one` chip + gạch chân | [mobile-one-chip.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/mobile-one-chip.png) | như trên |
 | Mobile 375 · `mixed` | [mobile-mixed.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/mobile-mixed.png) | [?state=mixed&mobile=1](https://lequanghuy.github.io/giaoan-review-note-proto/?state=mixed&mobile=1) |
+| Mobile 375 · `mixed3` | [mobile-mixed3.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/mobile-mixed3.png) | [?state=mixed3&mobile=1](https://lequanghuy.github.io/giaoan-review-note-proto/?state=mixed3&mobile=1) |
 | Mobile 375 · chỉ chip | [mobile-nopos-chip.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/mobile-nopos-chip.png) | [?state=nopos&mobile=1](https://lequanghuy.github.io/giaoan-review-note-proto/?state=nopos&mobile=1) |
 | Mobile 375 · soát xong | [mobile-done-message.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/mobile-done-message.png) | [?state=one&mobile=1](https://lequanghuy.github.io/giaoan-review-note-proto/?state=one&mobile=1) → "Đã soát" |
 | Mobile 375 · Home | [mobile-home.png](https://lequanghuy.github.io/giaoan-review-note-proto/spec/shots/mobile-home.png) | [?state=home&plan=two&mobile=1](https://lequanghuy.github.io/giaoan-review-note-proto/?state=home&plan=two&mobile=1) |
