@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Giáo án · GiaoAn AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --blue:#2563EB;--blue-h:#1D4ED8;--blue-s:#EFF6FF;--blue-b:#BFDBFE;
+  --g50:#F9FAFB;--g100:#F3F4F6;--g200:#E5E7EB;--g300:#D1D5DB;--g400:#9CA3AF;
+  --g500:#6B7280;--g600:#4B5563;--g700:#374151;--g800:#1F2937;--g900:#111827;
+  --green:#059669;--gs:#ECFDF5;--amber:#D97706;--as:#FFFBEB;--red:#DC2626;--rs:#FEF2F2;
+  --a50:#FFFBEB;--a100:#FEF3C7;--a200:#FDE68A;--a300:#FCD34D;--a400:#FBBF24;--a500:#F59E0B;--a600:#D97706;--a700:#B45309;--a800:#92400E;
+  --s600:#475569;--s700:#334155;--s800:#1E293B;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:Inter,system-ui,sans-serif;background:var(--g50);color:var(--g800);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;font-size:inherit}
+input{font-family:inherit;font-size:14px}
+a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:4px}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.screen{display:none;min-height:100vh}.screen.active{display:flex;flex-direction:column}
+.topbar{height:56px;background:#fff;border-bottom:1px solid var(--g200);display:flex;align-items:center;justify-content:space-between;padding:0 28px;flex-shrink:0;gap:12px}
+.topbar-left{display:flex;align-items:center;gap:16px;min-width:0}
+.logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:16px;color:var(--g900);cursor:pointer;flex-shrink:0}
+.logo-mark{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#2563EB,#3B82F6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700}
+.breadcrumb{display:flex;align-items:center;gap:8px;color:var(--g500);font-size:13px;min-width:0}
+.breadcrumb .sep{color:var(--g300)}.breadcrumb .current{color:var(--g800);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:420px}
+.topbar-right{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--blue-s);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:12px;border:1px solid var(--blue-b)}
+.user-email{color:var(--g600);font-size:13px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:9px 16px;border-radius:8px;font-weight:550;font-size:14px;transition:background .15s,border-color .15s;white-space:nowrap}
+.btn-primary{background:var(--blue);color:#fff;box-shadow:0 1px 2px rgba(37,99,235,.25)}.btn-primary:hover{background:var(--blue-h)}
+.btn-secondary{background:#fff;color:var(--g700);border:1px solid var(--g200)}.btn-secondary:hover{background:var(--g50);border-color:var(--g300)}
+.btn-ghost{background:transparent;color:var(--g600);padding:8px 12px}.btn-ghost:hover{background:var(--g100);color:var(--g800)}
+.btn-sm{padding:6px 12px;font-size:13px}
+.btn-xl{padding:14px 28px;font-size:15px;border-radius:10px;width:100%}
+/* Home */
+.page-body{flex:1;padding:20px 32px 32px;max-width:1080px;width:100%;margin:0 auto}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:16px}
+.page-header h1{font-size:20px;font-weight:700;color:var(--g900)}
+.page-header p{color:var(--g500);margin-top:2px;font-size:13px}
+.filters{display:flex;gap:12px;margin-bottom:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.filter-chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{padding:5px 12px;border-radius:20px;border:1px solid var(--g200);background:#fff;color:var(--g600);font-size:12px;font-weight:500}.chip.active{background:var(--blue-s);border-color:var(--blue-b);color:var(--blue);font-weight:600}
+.home-search{padding:6px 12px;border:1px solid var(--g200);border-radius:8px;background:#fff;color:var(--g800);outline:none;min-width:200px;font-size:13px}
+.table-card{background:#fff;border:1px solid var(--g200);border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+table{width:100%;border-collapse:collapse}
+thead th{text-align:left;padding:8px 12px;font-size:11px;font-weight:600;color:var(--g500);text-transform:uppercase;letter-spacing:.04em;background:var(--g50);border-bottom:1px solid var(--g200)}
+tbody tr{border-bottom:1px solid var(--g100);cursor:pointer}tbody tr:last-child{border-bottom:none}tbody tr:hover{background:var(--blue-s)}
+tbody td{padding:9px 12px;color:var(--g700);vertical-align:middle}
+td.name{font-weight:550;color:var(--g900)}
+.row-open{font-weight:550;color:var(--g900);text-align:left;padding:0;line-height:1.45}
+.row-open:hover{text-decoration:underline}
+.card-hint{display:flex;align-items:center;gap:5px;margin-top:3px;font-size:12px;font-weight:500;color:var(--a700);line-height:1.3}
+.card-hint[hidden]{display:none}
+.card-hint svg{flex-shrink:0}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:550;white-space:nowrap}
+.badge-generated{background:var(--blue-s);color:var(--blue)}
+.badge-exported{background:var(--gs);color:var(--green)}
+.badge-running{background:var(--blue-s);color:var(--blue);border:1px solid var(--blue-b)}
+.badge-flagged{background:var(--as);color:var(--amber);border:1px solid #FDE68A}
+.badge-blocked{background:var(--rs);color:var(--red);border:1px solid #FECACA}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+/* Editor */
+#screen-editor.active{height:100vh}
+.editor-layout{flex:1;display:flex;overflow:hidden;min-height:0}
+.editor-main{flex:1;overflow-y:auto;padding:20px 36px 96px;width:100%}
+.editor-inner{max-width:780px;margin:0 auto}
+.editor-sidebar{width:260px;border-left:1px solid var(--g200);background:#fff;padding:20px 16px;overflow-y:auto;flex-shrink:0}
+.meta-fields{background:#fff;border:1px solid var(--g200);border-radius:10px;padding:12px;margin-bottom:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.meta-fields .mf{display:flex;flex-direction:column;gap:4px}
+.meta-fields .mf.full{grid-column:1/-1}
+.meta-fields label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--g500)}
+.meta-fields input{padding:8px 10px;border:1px solid var(--g200);border-radius:6px;background:var(--g50);color:var(--g800);outline:none;width:100%}
+.meta-fields input:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.done-banner{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;margin-bottom:10px;background:var(--gs);border:1px solid #A7F3D0}
+.done-banner .t{font-weight:600;font-size:14px;color:#047857}
+.check-circle{width:18px;height:18px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.khbd-title{text-align:center;font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--g900);margin:6px 0 10px}
+.helper-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;font-size:13px;color:var(--g500)}
+.version-badge{background:var(--g100);padding:2px 8px;border-radius:4px;font-weight:600;color:var(--g700);font-size:12px}
+.section-title{font-size:15px;font-weight:700;color:var(--g900);margin:22px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--g200)}
+.section-title.first{margin-top:8px}
+.sub-label{font-size:13px;font-weight:600;color:var(--g700);margin:10px 0 6px}
+.block{background:#fff;border:1px solid var(--g200);border-radius:10px;margin-bottom:10px;position:relative;scroll-margin-top:16px}
+.block:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.block:focus{outline:none}
+#pc-block{scroll-margin-top:48px}
+.block-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 0;gap:8px}
+.block-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--g500)}
+.block-body{padding:8px 14px 14px;outline:none;min-height:40px;color:var(--g800);line-height:1.65}
+.block-body ul{padding-left:20px}.block-body li{margin-bottom:4px}.block-body p+p{margin-top:6px}
+.activity{background:#fff;border:1px solid var(--g200);border-radius:12px;margin-bottom:14px;overflow:hidden;scroll-margin-top:16px}
+.activity:focus{outline:none}
+.activity-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--g50);border-bottom:1px solid var(--g200);gap:10px;cursor:pointer;user-select:none;width:100%;text-align:left}
+.activity-head:hover{background:var(--g100)}
+.activity-head-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.activity-head h4{font-size:14px;font-weight:700;color:var(--g900)}
+.activity-chevron{color:var(--g400);font-size:12px;transition:transform .2s;flex-shrink:0;line-height:1}
+.activity.collapsed .activity-chevron{transform:rotate(-90deg)}
+.activity.collapsed .activity-inner{display:none}
+.activity.collapsed .activity-head{border-bottom:none}
+.activity-badges{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.activity-badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:600;background:var(--blue-s);color:var(--blue);border:1px solid var(--blue-b)}
+.activity-inner{padding:12px 14px 6px}
+.nested{margin-bottom:8px}
+.nested .block-label{color:var(--blue)}
+.editor-actions{display:flex;gap:10px;margin-top:24px;padding-top:18px;border-top:1px solid var(--g200);flex-wrap:wrap}
+.sidebar-section{margin-bottom:24px}
+.sidebar-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--g500);margin-bottom:10px}
+.sidebar-item{display:block;width:100%;text-align:left;padding:8px 10px;border-radius:6px;font-size:13px;color:var(--g600)}
+.sidebar-item:hover{background:var(--g50)}.sidebar-item.active{background:var(--blue-s);color:var(--blue);font-weight:550}
+.sidebar-sub{padding-left:18px;font-size:12px;color:var(--g500)}
+/* ===== Review note (feature) ===== */
+.rv-note{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;margin:0 0 14px;background:var(--a50);border:1px solid var(--a200);border-radius:12px;color:var(--s700);scroll-margin-top:16px}
+.rv-note[hidden]{display:none}
+.rv-note:focus{outline:none}
+.rv-note:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.rv-icon{color:var(--a700);flex-shrink:0;margin-top:2px}
+.rv-title{font-size:14px;font-weight:600;color:var(--s800);line-height:1.5}
+.rv-sub{font-size:13px;color:var(--s600);line-height:1.5;margin-top:2px}
+.rv-link{position:relative;display:inline;color:var(--blue-h);font-weight:600;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;padding:0 1px;border-radius:4px;line-height:inherit}
+.rv-link:hover{color:#1E40AF;text-decoration-thickness:2px}
+.rv-note.is-done{align-items:center;background:#fff;border-color:var(--g200);padding:8px 14px;transition:opacity .6s ease}
+.rv-note.is-done .rv-title{font-weight:500;color:var(--s700);font-size:13px}
+.rv-note.is-done .rv-icon{color:var(--green);margin-top:0}
+.rv-note.fade{opacity:0}
+.rv-chiprow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 16px 0}
+.rv-chiprow[hidden]{display:none}
+.activity.collapsed .rv-chiprow{padding-bottom:10px}
+.block .rv-chiprow{padding:8px 14px 0}
+.rv-chip{display:inline-flex;align-items:center;gap:6px;padding:3px 4px 3px 9px;border-radius:20px;background:var(--a50);border:1px solid var(--a200);color:var(--a800);font-size:12px;font-weight:600;line-height:1.4}
+.rv-chip svg{color:var(--a700);flex-shrink:0}
+.rv-done{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;min-height:24px;border-radius:20px;background:#fff;border:1px solid var(--a200);color:var(--s700);font-size:12px;font-weight:600;position:relative}
+.rv-done:hover{background:var(--g50);border-color:var(--a300)}
+.rv-done svg{color:var(--green)}
+.rv-sus{text-decoration-line:underline;text-decoration-style:dotted;text-decoration-color:var(--a600);text-decoration-thickness:2px;text-underline-offset:4px;text-decoration-skip-ink:none;cursor:help;border-radius:2px}
+.rv-sus:hover{background:var(--a50)}
+.rv-ring{border-color:var(--a500)!important;box-shadow:0 0 0 4px rgba(251,191,36,.45)!important}
+.activity,.block{transition:box-shadow .35s ease,border-color .35s ease}
+@media (prefers-reduced-motion:reduce){
+  .activity,.block,.rv-note.is-done,.activity-chevron,.toast{transition:none!important}
+  .pulse-dot{animation:none}
+}
+/* Export */
+#screen-export.active{height:100vh}
+.export-layout{flex:1;display:flex;overflow:hidden;min-height:0}
+.export-preview{flex:1;overflow-y:auto;padding:20px 28px 40px;display:flex;flex-direction:column;align-items:center;background:#E8EAED}
+.ex-hint{width:794px;max-width:100%;display:flex;align-items:center;flex-wrap:wrap;gap:6px 8px;margin:0 0 12px;padding:8px 12px;background:#fff;border:1px solid var(--g200);border-radius:8px;font-size:13px;color:var(--s600);flex-shrink:0}
+.ex-hint[hidden]{display:none}
+.ex-hint svg{color:var(--a700);flex-shrink:0}
+.ex-hint .sep{color:var(--g400)}
+.ex-hint button{color:var(--blue-h);font-weight:600;text-decoration:underline;text-underline-offset:3px;padding:2px;border-radius:4px}
+.doc-preview{width:794px;max-width:100%;background:#fff;box-shadow:0 8px 28px rgba(0,0,0,.14);border-radius:2px;padding:64px 76px 72px;font-family:"Times New Roman",Times,serif;color:#000;font-size:13pt;line-height:1.5;flex-shrink:0}
+.doc-preview .pl4-cap{text-align:center;font-size:11pt;font-weight:700;text-transform:uppercase;margin-bottom:2px}
+.doc-preview .pl4-subcap{text-align:center;font-size:10pt;font-style:italic;margin-bottom:18px;color:#222}
+.doc-preview .dots{border-bottom:1px dotted #333;display:inline-block;min-width:160px;padding:0 4px}
+.doc-preview .pl4-center-title{text-align:center;font-size:14pt;font-weight:700;text-transform:uppercase;margin:16px 0 6px}
+.doc-preview .pl4-lesson{text-align:center;font-size:13pt;font-weight:700;margin:0 0 10px}
+.doc-preview h3{font-size:13pt;font-weight:700;margin:16px 0 8px}
+.doc-preview h4{font-size:12.5pt;font-weight:700;margin:12px 0 6px}
+.doc-preview .ab{font-weight:700;margin:6px 0 2px;font-size:12pt}
+.doc-preview p,.doc-preview li{font-size:12pt;line-height:1.55;margin:0 0 4px}
+.doc-preview ul{padding-left:22px;margin:0 0 6px}
+.doc-preview .foot{font-size:10.5pt;margin-top:20px;padding-top:10px;border-top:1px solid #ccc;color:#333}
+.export-panel{width:340px;background:#fff;border-left:1px solid var(--g200);flex-shrink:0;display:flex;flex-direction:column;overflow-y:auto}
+.export-panel-top{padding:24px 24px 16px;border-bottom:1px solid var(--g200)}
+.export-panel h2{font-size:18px;font-weight:700;color:var(--g900);margin-bottom:6px}
+.export-panel .desc{color:var(--g500);font-size:13px;margin-bottom:16px;line-height:1.55}
+.export-btns{display:flex;flex-direction:column;gap:10px}
+.export-panel-body{padding:20px 24px 28px;flex:1;display:flex;flex-direction:column}
+.success-box{background:var(--gs);border:1px solid #A7F3D0;border-radius:10px;padding:14px 16px;font-size:13px;color:#047857;line-height:1.55}
+.success-box[hidden]{display:none}
+.success-box strong{display:block;margin-bottom:4px;font-size:14px}
+.export-note{margin-top:auto;padding-top:20px;border-top:1px solid var(--g100);font-size:12px;color:var(--g500);line-height:1.6}
+/* Toast */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--g900);color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:500;box-shadow:0 12px 40px rgba(0,0,0,.18);z-index:200;opacity:0;transition:all .3s;pointer-events:none;display:flex;align-items:center;gap:12px}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+.toast .ck{color:#6EE7B7;font-weight:700}
+.toast button{color:#93C5FD;font-weight:600;text-decoration:underline;font-size:13px}
+/* Demo + design notes panels (reviewer chrome) */
+.demo-panel{position:fixed;bottom:16px;right:16px;background:#fff;border:2px solid var(--g800);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.14);z-index:90;width:214px;font-size:11px}
+.panel-toggle{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;padding:8px 12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--g900)}
+.panel-toggle .lbl{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.demo-panel .panel-toggle .lbl::before{content:'';width:8px;height:8px;border-radius:2px;background:var(--amber)}
+.panel-toggle .chev{transition:transform .2s;font-size:10px;color:var(--g500)}
+.panel-toggle[aria-expanded="false"] .chev{transform:rotate(180deg)}
+.panel-body{padding:0 10px 10px}
+.panel-body[hidden]{display:none}
+.demo-panel button.d{display:block;width:100%;text-align:left;padding:5px 8px;border-radius:6px;font-size:11px;font-weight:500;color:var(--g600);margin-bottom:2px}
+.demo-panel button.d:hover{background:var(--g100);color:var(--g800)}
+.demo-panel button.d.active{background:var(--blue-s);color:var(--blue);font-weight:600}
+.demo-row{display:flex;align-items:center;justify-content:space-between;padding:6px 8px;margin-top:4px;border-top:1px solid var(--g200);color:var(--g600)}
+.toggle-sw{width:32px;height:18px;border-radius:9px;background:var(--g300);position:relative;transition:background .2s;flex-shrink:0}
+.toggle-sw[aria-checked="true"]{background:var(--blue)}
+.toggle-sw::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.toggle-sw[aria-checked="true"]::after{left:16px}
+.demo-reset{width:100%;margin-top:6px;padding:6px 8px;border-radius:6px;border:1px solid var(--g200);font-size:11px;font-weight:600;color:var(--g700)}
+.demo-reset:hover{background:var(--g50)}
+.demo-foot{color:var(--g500);font-size:10.5px;line-height:1.4;padding:6px 4px 0}
+.notes-panel{position:fixed;bottom:16px;left:16px;background:#fff;border:1px solid var(--g300);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:89;width:360px;max-width:calc(100vw - 32px)}
+.notes-panel .panel-toggle{width:auto;gap:10px}
+.notes-panel .panel-toggle .lbl::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--blue)}
+.notes-panel[data-open="false"]{width:auto}
+.notes-panel .panel-body{max-height:min(60vh,520px);overflow-y:auto;padding:0 14px 12px}
+.notes-panel ol{padding-left:18px;font-size:12px;color:var(--g700);line-height:1.5}
+.notes-panel li{margin-bottom:6px}
+.notes-panel b{color:var(--g900)}
+.notes-panel .ref{font-size:11px;color:var(--g500);margin-top:6px}
+body.embed .demo-panel,body.embed .notes-panel{display:none}
+.mframe{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:150;display:flex;align-items:center;justify-content:center}
+.mframe[hidden]{display:none}
+.mframe .phone{width:399px;height:min(800px,calc(100vh - 40px));background:#111827;border-radius:36px;padding:12px;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.mframe iframe{width:375px;height:100%;border:0;border-radius:26px;background:#fff;display:block}
+.mframe .close{position:absolute;top:16px;right:16px;background:#fff;border-radius:8px;padding:8px 12px;font-weight:600;font-size:13px}
+/* Mobile 375 */
+@media (max-width:720px){
+  .topbar{padding:0 12px}
+  .user-email,.breadcrumb,.hide-m{display:none}
+  .topbar-right{gap:6px}
+  .topbar .btn-sm{min-height:44px;padding:6px 10px}
+  #screen-editor.active,#screen-export.active{height:auto}
+  .editor-layout,.export-layout{display:block;overflow:visible}
+  .editor-main{overflow:visible;padding:12px 12px 120px}
+  .editor-sidebar{display:none}
+  .meta-fields{gap:8px;padding:10px}
+  .activity-badges{display:none}
+  .activity-head{min-height:48px}
+  .rv-note{padding:10px 12px;gap:8px}
+  .rv-title{line-height:1.6}
+  .rv-link::after{content:'';position:absolute;left:-4px;right:-4px;top:50%;height:44px;transform:translateY(-50%)}
+  .rv-chiprow{padding:10px 12px 0}
+  .rv-chip{padding:4px 4px 4px 10px}
+  .rv-done{min-height:36px;padding:4px 12px}
+  .rv-done::after{content:'';position:absolute;left:0;right:0;top:50%;height:44px;transform:translateY(-50%)}
+  .page-body{padding:14px 12px 120px}
+  .col-khoi,.col-upd,.col-mon{display:none}
+  .home-search{min-width:0;width:100%}
+  .export-preview{padding:12px 8px 24px}
+  .doc-preview{padding:28px 20px 36px}
+  .export-panel{width:100%;border-left:none;border-top:1px solid var(--g200)}
+  .demo-panel{width:188px;bottom:10px;right:10px}
+  .notes-panel{bottom:10px;left:10px;max-width:calc(100vw - 20px)}
+  .notes-panel[data-open="false"]{max-width:none;width:auto}
+  .notes-panel[data-open="false"] .panel-toggle,.demo-panel .panel-toggle[aria-expanded="false"]{padding:7px 10px}
+  .demo-panel:has(.panel-toggle[aria-expanded="false"]){width:auto}
+  .notes-panel[data-open="true"]{bottom:56px;z-index:95}
+  .toast{max-width:calc(100vw - 24px)}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-look" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/><path d="M11 8v3.2"/><path d="M11 14h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.8 2.8L16 10"/></symbol>
+</svg>
+<!-- ================= HOME ================= -->
+<div id="screen-home" class="screen">
+<div class="topbar">
+  <div class="topbar-left"><div class="logo" onclick="go('home')"><div class="logo-mark">G</div>GiaoAn AI</div></div>
+  <div class="topbar-right"><span class="user-email">huy.le@truongthcs.edu.vn</span><div class="avatar">HL</div></div>
+</div>
+<main class="page-body">
+  <div class="page-header">
+    <div><h1>Giáo án của tôi</h1><p>6 tiết · Toán · Ngữ văn · Tiếng Anh</p></div>
+    <button class="btn btn-primary">+ Tạo tiết mới</button>
+  </div>
+  <div class="filters">
+    <div class="filter-chips">
+      <button class="chip active">Tất cả</button><button class="chip">Toán</button><button class="chip">Ngữ văn</button><button class="chip">Tiếng Anh</button>
+    </div>
+    <input class="home-search" type="search" placeholder="Tìm tiết…" aria-label="Tìm tiết"/>
+  </div>
+  <div class="table-card"><table>
+    <thead><tr><th style="width:46%">Tên tiết</th><th class="col-mon">Môn</th><th class="col-khoi">Khối</th><th>Trạng thái</th><th class="col-upd">Cập nhật</th></tr></thead>
+    <tbody>
+      <tr><td class="name">Bài 3: Phân số bằng nhau</td><td class="col-mon">Toán</td><td class="col-khoi">6</td>
+        <td><span class="badge badge-running"><span class="pulse-dot"></span>Đang soạn…</span></td><td class="col-upd">Vừa xong</td></tr>
+      <tr id="row-target" onclick="openFromHome(event)">
+        <td class="name">
+          <button class="row-open" id="row-open" onclick="openFromHome(event)">Góc tạo bởi một đường thẳng cắt hai đường thẳng song song</button>
+          <div class="card-hint" id="card-hint" hidden><svg width="13" height="13" aria-hidden="true"><use href="#i-look"/></svg><span id="card-hint-text">Nên soát số liệu · HĐ2</span></div>
+        </td>
+        <td class="col-mon">Toán</td><td class="col-khoi">7</td>
+        <td><span class="badge badge-generated"><span class="badge-dot"></span>Đã soạn</span></td><td class="col-upd">10 phút trước</td></tr>
+      <tr><td class="name">Phương trình bậc nhất một ẩn</td><td class="col-mon">Toán</td><td class="col-khoi">8</td>
+        <td><span class="badge badge-flagged"><span class="badge-dot"></span>Cần xem lại</span></td><td class="col-upd">Hôm qua</td></tr>
+      <tr><td class="name">Unit 5: Holidays</td><td class="col-mon">Tiếng Anh</td><td class="col-khoi">7</td>
+        <td><span class="badge badge-blocked"><span class="badge-dot"></span>Chưa soạn được</span></td><td class="col-upd">2 ngày trước</td></tr>
+      <tr><td class="name">Văn bản nghị luận xã hội</td><td class="col-mon">Ngữ văn</td><td class="col-khoi">9</td>
+        <td><span class="badge badge-generated"><span class="badge-dot"></span>Đã soạn</span></td><td class="col-upd">3 ngày trước</td></tr>
+      <tr><td class="name">Hình vuông và hình chữ nhật</td><td class="col-mon">Toán</td><td class="col-khoi">6</td>
+        <td><span class="badge badge-exported"><span class="badge-dot"></span>Đã xuất</span></td><td class="col-upd">4 ngày trước</td></tr>
+    </tbody>
+  </table></div>
+</main>
+</div>
+
+<!-- ================= EDITOR ================= -->
+<div id="screen-editor" class="screen">
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo" onclick="go('home')"><div class="logo-mark">G</div>GiaoAn AI</div>
+    <div class="breadcrumb"><span class="sep">/</span><a href="#" onclick="go('home');return false;">Giáo án</a><span class="sep">/</span><span class="current">Góc tạo bởi một đường thẳng cắt hai đường thẳng song song</span></div>
+  </div>
+  <div class="topbar-right">
+    <button class="btn btn-ghost btn-sm" onclick="go('home')" aria-label="Về danh sách">← <span class="hide-m">Về danh sách</span></button>
+    <button class="btn btn-secondary btn-sm" onclick="go('export')">Xuất file</button>
+    <div class="avatar">HL</div>
+  </div>
+</div>
+<div class="editor-layout">
+  <div class="editor-main" id="editor-main">
+   <div class="editor-inner">
+    <div class="done-banner"><div class="check-circle" aria-hidden="true">✓</div><div class="t">Giáo án đã soạn xong</div></div>
+    <div class="meta-fields">
+      <div class="mf"><label for="m1">Trường</label><input id="m1" type="text" value="THCS Nguyễn Du"/></div>
+      <div class="mf"><label for="m2">Tổ</label><input id="m2" type="text" value="Tổ Toán — Tin"/></div>
+      <div class="mf"><label for="m3">Họ tên GV</label><input id="m3" type="text" value="Huy Lê"/></div>
+      <div class="mf"><label for="m4">Thời gian</label><input id="m4" type="text" value="1 tiết (45 phút)"/></div>
+      <div class="mf full"><label for="m5">Tên bài dạy</label><input id="m5" type="text" value="Góc tạo bởi một đường thẳng cắt hai đường thẳng song song"/></div>
+      <div class="mf"><label for="m6">Môn học / HĐGD</label><input id="m6" type="text" value="Toán"/></div>
+      <div class="mf"><label for="m7">Lớp</label><input id="m7" type="text" value="7"/></div>
+    </div>
+
+    <p class="khbd-title">Kế hoạch bài dạy</p>
+    <div class="helper-row"><span class="version-badge">v1</span><span>theo khung Phụ lục IV · GV tự thẩm định</span></div>
+
+    <!-- Review note: summary line -->
+    <div class="rv-note" id="rv-note" role="note" aria-labelledby="rv-title" tabindex="-1" hidden>
+      <svg class="rv-icon" id="rv-icon" width="18" height="18" aria-hidden="true"><use href="#i-look"/></svg>
+      <div>
+        <p class="rv-title" id="rv-title">Nên soát lại số liệu ở Hoạt động 2</p>
+        <p class="rv-sub" id="rv-sub">Hệ thống đã tự kiểm tra và chỉnh một lượt, nhưng còn chỗ chưa chắc chắn. Thầy cô xem nhanh trước khi dùng.</p>
+      </div>
+    </div>
+    <div class="sr-only" role="status" aria-live="polite" id="rv-live"></div>
+    <span class="sr-only" id="rv-desc">Câu này nên được soát lại</span>
+
+    <div class="section-title first" id="sec-1">I. Mục tiêu</div>
+    <div class="sub-label">1. Về kiến thức</div>
+    <div class="block"><div class="block-header"><span class="block-label">Kiến thức</span></div>
+      <div class="block-body" contenteditable="true"><ul>
+        <li>Nhận biết được các cặp góc so le trong, đồng vị, trong cùng phía tạo bởi một đường thẳng cắt hai đường thẳng.</li>
+        <li>Phát biểu được tính chất: nếu một đường thẳng cắt hai đường thẳng song song thì hai góc so le trong bằng nhau, hai góc đồng vị bằng nhau, hai góc trong cùng phía bù nhau.</li>
+        <li>Vận dụng được tính chất để tính số đo góc trong hình đơn giản.</li>
+      </ul></div></div>
+    <div class="sub-label">2. Về năng lực</div>
+    <div class="block"><div class="block-header"><span class="block-label">Năng lực</span></div>
+      <div class="block-body" contenteditable="true"><ul>
+        <li><strong>Năng lực toán học:</strong> tư duy và lập luận khi giải thích vì sao hai góc bằng nhau hoặc bù nhau; dùng thước đo góc, ê ke để vẽ và đo.</li>
+        <li><strong>Năng lực giao tiếp toán học:</strong> dùng đúng kí hiệu a // b, Â₁, B̂₁ và các thuật ngữ so le trong, đồng vị, trong cùng phía.</li>
+        <li><strong>Năng lực hợp tác:</strong> phân công đo góc và đối chiếu kết quả trong nhóm.</li>
+      </ul></div></div>
+    <div class="sub-label">3. Về phẩm chất</div>
+    <div class="block" id="pc-block" tabindex="-1" data-flag-container="pc">
+      <div class="block-header"><span class="block-label">Phẩm chất</span></div>
+      <div class="rv-chiprow" data-chip="pc" hidden></div>
+      <div class="block-body" contenteditable="true"><ul>
+        <li><span class="sus" data-flag="pc" data-bad="Trung thực khi báo cáo số đo góc đã kiểm tra, số liệu đúng với hình vẽ." data-good="Trung thực khi báo cáo số đo góc đo được trên hình vẽ.">Trung thực khi báo cáo số đo góc đo được trên hình vẽ.</span></li>
+        <li>Cẩn thận, chính xác khi vẽ hình và sử dụng thước đo góc.</li>
+        <li>Chăm chỉ, có tinh thần hợp tác khi làm việc nhóm.</li>
+      </ul></div></div>
+
+    <div class="section-title" id="sec-2">II. Thiết bị dạy học và học liệu</div>
+    <div class="block"><div class="block-header"><span class="block-label">Thiết bị và học liệu</span></div>
+      <div class="block-body" contenteditable="true"><ul>
+        <li><strong>Giáo viên:</strong> SGK Toán 7 tập một, máy chiếu (nếu có), bảng phụ vẽ hai đường thẳng song song bị một đường thẳng cắt, thước thẳng, thước đo góc.</li>
+        <li><strong>Học sinh:</strong> SGK, thước thẳng, thước đo góc, ê ke, giấy kẻ ô.</li>
+        <li>Phiếu học tập số 1 (đo góc theo nhóm) và phiếu học tập số 2 (bài luyện tập).</li>
+      </ul></div></div>
+
+    <div class="section-title" id="sec-3">III. Tiến trình dạy học</div>
+    <!-- HĐ1 -->
+    <section class="activity" id="hd1" tabindex="-1" aria-labelledby="hd1-h">
+      <button class="activity-head" aria-expanded="true" onclick="toggleAct('hd1')">
+        <span class="activity-head-left"><span class="activity-chevron" aria-hidden="true">▾</span><h4 id="hd1-h">Hoạt động 1: Mở đầu</h4></span>
+        <span class="activity-badges" aria-hidden="true"><span class="activity-badge">a</span><span class="activity-badge">b</span><span class="activity-badge">c</span><span class="activity-badge">d</span></span>
+      </button>
+      <div class="activity-inner">
+        <div class="block nested"><div class="block-header"><span class="block-label">a) Mục tiêu</span></div>
+          <div class="block-body" contenteditable="true"><p>HS nhận ra hình ảnh hai đường thẳng song song bị một đường thẳng cắt trong thực tế và nảy sinh câu hỏi về quan hệ giữa các góc tạo thành.</p></div></div>
+        <div class="block nested"><div class="block-header"><span class="block-label">b) Nội dung</span></div>
+          <div class="block-body" contenteditable="true"><p>GV chiếu ảnh lan can cầu thang (hai thanh ngang song song, một thanh chéo). HS dự đoán: các góc thanh chéo tạo với hai thanh ngang có bằng nhau không?</p></div></div>
+        <div class="block nested"><div class="block-header"><span class="block-label">c) Sản phẩm</span></div>
+          <div class="block-body" contenteditable="true"><p>Dự đoán của HS: một số góc có vẻ bằng nhau, một số góc có vẻ bù nhau; câu hỏi cần kiểm chứng trong tiết học.</p></div></div>
+        <div class="block nested"><div class="block-header"><span class="block-label">d) Tổ chức thực hiện</span></div>
+          <div class="block-body" contenteditable="true"><ul>
+            <li><strong>Giao nhiệm vụ:</strong> GV chiếu ảnh, nêu câu hỏi; HS suy nghĩ cá nhân 1 phút.</li>
+            <li><strong>Thực hiện:</strong> HS trao đổi cặp đôi, ghi dự đoán.</li>
+            <li><strong>Báo cáo, thảo luận:</strong> 2–3 HS nêu dự đoán; lớp nhận xét.</li>
+            <li><strong>Kết luận:</strong> GV ghi nhận các dự đoán, dẫn vào Hoạt động 2.</li>
+          </ul></div></div>
+      </div>
+    </section>
+
+    <!-- HĐ2 -->
+    <section class="activity" id="hd2" tabindex="-1" aria-labelledby="hd2-h" data-flag-container="hd2">
+      <button class="activity-head" aria-expanded="true" onclick="toggleAct('hd2')">
+        <span class="activity-head-left"><span class="activity-chevron" aria-hidden="true">▾</span><h4 id="hd2-h">Hoạt động 2: Hình thành kiến thức mới</h4></span>
+        <span class="activity-badges" aria-hidden="true"><span class="activity-badge">a</span><span class="activity-badge">b</span><span class="activity-badge">c</span><span class="activity-badge">d</span></span>
+      </button>
+      <div class="rv-chiprow" data-chip="hd2" hidden></div>
+      <div class="activity-inner">
+        <div class="block nested"><div class="block-header"><span class="block-label">a) Mục tiêu</span></div>
+          <div class="block-body" contenteditable="true"><p>HS nhận biết các cặp góc so le trong, đồng vị, trong cùng phía; phát hiện và phát biểu được tính chất khi một đường thẳng cắt hai đường thẳng song song.</p></div></div>
+        <div class="block nested"><div class="block-header"><span class="block-label">b) Nội dung</span></div>
+          <div class="block-body" contenteditable="true"><ul>
+            <li>Nhóm 4 HS vẽ a // b bằng thước và ê ke, vẽ đường thẳng c cắt a tại A, cắt b tại B; đánh số các góc Â₁ … Â₄, B̂₁ … B̂₄.</li>
+            <li>Đo các góc, ghi vào phiếu học tập số 1; so sánh từng cặp góc so le trong, đồng vị, trong cùng phía.</li>
+            <li>Ví dụ (Hình 2): a // b, c cắt a tại A và cắt b tại B. <span class="sus" data-flag="hd2" data-bad="Biết Â₁ = 65° thì B̂₁ (đồng vị với Â₁) bằng 110°, B̂₂ (trong cùng phía với Â₁) bằng 115°." data-good="Biết Â₁ = 65° thì B̂₁ (đồng vị với Â₁) bằng 65°, B̂₂ (trong cùng phía với Â₁) bằng 115°.">Biết Â₁ = 65° thì B̂₁ (đồng vị với Â₁) bằng 65°, B̂₂ (trong cùng phía với Â₁) bằng 115°.</span></li>
+          </ul></div></div>
+        <div class="block nested"><div class="block-header"><span class="block-label">c) Sản phẩm</span></div>
+          <div class="block-body" contenteditable="true"><p>Phiếu học tập số 1 có số đo các góc. Kết luận: nếu a // b thì hai góc so le trong bằng nhau, hai góc đồng vị bằng nhau, hai góc trong cùng phía bù nhau.</p></div></div>
+        <div class="block nested"><div class="block-header"><span class="block-label">d) Tổ chức thực hiện</span></div>
+          <div class="block-body" contenteditable="true"><ul>
+            <li><strong>Giao nhiệm vụ:</strong> GV phát phiếu học tập số 1, hướng dẫn cách đánh số góc.</li>
+            <li><strong>Thực hiện:</strong> HS vẽ, đo theo nhóm 4; GV quan sát, hỗ trợ nhóm đặt thước đo góc chưa đúng.</li>
+            <li><strong>Báo cáo, thảo luận:</strong> Đại diện 2 nhóm treo phiếu, trình bày nhận xét về các cặp góc.</li>
+            <li><strong>Kết luận:</strong> GV chốt tính chất, HS ghi vở.</li>
+          </ul></div></div>
+      </div>
+    </section>
+
+    <!-- HĐ3 -->
+    <section class="activity" id="hd3" tabindex="-1" aria-labelledby="hd3-h" data-flag-container="hd3">
+      <button class="activity-head" aria-expanded="true" onclick="toggleAct('hd3')">
+        <span class="activity-head-left"><span class="activity-chevron" aria-hidden="true">▾</span><h4 id="hd3-h">Hoạt động 3: Luyện tập</h4></span>
+        <span class="activity-badges" aria-hidden="true"><span class="activity-badge">a</span><span class="activity-badge">b</span><span class="activity-badge">c</span><span class="activity-badge">d</span></span>
+      </button>
+      <div class="rv-chiprow" data-chip="hd3" hidden></div>
+      <div class="activity-inner">
+        <div class="block nested"><div class="block-header"><span class="block-label">a) Mục tiêu</span></div>
+          <div class="block-body" contenteditable="true"><p>HS vận dụng tính chất để tính số đo góc và trình bày lập luận có căn cứ.</p></div></div>
+        <div class="block nested"><div class="block-header"><span class="block-label">b) Nội dung</span></div>
+          <div class="block-body" contenteditable="true"><ul>
+            <li>Bài 1: Cho a // b, đường thẳng c cắt a tại M, cắt b tại N, M̂₁ = 70°. Tính các góc tại N.</li>
+            <li>Bài 2: Cho m // n, một góc so le trong bằng 48°. Tính góc trong cùng phía với góc đó.</li>
+            <li>Bài 3 (Tìm và sửa câu sai): “Nếu a // b thì hai góc đồng vị bù nhau.”</li>
+          </ul></div></div>
+        <div class="block nested"><div class="block-header"><span class="block-label">c) Sản phẩm</span></div>
+          <div class="block-body" contenteditable="true"><p>Lời giải đủ bước trên phiếu học tập số 2. Đáp án: Bài 1: N̂₁ = N̂₃ = 70°, N̂₂ = N̂₄ = 110°; Bài 2: 132°; Bài 3: sửa thành “hai góc đồng vị bằng nhau”.</p>
+            <p><span class="sus" data-flag="hd3" data-bad="Nhận xét chung: hai góc trong cùng phía luôn không bằng nhau." data-good="Nhận xét chung: hai góc trong cùng phía luôn có tổng bằng 180°.">Nhận xét chung: hai góc trong cùng phía luôn có tổng bằng 180°.</span></p></div></div>
+        <div class="block nested"><div class="block-header"><span class="block-label">d) Tổ chức thực hiện</span></div>
+          <div class="block-body" contenteditable="true"><ul>
+            <li><strong>Giao nhiệm vụ:</strong> GV phát phiếu học tập số 2, yêu cầu ghi rõ căn cứ ở mỗi bước.</li>
+            <li><strong>Thực hiện:</strong> HS làm cá nhân; GV hỗ trợ HS còn nhầm vị trí góc.</li>
+            <li><strong>Báo cáo, thảo luận:</strong> 3 HS lên bảng; lớp đối chiếu, nhận xét.</li>
+            <li><strong>Kết luận:</strong> GV chốt cách trình bày và các nhầm lẫn thường gặp.</li>
+          </ul></div></div>
+      </div>
+    </section>
+
+    <!-- HĐ4 -->
+    <section class="activity" id="hd4" tabindex="-1" aria-labelledby="hd4-h">
+      <button class="activity-head" aria-expanded="true" onclick="toggleAct('hd4')">
+        <span class="activity-head-left"><span class="activity-chevron" aria-hidden="true">▾</span><h4 id="hd4-h">Hoạt động 4: Vận dụng</h4></span>
+        <span class="activity-badges" aria-hidden="true"><span class="activity-badge">a</span><span class="activity-badge">b</span><span class="activity-badge">c</span><span class="activity-badge">d</span></span>
+      </button>
+      <div class="activity-inner">
+        <div class="block nested"><div class="block-header"><span class="block-label">a) Mục tiêu</span></div>
+          <div class="block-body" contenteditable="true"><p>HS vận dụng tính chất vào tình huống thực tế quanh trường, nhà.</p></div></div>
+        <div class="block nested"><div class="block-header"><span class="block-label">b) Nội dung</span></div>
+          <div class="block-body" contenteditable="true"><p>Tìm một hình ảnh có hai đường song song bị một đường thẳng cắt (lan can, vạch kẻ đường, khung cửa sổ); đo một góc, suy ra các góc còn lại và giải thích.</p></div></div>
+        <div class="block nested"><div class="block-header"><span class="block-label">c) Sản phẩm</span></div>
+          <div class="block-body" contenteditable="true"><p>Ảnh chụp hoặc hình vẽ kèm số đo và lời giải thích ngắn.</p></div></div>
+        <div class="block nested"><div class="block-header"><span class="block-label">d) Tổ chức thực hiện</span></div>
+          <div class="block-body" contenteditable="true"><ul>
+            <li><strong>Giao nhiệm vụ:</strong> GV giao làm ở nhà, nêu hạn nộp và tiêu chí nhận xét.</li>
+            <li><strong>Thực hiện:</strong> HS thực hiện cá nhân ngoài giờ học.</li>
+            <li><strong>Báo cáo, đánh giá:</strong> Một số HS chia sẻ ở tiết sau; GV nhận xét.</li>
+          </ul></div></div>
+      </div>
+    </section>
+
+    <div class="editor-actions">
+      <button class="btn btn-primary" onclick="go('export')">Xuất file</button>
+      <button class="btn btn-secondary" onclick="go('home')">Về danh sách</button>
+    </div>
+   </div>
+  </div>
+  <aside class="editor-sidebar" aria-label="Mục lục">
+    <div class="sidebar-section"><div class="sidebar-title">Phụ lục IV</div>
+      <button class="sidebar-item active" onclick="jumpPlain('editor-top')">Thông tin bài dạy</button>
+      <button class="sidebar-item" onclick="jumpPlain('sec-1')">I. Mục tiêu</button>
+      <button class="sidebar-item sidebar-sub" onclick="jumpPlain('sec-1')">1. Kiến thức · 2. Năng lực · 3. Phẩm chất</button>
+      <button class="sidebar-item" onclick="jumpPlain('sec-2')">II. Thiết bị và học liệu</button>
+      <button class="sidebar-item" onclick="jumpPlain('sec-3')">III. Tiến trình dạy học</button>
+      <button class="sidebar-item sidebar-sub" onclick="jumpPlain('hd1')">1. Mở đầu</button>
+      <button class="sidebar-item sidebar-sub" onclick="jumpPlain('hd2')">2. Hình thành kiến thức mới</button>
+      <button class="sidebar-item sidebar-sub" onclick="jumpPlain('hd3')">3. Luyện tập</button>
+      <button class="sidebar-item sidebar-sub" onclick="jumpPlain('hd4')">4. Vận dụng</button>
+    </div>
+    <div class="sidebar-section"><div class="sidebar-title">Trạng thái</div>
+      <div style="font-size:12px;color:var(--g500);line-height:1.5;padding:0 4px">Đã soạn theo khung Phụ lục IV. GV tự thẩm định trước khi nộp.</div>
+    </div>
+  </aside>
+</div>
+</div>
+
+<!-- ================= EXPORT ================= -->
+<div id="screen-export" class="screen">
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo" onclick="go('home')"><div class="logo-mark">G</div>GiaoAn AI</div>
+    <div class="breadcrumb"><span class="sep">/</span><a href="#" onclick="go('editor');return false;">Giáo án</a><span class="sep">/</span><span class="current">Xuất file</span></div>
+  </div>
+  <div class="topbar-right"><button class="btn btn-ghost btn-sm" onclick="go('editor')" aria-label="Về giáo án">← <span class="hide-m">Về giáo án</span></button><div class="avatar">HL</div></div>
+</div>
+<div class="export-layout">
+  <div class="export-preview">
+    <p class="ex-hint" id="ex-hint" hidden><svg width="15" height="15" aria-hidden="true"><use href="#i-look"/></svg><span id="ex-hint-text">Còn 1 chỗ nên soát ở Hoạt động 2</span><span class="sep" aria-hidden="true">·</span><button type="button" onclick="openToSummary()">Xem lại</button></p>
+    <div class="doc-preview" aria-label="Xem trước file Word">
+      <p class="pl4-cap">Phụ lục IV</p>
+      <p class="pl4-cap">Khung kế hoạch bài dạy</p>
+      <p class="pl4-subcap">(Kèm theo Công văn số 5512/BGDĐT-GDTrH ngày 18 tháng 12 năm 2020 của Bộ GDĐT)</p>
+      <p>Trường: <span class="dots">THCS Nguyễn Du</span></p>
+      <p>Tổ: <span class="dots">Tổ Toán — Tin</span></p>
+      <p>Họ và tên giáo viên: <span class="dots">Huy Lê</span></p>
+      <p class="pl4-center-title">Kế hoạch bài dạy</p>
+      <p class="pl4-lesson">Tên bài dạy: Góc tạo bởi một đường thẳng cắt hai đường thẳng song song</p>
+      <p>Môn học/Hoạt động giáo dục: Toán; lớp: 7</p>
+      <p>Thời gian thực hiện: 1 tiết (45 phút)</p>
+      <h3>I. Mục tiêu</h3>
+      <p class="ab">1. Về kiến thức:</p>
+      <ul><li>Nhận biết được các cặp góc so le trong, đồng vị, trong cùng phía tạo bởi một đường thẳng cắt hai đường thẳng.</li>
+      <li>Phát biểu được tính chất: nếu một đường thẳng cắt hai đường thẳng song song thì hai góc so le trong bằng nhau, hai góc đồng vị bằng nhau, hai góc trong cùng phía bù nhau.</li>
+      <li>Vận dụng được tính chất để tính số đo góc trong hình đơn giản.</li></ul>
+      <p class="ab">2. Về năng lực:</p>
+      <ul><li>Năng lực toán học: tư duy và lập luận khi giải thích vì sao hai góc bằng nhau hoặc bù nhau; dùng thước đo góc, ê ke để vẽ và đo.</li>
+      <li>Năng lực giao tiếp toán học: dùng đúng kí hiệu và thuật ngữ so le trong, đồng vị, trong cùng phía.</li>
+      <li>Năng lực hợp tác: phân công đo góc và đối chiếu kết quả trong nhóm.</li></ul>
+      <p class="ab">3. Về phẩm chất:</p>
+      <ul><li class="doc-sus" data-flag="pc">Trung thực khi báo cáo số đo góc đo được trên hình vẽ.</li>
+      <li>Cẩn thận, chính xác khi vẽ hình và sử dụng thước đo góc.</li>
+      <li>Chăm chỉ, có tinh thần hợp tác khi làm việc nhóm.</li></ul>
+      <h3>II. Thiết bị dạy học và học liệu</h3>
+      <ul><li>Giáo viên: SGK Toán 7 tập một, máy chiếu (nếu có), bảng phụ, thước thẳng, thước đo góc.</li>
+      <li>Học sinh: SGK, thước thẳng, thước đo góc, ê ke, giấy kẻ ô.</li>
+      <li>Phiếu học tập số 1 và số 2.</li></ul>
+      <h3>III. Tiến trình dạy học</h3>
+      <h4>1. Hoạt động 1: Mở đầu</h4>
+      <p class="ab">a) Mục tiêu:</p><p>Học sinh nhận ra hình ảnh hai đường thẳng song song bị một đường thẳng cắt trong thực tế và nảy sinh câu hỏi về quan hệ giữa các góc.</p>
+      <p class="ab">b) Nội dung:</p><p>Quan sát ảnh lan can cầu thang, dự đoán quan hệ giữa các góc.</p>
+      <p class="ab">c) Sản phẩm:</p><p>Dự đoán của học sinh về các góc bằng nhau, bù nhau.</p>
+      <p class="ab">d) Tổ chức thực hiện:</p><p>Giao nhiệm vụ → học sinh trao đổi cặp đôi → báo cáo, thảo luận → giáo viên kết luận, dẫn vào hoạt động 2.</p>
+      <h4>2. Hoạt động 2: Hình thành kiến thức mới</h4>
+      <p class="ab">a) Mục tiêu:</p><p>Học sinh nhận biết các cặp góc và phát biểu được tính chất khi một đường thẳng cắt hai đường thẳng song song.</p>
+      <p class="ab">b) Nội dung:</p><p>Vẽ a // b, đường thẳng c cắt a tại A, cắt b tại B; đo và so sánh các cặp góc. Ví dụ (Hình 2): <span class="doc-sus" data-flag="hd2">Biết Â₁ = 65° thì B̂₁ (đồng vị với Â₁) bằng 65°, B̂₂ (trong cùng phía với Â₁) bằng 115°.</span></p>
+      <p class="ab">c) Sản phẩm:</p><p>Phiếu học tập số 1; kết luận về tính chất các cặp góc.</p>
+      <p class="ab">d) Tổ chức thực hiện:</p><p>Giao nhiệm vụ → học sinh vẽ, đo theo nhóm → báo cáo, thảo luận → giáo viên chốt tính chất.</p>
+      <h4>3. Hoạt động 3: Luyện tập</h4>
+      <p class="ab">a) Mục tiêu:</p><p>Vận dụng tính chất để tính số đo góc, trình bày lập luận có căn cứ.</p>
+      <p class="ab">b) Nội dung:</p><p>Bài 1, Bài 2 tính góc; Bài 3 tìm và sửa câu sai.</p>
+      <p class="ab">c) Sản phẩm:</p><p>Lời giải đủ bước; đáp án: Bài 1: 70° và 110°; Bài 2: 132°. <span class="doc-sus" data-flag="hd3">Nhận xét chung: hai góc trong cùng phía luôn có tổng bằng 180°.</span></p>
+      <p class="ab">d) Tổ chức thực hiện:</p><p>Phát phiếu → học sinh làm cá nhân → lên bảng, đối chiếu → giáo viên chốt cách trình bày.</p>
+      <h4>4. Hoạt động 4: Vận dụng</h4>
+      <p class="ab">a) Mục tiêu:</p><p>Vận dụng tính chất vào tình huống thực tế.</p>
+      <p class="ab">b) Nội dung:</p><p>Tìm hình ảnh thực tế, đo một góc và suy ra các góc còn lại.</p>
+      <p class="ab">c) Sản phẩm:</p><p>Ảnh hoặc hình vẽ kèm số đo và giải thích.</p>
+      <p class="ab">d) Tổ chức thực hiện:</p><p>Giao làm ở nhà → học sinh thực hiện → chia sẻ, nhận xét ở tiết sau.</p>
+      <p class="foot">theo khung Phụ lục IV · GV tự thẩm định</p>
+    </div>
+  </div>
+  <aside class="export-panel">
+    <div class="export-panel-top">
+      <h2>Xuất giáo án</h2>
+      <p class="desc">Tải file kế hoạch bài dạy theo khung Phụ lục IV để nộp tổ chuyên môn hoặc lưu trữ.</p>
+      <div class="export-btns">
+        <button class="btn btn-primary btn-xl" onclick="doExport()">⬇ Tải Word (.docx)</button>
+        <button class="btn btn-secondary btn-xl" onclick="doExport()">⬇ Tải PDF</button>
+      </div>
+    </div>
+    <div class="export-panel-body">
+      <div class="success-box" id="ex-success" hidden><strong>✓ Đã tải file</strong>File theo khung Phụ lục IV. GV tự thẩm định trước khi nộp.</div>
+      <div class="export-note">Bao gồm: Thông tin bài dạy · I. Mục tiêu · II. Thiết bị dạy học và học liệu · III. Tiến trình dạy học (4 hoạt động).<br/><br/>theo khung Phụ lục IV · GV tự thẩm định</div>
+    </div>
+  </aside>
+</div>
+</div>
+
+<!-- Done toast (unchanged) -->
+<div class="toast" id="toast" role="status" aria-live="polite"><span class="ck" aria-hidden="true">✓</span><span>Giáo án đã soạn xong</span><button type="button" onclick="toastOpen()">Mở</button></div>
+
+<!-- Mobile frame -->
+<div class="mframe" id="mframe" hidden>
+  <button class="close" type="button" onclick="setMobile(false)">Đóng khung mobile</button>
+  <div class="phone"><iframe id="mframe-if" title="Xem trước mobile 375px"></iframe></div>
+</div>
+
+<!-- Demo panel -->
+<div class="demo-panel" id="demo-panel">
+  <button class="panel-toggle" type="button" aria-expanded="true" aria-controls="demo-body" onclick="togglePanel(this)"><span class="lbl">Demo</span><span class="chev" aria-hidden="true">▾</span></button>
+  <div class="panel-body" id="demo-body">
+    <button class="d" type="button" data-s="one" onclick="setState('one')">1 chỗ · Hoạt động 2</button>
+    <button class="d" type="button" data-s="two" onclick="setState('two')">2 chỗ · HĐ2 + HĐ3</button>
+    <button class="d" type="button" data-s="phamchat" onclick="setState('phamchat')">Câu chữ · Phẩm chất</button>
+    <button class="d" type="button" data-s="reviewed" onclick="setState('reviewed')">Đã soát xong</button>
+    <button class="d" type="button" data-s="home" onclick="setState('home')">Home (danh sách)</button>
+    <button class="d" type="button" data-s="export" onclick="setState('export')">Xuất file</button>
+    <button class="d" type="button" onclick="showToast()">Toast xong (không đổi)</button>
+    <div class="demo-row"><span id="msw-l">Khung mobile 375</span><button class="toggle-sw" id="msw" type="button" role="switch" aria-checked="false" aria-labelledby="msw-l" onclick="setMobile(this.getAttribute('aria-checked')!=='true')"></button></div>
+    <button class="demo-reset" type="button" onclick="resetAll()">Đặt lại (xoá localStorage)</button>
+    <p class="demo-foot">“Đã soát” được lưu theo từng giáo án. Bấm Đặt lại để xem lại từ đầu.</p>
+  </div>
+</div>
+
+<!-- Design notes -->
+<div class="notes-panel" id="notes-panel" data-open="false">
+  <button class="panel-toggle" type="button" aria-expanded="false" aria-controls="notes-body" onclick="togglePanel(this)"><span class="lbl">Ghi chú thiết kế</span><span class="chev" aria-hidden="true">▾</span></button>
+  <div class="panel-body" id="notes-body" hidden>
+    <ol>
+      <li><b>Khi nào hiện:</b> hệ thống đã tự chỉnh một lần mà vẫn còn chỗ nghi (R1 câu chữ lọt từ hệ thống; R2–R4 số liệu Toán). Giáo án vẫn giao bình thường (AC S3).</li>
+      <li><b>Không phải trạng thái hỏng:</b> không chặn thao tác nào, không liên quan hạn mức miễn phí.</li>
+      <li><b>Dòng tóm tắt:</b> một dòng mảnh đầu thân giáo án (dưới tiêu đề và dòng khung, trên mục I). Nền amber-50, viền 1px amber-200, icon amber-700, chữ slate, bo 12. Không đỏ, không rung. Icon + chữ, không chỉ dựa vào màu. role="note".</li>
+      <li><b>Tên hoạt động là nút:</b> cuộn mượt tới hoạt động, focus, viền amber nhẹ 2 giây. Khi bật giảm chuyển động: nhảy thẳng, không hiệu ứng.</li>
+      <li><b>Tại chỗ:</b> chip “Nên soát số liệu” / “Nên soát câu chữ” ngay dưới tiêu đề; câu cần soát gạch chân chấm amber, title và aria-describedby “Câu này nên được soát lại”.</li>
+      <li><b>Dự phòng:</b> nếu hệ thống chỉ biết hoạt động mà không biết câu cụ thể thì chỉ hiện chip, không gạch chân.</li>
+      <li><b>Nút “Đã soát”:</b> bỏ chip và gạch chân, cập nhật dòng tóm tắt. Soát hết thì còn một dòng “Đã soát xong các chỗ được nhắc”, mờ dần sau khoảng 4 giây. Lưu localStorage theo từng giáo án.</li>
+      <li><b>Sửa chữ</b> trong hoạt động được nhắc cũng tính là đã soát.</li>
+      <li><b>Không có nút X</b> trên dòng tóm tắt: đóng = đã soát. Nếu cho ẩn, thầy cô có thể mất lời nhắc mà chưa xem.</li>
+      <li><b>Home:</b> badge giữ “Đã soạn” (“Cần xem lại” đã dành cho trường hợp gần SGK). Thêm dòng phụ amber-700 “Nên soát số liệu · HĐ2”; bấm mở giáo án tại dòng tóm tắt; soát xong thì ẩn.</li>
+      <li><b>Toast xong giữ nguyên</b> (“Giáo án đã soạn xong” + “Mở”), không thêm toast riêng.</li>
+      <li><b>Xuất file:</b> lời nhắc không bao giờ in ra file. Trên bản xem trước chỉ có một dòng nhẹ “Còn 1 chỗ nên soát ở Hoạt động 2 · Xem lại”. Nút tải vẫn bật.</li>
+      <li><b>Mobile 375:</b> dòng tóm tắt xuống dòng; vùng chạm tên hoạt động và “Đã soát” ≥ 44px; chip nằm dưới tiêu đề.</li>
+      <li><b>A11y:</b> nút thật, viền focus rõ, tương phản AA, gạch chân có mô tả cho trình đọc màn hình, thông báo “đã soát xong” qua vùng aria-live.</li>
+      <li><b>Giọng văn:</b> bình tĩnh, gợi ý (“nên soát”), không dùng từ mang nghĩa hỏng hóc, không nhắc hạn mức.</li>
+    </ol>
+    <p class="ref">Nguồn: ga-postgen-check/ac-v1.md · Q1 phương án (a), S3.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  var $ = function(s, r){ return (r || document).querySelector(s); };
+  var $$ = function(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var reduced = function(){ return window.matchMedia('(prefers-reduced-motion: reduce)').matches; };
+  var STORE = 'giaoan.reviewNote.v1.';
+
+  var FLAGS = {
+    hd2: {kind:'num',  name:'Hoạt động 2', short:'HĐ2', target:'hd2'},
+    hd3: {kind:'num',  name:'Hoạt động 3', short:'HĐ3', target:'hd3'},
+    pc:  {kind:'text', name:'Phẩm chất',   short:'Phẩm chất', target:'pc-block'}
+  };
+  var PLANS = {
+    one:      {id:'toan7-goc-song-song-a', flags:['hd2']},
+    two:      {id:'toan7-goc-song-song-b', flags:['hd2','hd3']},
+    phamchat: {id:'toan7-goc-song-song-c', flags:['pc']},
+    reviewed: {id:'toan7-goc-song-song-d', flags:['hd2'], demoAllReviewed:true}
+  };
+
+  var planKey = 'one', reviewed = new Set(), fadeT = null, hideT = null, curState = 'one';
+
+  function load(){
+    try { reviewed = new Set(JSON.parse(localStorage.getItem(STORE + PLANS[planKey].id) || '[]')); }
+    catch(e){ reviewed = new Set(); }
+  }
+  function save(){ try { localStorage.setItem(STORE + PLANS[planKey].id, JSON.stringify(Array.from(reviewed))); } catch(e){} }
+  function remaining(){ return PLANS[planKey].flags.filter(function(f){ return !reviewed.has(f); }); }
+  function allKind(list, k){ return list.every(function(f){ return FLAGS[f].kind === k; }); }
+
+  /* Plan text: flagged sentence shows the suspicious version; others show the clean version. */
+  function applyContent(){
+    var p = PLANS[planKey];
+    $$('.sus').forEach(function(el){
+      var f = el.dataset.flag;
+      var bad = p.flags.indexOf(f) > -1 && !p.demoAllReviewed;
+      el.textContent = bad ? el.dataset.bad : el.dataset.good;
+      var d = document.querySelector('.doc-sus[data-flag="' + f + '"]');
+      if (d) d.textContent = el.textContent;   // Word preview: same text, never any marker
+    });
+  }
+
+  function markers(){
+    var rem = remaining();
+    Object.keys(FLAGS).forEach(function(f){
+      var on = rem.indexOf(f) > -1;
+      var row = document.querySelector('.rv-chiprow[data-chip="' + f + '"]');
+      if (row){
+        if (on){
+          var label = FLAGS[f].kind === 'text' ? 'Nên soát câu chữ' : 'Nên soát số liệu';
+          row.innerHTML = '<span class="rv-chip"><svg width="13" height="13" aria-hidden="true"><use href="#i-look"/></svg>' + label +
+            '<button class="rv-done" type="button" data-done="' + f + '" aria-label="Đã soát ' + FLAGS[f].name + '">' +
+            '<svg width="12" height="12" aria-hidden="true"><use href="#i-check"/></svg>Đã soát</button></span>';
+          row.hidden = false;
+        } else { row.hidden = true; row.innerHTML = ''; }
+      }
+      $$('.sus[data-flag="' + f + '"]').forEach(function(s){
+        if (on){ s.classList.add('rv-sus'); s.title = 'Câu này nên được soát lại'; s.setAttribute('aria-describedby', 'rv-desc'); }
+        else { s.classList.remove('rv-sus'); s.removeAttribute('title'); s.removeAttribute('aria-describedby'); }
+      });
+    });
+  }
+
+  function linkBtn(f){ return '<button type="button" class="rv-link" data-go="' + f + '">' + FLAGS[f].name + '</button>'; }
+
+  function summary(opts){
+    opts = opts || {};
+    var note = $('#rv-note');
+    clearTimeout(fadeT); clearTimeout(hideT);
+    note.classList.remove('is-done', 'fade');
+    var rem = remaining();
+    if (rem.length){
+      var links = rem.map(linkBtn).join(' và ');
+      var t = allKind(rem, 'text') ? 'Nên soát lại câu chữ ở mục ' + links
+            : allKind(rem, 'num')  ? 'Nên soát lại số liệu ở ' + links
+            : 'Nên soát lại ở ' + links;
+      $('#rv-title').innerHTML = t;
+      $('#rv-sub').hidden = false;
+      $('#rv-icon').innerHTML = '<use href="#i-look"/>';
+      note.hidden = false;
+      return;
+    }
+    if (opts.confirm){
+      $('#rv-title').textContent = 'Đã soát xong các chỗ được nhắc';
+      $('#rv-sub').hidden = true;
+      $('#rv-icon').innerHTML = '<use href="#i-check-circle"/>';
+      note.classList.add('is-done');
+      note.hidden = false;
+      $('#rv-live').textContent = 'Đã soát xong các chỗ được nhắc';
+      fadeT = setTimeout(function(){
+        if (reduced()){ note.hidden = true; return; }
+        note.classList.add('fade');
+        hideT = setTimeout(function(){ note.hidden = true; note.classList.remove('fade'); }, 650);
+      }, 4000);
+      return;
+    }
+    note.hidden = true;
+  }
+
+  function homeHint(){
+    var rem = remaining(), hint = $('#card-hint');
+    if (!rem.length){ hint.hidden = true; $('#row-open').removeAttribute('aria-describedby'); return; }
+    var shorts = rem.map(function(f){ return FLAGS[f].short; }).join(', ');
+    $('#card-hint-text').textContent = (allKind(rem, 'text') ? 'Nên soát câu chữ · ' : 'Nên soát số liệu · ') + shorts;
+    hint.hidden = false;
+    $('#row-open').setAttribute('aria-describedby', 'card-hint-text');
+  }
+
+  function exportHint(){
+    var rem = remaining(), el = $('#ex-hint');
+    if (!rem.length){ el.hidden = true; return; }
+    var names = rem.map(function(f){ return FLAGS[f].name; }).join(' và ');
+    $('#ex-hint-text').textContent = 'Còn ' + rem.length + ' chỗ nên soát ở ' + (allKind(rem, 'text') ? 'mục ' : '') + names;
+    el.hidden = false;
+  }
+
+  function renderAll(opts){ markers(); summary(opts); homeHint(); exportHint(); }
+
+  function markReviewed(f, via){
+    if (reviewed.has(f) || PLANS[planKey].flags.indexOf(f) < 0) return;
+    reviewed.add(f); save();
+    renderAll({confirm: remaining().length === 0});
+    if (via === 'button'){
+      var t = document.getElementById(FLAGS[f].target);
+      if (t) t.focus({preventScroll:true});
+    }
+  }
+
+  /* Jump from summary link: scroll, focus, 2s soft amber ring */
+  function jumpTo(f){
+    var el = document.getElementById(FLAGS[f].target);
+    if (!el) return;
+    if (el.classList.contains('collapsed')) toggleAct(el.id, true);
+    el.scrollIntoView({behavior: reduced() ? 'auto' : 'smooth', block: 'start'});
+    el.focus({preventScroll:true});
+    el.classList.remove('rv-ring'); void el.offsetWidth; el.classList.add('rv-ring');
+    clearTimeout(el._rt); el._rt = setTimeout(function(){ el.classList.remove('rv-ring'); }, 2000);
+  }
+  window.jumpPlain = function(id){
+    if (id === 'editor-top'){ $('#editor-main').scrollTo({top:0, behavior: reduced() ? 'auto' : 'smooth'}); return; }
+    var el = document.getElementById(id); if (!el) return;
+    el.scrollIntoView({behavior: reduced() ? 'auto' : 'smooth', block: 'start'});
+  };
+  window.toggleAct = function(id, forceOpen){
+    var a = document.getElementById(id);
+    var open = forceOpen ? true : a.classList.contains('collapsed');
+    a.classList.toggle('collapsed', !open);
+    a.querySelector('.activity-head').setAttribute('aria-expanded', open ? 'true' : 'false');
+  };
+
+  function focusSummary(){
+    var note = $('#rv-note');
+    if (note.hidden){ $('#editor-main').scrollTop = 0; window.scrollTo(0, 0); return; }
+    note.scrollIntoView({behavior: 'auto', block: 'center'});
+    note.focus({preventScroll:true});
+  }
+
+  document.addEventListener('click', function(e){
+    var g = e.target.closest('[data-go]');
+    if (g){ e.preventDefault(); jumpTo(g.dataset.go); return; }
+    var d = e.target.closest('[data-done]');
+    if (d){ e.preventDefault(); markReviewed(d.dataset.done, 'button'); }
+  });
+  /* Editing the flagged activity/section counts as reviewed */
+  $$('[data-flag-container]').forEach(function(c){
+    c.addEventListener('input', function(){
+      var f = c.dataset.flagContainer;
+      if (remaining().indexOf(f) > -1) markReviewed(f, 'edit');
+    });
+  });
+
+  var TITLES = {home:'Giáo án của tôi', export:'Xuất file', editor:'Góc tạo bởi một đường thẳng cắt hai đường thẳng song song'};
+  function show(name){
+    $$('.screen').forEach(function(s){ s.classList.remove('active'); });
+    $('#screen-' + name).classList.add('active');
+    document.title = TITLES[name] + ' · GiaoAn AI';
+    window.scrollTo(0, 0);
+  }
+  window.go = function(name){
+    show(name);
+    renderAll();
+    if (name === 'editor') $('#editor-main').scrollTop = 0;
+    if (name === 'export') $('#ex-success').hidden = true;
+  };
+  window.openToSummary = function(){ show('editor'); renderAll(); requestAnimationFrame(focusSummary); };
+  window.openFromHome = function(e){ if (e) e.stopPropagation(); window.openToSummary(); };
+
+  function setUrl(s){
+    var u = new URL(location.href);
+    u.searchParams.set('state', s);
+    history.replaceState(null, '', u);
+  }
+
+  window.setState = function(s){
+    if (['one','two','phamchat','reviewed','home','export'].indexOf(s) < 0) s = 'one';
+    curState = s;
+    $$('.demo-panel button.d[data-s]').forEach(function(b){ b.classList.toggle('active', b.dataset.s === s); });
+    setUrl(s);
+    var planParam = new URLSearchParams(location.search).get('plan');
+    if (s === 'home' || s === 'export') planKey = (planParam === 'two' || planParam === 'phamchat') ? planParam : 'one';
+    else planKey = s;
+    ['hd1','hd2','hd3','hd4'].forEach(function(id){ toggleAct(id, true); });
+    if (planKey === 'reviewed'){
+      reviewed = new Set(PLANS.reviewed.flags);   // demo: everything already reviewed -> quiet confirmation once
+      applyContent(); show('editor'); renderAll({confirm:true});
+      $('#editor-main').scrollTop = 0;
+    } else {
+      load(); applyContent();
+      if (s === 'home'){ show('home'); renderAll(); }
+      else if (s === 'export'){ show('export'); renderAll(); $('#ex-success').hidden = true; }
+      else { show('editor'); renderAll(); $('#editor-main').scrollTop = 0; }
+    }
+    if (!$('#mframe').hidden) $('#mframe-if').src = frameSrc();
+  };
+
+  window.resetAll = function(){
+    Object.keys(localStorage).filter(function(k){ return k.indexOf(STORE) === 0; })
+      .forEach(function(k){ localStorage.removeItem(k); });
+    window.setState(curState);
+  };
+  window.doExport = function(){ $('#ex-success').hidden = false; };
+  window.showToast = function(){
+    var t = $('#toast'); t.classList.add('show');
+    clearTimeout(t._h); t._h = setTimeout(function(){ t.classList.remove('show'); }, 8000);
+  };
+  window.toastOpen = function(){ $('#toast').classList.remove('show'); window.go('editor'); };
+  window.togglePanel = function(btn){
+    var body = document.getElementById(btn.getAttribute('aria-controls'));
+    var open = btn.getAttribute('aria-expanded') !== 'true';
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    body.hidden = !open;
+    btn.parentElement.setAttribute('data-open', open ? 'true' : 'false');
+  };
+
+  function frameSrc(){ return location.pathname + '?state=' + curState + '&embed=1'; }
+  window.setMobile = function(on){
+    $('#msw').setAttribute('aria-checked', on ? 'true' : 'false');
+    var f = $('#mframe');
+    if (on){ $('#mframe-if').src = frameSrc(); f.hidden = false; }
+    else { f.hidden = true; $('#mframe-if').src = 'about:blank'; }
+    var u = new URL(location.href);
+    if (on) u.searchParams.set('mobile', '1'); else u.searchParams.delete('mobile');
+    history.replaceState(null, '', u);
+  };
+
+  /* init */
+  var params = new URLSearchParams(location.search);
+  if (params.get('embed') === '1') document.body.classList.add('embed');
+  if (window.matchMedia('(max-width: 720px)').matches || params.get('demo') === '0'){
+    var b = $('#demo-panel .panel-toggle'); b.setAttribute('aria-expanded', 'false'); $('#demo-body').hidden = true;
+  }
+  if (params.get('notes') === '1'){ window.togglePanel($('#notes-panel .panel-toggle')); }
+  window.setState(params.get('state') || 'one');
+  if (params.get('mobile') === '1' && params.get('embed') !== '1') window.setMobile(true);
+})();
+</script>
+</body>
+</html>
