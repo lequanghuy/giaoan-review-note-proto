@@ -128,6 +128,9 @@ td.name{font-weight:550;color:var(--g900)}
 .rv-sub{font-size:13px;color:var(--s600);line-height:1.5;margin-top:2px}
 .rv-link{position:relative;display:inline;color:var(--blue-h);font-weight:600;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;padding:0 1px;border-radius:4px;line-height:inherit}
 .rv-link:hover{color:#1E40AF;text-decoration-thickness:2px}
+.rv-link{padding:0}
+.rv-link.num{padding:0}
+.rv-link.num::before{content:'';position:absolute;left:-5px;right:-5px;top:-4px;bottom:-4px}
 .rv-note.is-done{align-items:center;background:#fff;border-color:var(--g200);padding:8px 14px;transition:opacity .6s ease}
 .rv-note.is-done .rv-title{font-weight:500;color:var(--s700);font-size:13px}
 .rv-note.is-done .rv-icon{color:var(--green);margin-top:0}
@@ -236,6 +239,7 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
   .rv-note{padding:10px 12px;gap:8px}
   .rv-title{line-height:1.6}
   .rv-link::after{content:'';position:absolute;left:-4px;right:-4px;top:50%;height:44px;transform:translateY(-50%)}
+  .rv-link.num::after{left:-6px;right:-6px}
   .rv-chiprow{padding:10px 12px 0}
   .rv-chip{padding:4px 4px 4px 10px}
   .rv-done{min-height:36px;padding:4px 12px}
@@ -270,7 +274,7 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
 </div>
 <main class="page-body">
   <div class="page-header">
-    <div><h1>Giáo án của tôi</h1><p>6 tiết · Toán · Ngữ văn · Tiếng Anh</p></div>
+    <div><h1>Giáo án của tôi</h1><p>7 tiết · Toán · Ngữ văn · Tiếng Anh</p></div>
     <button class="btn btn-primary">+ Tạo tiết mới</button>
   </div>
   <div class="filters">
@@ -291,6 +295,12 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
         </td>
         <td class="col-mon">Toán</td><td class="col-khoi">7</td>
         <td><span class="badge badge-generated"><span class="badge-dot"></span>Đã soạn</span></td><td class="col-upd">10 phút trước</td></tr>
+      <tr id="row-guard" title="Demo: giáo án vừa gần SGK vừa còn chỗ nên soát">
+        <td class="name">Định lí Pythagore
+          <div class="card-hint"><svg width="13" height="13" aria-hidden="true"><use href="#i-look"/></svg><span>Nên soát số liệu · HĐ3</span></div>
+        </td>
+        <td class="col-mon">Toán</td><td class="col-khoi">8</td>
+        <td><span class="badge badge-flagged"><span class="badge-dot"></span>Cần xem lại</span></td><td class="col-upd">30 phút trước</td></tr>
       <tr><td class="name">Phương trình bậc nhất một ẩn</td><td class="col-mon">Toán</td><td class="col-khoi">8</td>
         <td><span class="badge badge-flagged"><span class="badge-dot"></span>Cần xem lại</span></td><td class="col-upd">Hôm qua</td></tr>
       <tr><td class="name">Unit 5: Holidays</td><td class="col-mon">Tiếng Anh</td><td class="col-khoi">7</td>
@@ -339,11 +349,11 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
       <svg class="rv-icon" id="rv-icon" width="18" height="18" aria-hidden="true"><use href="#i-look"/></svg>
       <div>
         <p class="rv-title" id="rv-title">Nên soát lại số liệu ở Hoạt động 2</p>
-        <p class="rv-sub" id="rv-sub">Hệ thống đã tự kiểm tra và chỉnh một lượt, nhưng còn chỗ chưa chắc chắn. Thầy cô xem nhanh trước khi dùng.</p>
+        <p class="rv-sub" id="rv-sub">Hệ thống đã tự kiểm tra và còn chỗ chưa chắc chắn. Thầy cô xem nhanh trước khi dùng.</p>
       </div>
     </div>
     <div class="sr-only" role="status" aria-live="polite" id="rv-live"></div>
-    <span class="sr-only" id="rv-desc">Câu này nên được soát lại</span>
+    <span class="sr-only" id="rv-desc">Nên soát lại câu này</span>
 
     <div class="section-title first" id="sec-1">I. Mục tiêu</div>
     <div class="sub-label">1. Về kiến thức</div>
@@ -365,7 +375,7 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
       <div class="block-header"><span class="block-label">Phẩm chất</span></div>
       <div class="rv-chiprow" data-chip="pc" hidden></div>
       <div class="block-body" contenteditable="true"><ul>
-        <li><span class="sus" data-flag="pc" data-bad="Trung thực khi báo cáo số đo góc đã kiểm tra, số liệu đúng với hình vẽ." data-good="Trung thực khi báo cáo số đo góc đo được trên hình vẽ.">Trung thực khi báo cáo số đo góc đo được trên hình vẽ.</span></li>
+        <li><span class="sus" data-flag="pc-text" data-bad="Trung thực khi báo cáo số đo góc đã kiểm tra, số liệu đúng với hình vẽ." data-good="Trung thực khi báo cáo số đo góc đo được trên hình vẽ.">Trung thực khi báo cáo số đo góc đo được trên hình vẽ.</span></li>
         <li>Cẩn thận, chính xác khi vẽ hình và sử dụng thước đo góc.</li>
         <li>Chăm chỉ, có tinh thần hợp tác khi làm việc nhóm.</li>
       </ul></div></div>
@@ -416,7 +426,7 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
           <div class="block-body" contenteditable="true"><ul>
             <li>Nhóm 4 HS vẽ a // b bằng thước và ê ke, vẽ đường thẳng c cắt a tại A, cắt b tại B; đánh số các góc Â₁ … Â₄, B̂₁ … B̂₄.</li>
             <li>Đo các góc, ghi vào phiếu học tập số 1; so sánh từng cặp góc so le trong, đồng vị, trong cùng phía.</li>
-            <li>Ví dụ (Hình 2): a // b, c cắt a tại A và cắt b tại B. <span class="sus" data-flag="hd2" data-bad="Biết Â₁ = 65° thì B̂₁ (đồng vị với Â₁) bằng 110°, B̂₂ (trong cùng phía với Â₁) bằng 115°." data-good="Biết Â₁ = 65° thì B̂₁ (đồng vị với Â₁) bằng 65°, B̂₂ (trong cùng phía với Â₁) bằng 115°.">Biết Â₁ = 65° thì B̂₁ (đồng vị với Â₁) bằng 65°, B̂₂ (trong cùng phía với Â₁) bằng 115°.</span></li>
+            <li>Ví dụ (Hình 2): a // b, c cắt a tại A và cắt b tại B. <span class="sus" data-flag="hd2-num" data-bad="Biết Â₁ = 65° thì B̂₁ (đồng vị với Â₁) bằng 110°, B̂₂ (trong cùng phía với Â₁) bằng 115°." data-good="Biết Â₁ = 65° thì B̂₁ (đồng vị với Â₁) bằng 65°, B̂₂ (trong cùng phía với Â₁) bằng 115°.">Biết Â₁ = 65° thì B̂₁ (đồng vị với Â₁) bằng 65°, B̂₂ (trong cùng phía với Â₁) bằng 115°.</span></li>
           </ul></div></div>
         <div class="block nested"><div class="block-header"><span class="block-label">c) Sản phẩm</span></div>
           <div class="block-body" contenteditable="true"><p>Phiếu học tập số 1 có số đo các góc. Kết luận: nếu a // b thì hai góc so le trong bằng nhau, hai góc đồng vị bằng nhau, hai góc trong cùng phía bù nhau.</p></div></div>
@@ -444,11 +454,11 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
           <div class="block-body" contenteditable="true"><ul>
             <li>Bài 1: Cho a // b, đường thẳng c cắt a tại M, cắt b tại N, M̂₁ = 70°. Tính các góc tại N.</li>
             <li>Bài 2: Cho m // n, một góc so le trong bằng 48°. Tính góc trong cùng phía với góc đó.</li>
-            <li>Bài 3 (Tìm và sửa câu sai): “Nếu a // b thì hai góc đồng vị bù nhau.”</li>
+            <li>Bài 3 (Tìm và sửa câu chưa đúng): “Nếu a // b thì hai góc đồng vị bù nhau.”</li>
           </ul></div></div>
         <div class="block nested"><div class="block-header"><span class="block-label">c) Sản phẩm</span></div>
-          <div class="block-body" contenteditable="true"><p>Lời giải đủ bước trên phiếu học tập số 2. Đáp án: Bài 1: N̂₁ = N̂₃ = 70°, N̂₂ = N̂₄ = 110°; Bài 2: 132°; Bài 3: sửa thành “hai góc đồng vị bằng nhau”.</p>
-            <p><span class="sus" data-flag="hd3" data-bad="Nhận xét chung: hai góc trong cùng phía luôn không bằng nhau." data-good="Nhận xét chung: hai góc trong cùng phía luôn có tổng bằng 180°.">Nhận xét chung: hai góc trong cùng phía luôn có tổng bằng 180°.</span></p></div></div>
+          <div class="block-body" contenteditable="true"><p>Lời giải đủ bước trên phiếu học tập số 2. Đáp án: <span class="sus" data-flag="hd3-num" data-bad="Bài 1: N̂₁ = N̂₃ = 70°, N̂₂ = N̂₄ = 120°" data-good="Bài 1: N̂₁ = N̂₃ = 70°, N̂₂ = N̂₄ = 110°">Bài 1: N̂₁ = N̂₃ = 70°, N̂₂ = N̂₄ = 110°</span>; Bài 2: 132°; Bài 3: sửa thành “hai góc đồng vị bằng nhau”.</p>
+            <p><span class="sus" data-flag="hd3-content" data-bad="Nhận xét chung: hai góc trong cùng phía luôn không bằng nhau." data-good="Nhận xét chung: hai góc trong cùng phía luôn có tổng bằng 180°.">Nhận xét chung: hai góc trong cùng phía luôn có tổng bằng 180°.</span></p></div></div>
         <div class="block nested"><div class="block-header"><span class="block-label">d) Tổ chức thực hiện</span></div>
           <div class="block-body" contenteditable="true"><ul>
             <li><strong>Giao nhiệm vụ:</strong> GV phát phiếu học tập số 2, yêu cầu ghi rõ căn cứ ở mỗi bước.</li>
@@ -460,16 +470,17 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
     </section>
 
     <!-- HĐ4 -->
-    <section class="activity" id="hd4" tabindex="-1" aria-labelledby="hd4-h">
+    <section class="activity" id="hd4" tabindex="-1" aria-labelledby="hd4-h" data-flag-container="hd4">
       <button class="activity-head" aria-expanded="true" onclick="toggleAct('hd4')">
         <span class="activity-head-left"><span class="activity-chevron" aria-hidden="true">▾</span><h4 id="hd4-h">Hoạt động 4: Vận dụng</h4></span>
         <span class="activity-badges" aria-hidden="true"><span class="activity-badge">a</span><span class="activity-badge">b</span><span class="activity-badge">c</span><span class="activity-badge">d</span></span>
       </button>
+      <div class="rv-chiprow" data-chip="hd4" hidden></div>
       <div class="activity-inner">
         <div class="block nested"><div class="block-header"><span class="block-label">a) Mục tiêu</span></div>
           <div class="block-body" contenteditable="true"><p>HS vận dụng tính chất vào tình huống thực tế quanh trường, nhà.</p></div></div>
         <div class="block nested"><div class="block-header"><span class="block-label">b) Nội dung</span></div>
-          <div class="block-body" contenteditable="true"><p>Tìm một hình ảnh có hai đường song song bị một đường thẳng cắt (lan can, vạch kẻ đường, khung cửa sổ); đo một góc, suy ra các góc còn lại và giải thích.</p></div></div>
+          <div class="block-body" contenteditable="true"><p>Tìm một hình ảnh có hai đường song song bị một đường thẳng cắt (lan can, vạch kẻ đường, khung cửa sổ); đo một góc, suy ra các góc còn lại và giải thích.</p><p><span class="sus" data-flag="hd4-num" data-bad="Ví dụ: thanh chéo tạo với thanh ngang phía trên một góc 50° thì góc đồng vị với nó ở thanh ngang phía dưới bằng 130°." data-good="Ví dụ: thanh chéo tạo với thanh ngang phía trên một góc 50° thì góc đồng vị với nó ở thanh ngang phía dưới cũng bằng 50°.">Ví dụ: thanh chéo tạo với thanh ngang phía trên một góc 50° thì góc đồng vị với nó ở thanh ngang phía dưới cũng bằng 50°.</span></p></div></div>
         <div class="block nested"><div class="block-header"><span class="block-label">c) Sản phẩm</span></div>
           <div class="block-body" contenteditable="true"><p>Ảnh chụp hoặc hình vẽ kèm số đo và lời giải thích ngắn.</p></div></div>
         <div class="block nested"><div class="block-header"><span class="block-label">d) Tổ chức thực hiện</span></div>
@@ -539,7 +550,7 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
       <li>Năng lực giao tiếp toán học: dùng đúng kí hiệu và thuật ngữ so le trong, đồng vị, trong cùng phía.</li>
       <li>Năng lực hợp tác: phân công đo góc và đối chiếu kết quả trong nhóm.</li></ul>
       <p class="ab">3. Về phẩm chất:</p>
-      <ul><li class="doc-sus" data-flag="pc">Trung thực khi báo cáo số đo góc đo được trên hình vẽ.</li>
+      <ul><li class="doc-sus" data-flag="pc-text">Trung thực khi báo cáo số đo góc đo được trên hình vẽ.</li>
       <li>Cẩn thận, chính xác khi vẽ hình và sử dụng thước đo góc.</li>
       <li>Chăm chỉ, có tinh thần hợp tác khi làm việc nhóm.</li></ul>
       <h3>II. Thiết bị dạy học và học liệu</h3>
@@ -554,17 +565,17 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
       <p class="ab">d) Tổ chức thực hiện:</p><p>Giao nhiệm vụ → học sinh trao đổi cặp đôi → báo cáo, thảo luận → giáo viên kết luận, dẫn vào hoạt động 2.</p>
       <h4>2. Hoạt động 2: Hình thành kiến thức mới</h4>
       <p class="ab">a) Mục tiêu:</p><p>Học sinh nhận biết các cặp góc và phát biểu được tính chất khi một đường thẳng cắt hai đường thẳng song song.</p>
-      <p class="ab">b) Nội dung:</p><p>Vẽ a // b, đường thẳng c cắt a tại A, cắt b tại B; đo và so sánh các cặp góc. Ví dụ (Hình 2): <span class="doc-sus" data-flag="hd2">Biết Â₁ = 65° thì B̂₁ (đồng vị với Â₁) bằng 65°, B̂₂ (trong cùng phía với Â₁) bằng 115°.</span></p>
+      <p class="ab">b) Nội dung:</p><p>Vẽ a // b, đường thẳng c cắt a tại A, cắt b tại B; đo và so sánh các cặp góc. Ví dụ (Hình 2): <span class="doc-sus" data-flag="hd2-num">Biết Â₁ = 65° thì B̂₁ (đồng vị với Â₁) bằng 65°, B̂₂ (trong cùng phía với Â₁) bằng 115°.</span></p>
       <p class="ab">c) Sản phẩm:</p><p>Phiếu học tập số 1; kết luận về tính chất các cặp góc.</p>
       <p class="ab">d) Tổ chức thực hiện:</p><p>Giao nhiệm vụ → học sinh vẽ, đo theo nhóm → báo cáo, thảo luận → giáo viên chốt tính chất.</p>
       <h4>3. Hoạt động 3: Luyện tập</h4>
       <p class="ab">a) Mục tiêu:</p><p>Vận dụng tính chất để tính số đo góc, trình bày lập luận có căn cứ.</p>
-      <p class="ab">b) Nội dung:</p><p>Bài 1, Bài 2 tính góc; Bài 3 tìm và sửa câu sai.</p>
-      <p class="ab">c) Sản phẩm:</p><p>Lời giải đủ bước; đáp án: Bài 1: 70° và 110°; Bài 2: 132°. <span class="doc-sus" data-flag="hd3">Nhận xét chung: hai góc trong cùng phía luôn có tổng bằng 180°.</span></p>
+      <p class="ab">b) Nội dung:</p><p>Bài 1, Bài 2 tính góc; Bài 3 tìm và sửa câu chưa đúng.</p>
+      <p class="ab">c) Sản phẩm:</p><p>Lời giải đủ bước; đáp án: <span class="doc-sus" data-flag="hd3-num">Bài 1: N̂₁ = N̂₃ = 70°, N̂₂ = N̂₄ = 110°</span>; Bài 2: 132°. <span class="doc-sus" data-flag="hd3-content">Nhận xét chung: hai góc trong cùng phía luôn có tổng bằng 180°.</span></p>
       <p class="ab">d) Tổ chức thực hiện:</p><p>Phát phiếu → học sinh làm cá nhân → lên bảng, đối chiếu → giáo viên chốt cách trình bày.</p>
       <h4>4. Hoạt động 4: Vận dụng</h4>
       <p class="ab">a) Mục tiêu:</p><p>Vận dụng tính chất vào tình huống thực tế.</p>
-      <p class="ab">b) Nội dung:</p><p>Tìm hình ảnh thực tế, đo một góc và suy ra các góc còn lại.</p>
+      <p class="ab">b) Nội dung:</p><p>Tìm hình ảnh thực tế, đo một góc và suy ra các góc còn lại. <span class="doc-sus" data-flag="hd4-num">Ví dụ: thanh chéo tạo với thanh ngang phía trên một góc 50° thì góc đồng vị với nó ở thanh ngang phía dưới cũng bằng 50°.</span></p>
       <p class="ab">c) Sản phẩm:</p><p>Ảnh hoặc hình vẽ kèm số đo và giải thích.</p>
       <p class="ab">d) Tổ chức thực hiện:</p><p>Giao làm ở nhà → học sinh thực hiện → chia sẻ, nhận xét ở tiết sau.</p>
       <p class="foot">theo khung Phụ lục IV · GV tự thẩm định</p>
@@ -600,8 +611,10 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
 <div class="demo-panel" id="demo-panel">
   <button class="panel-toggle" type="button" aria-expanded="true" aria-controls="demo-body" onclick="togglePanel(this)"><span class="lbl">Demo</span><span class="chev" aria-hidden="true">▾</span></button>
   <div class="panel-body" id="demo-body">
-    <button class="d" type="button" data-s="one" onclick="setState('one')">1 chỗ · Hoạt động 2</button>
-    <button class="d" type="button" data-s="two" onclick="setState('two')">2 chỗ · HĐ2 + HĐ3</button>
+    <button class="d" type="button" data-s="one" onclick="setState('one')">Số liệu · HĐ2</button>
+    <button class="d" type="button" data-s="two" onclick="setState('two')">Số liệu HĐ2 + nội dung HĐ3</button>
+    <button class="d" type="button" data-s="three" onclick="setState('three')">Số liệu · HĐ2, 3, 4</button>
+    <button class="d" type="button" data-s="mixed" onclick="setState('mixed')">Số liệu HĐ2 + câu chữ Phẩm chất</button>
     <button class="d" type="button" data-s="phamchat" onclick="setState('phamchat')">Câu chữ · Phẩm chất</button>
     <button class="d" type="button" data-s="reviewed" onclick="setState('reviewed')">Đã soát xong</button>
     <button class="d" type="button" data-s="home" onclick="setState('home')">Home (danh sách)</button>
@@ -618,23 +631,26 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
   <button class="panel-toggle" type="button" aria-expanded="false" aria-controls="notes-body" onclick="togglePanel(this)"><span class="lbl">Ghi chú thiết kế</span><span class="chev" aria-hidden="true">▾</span></button>
   <div class="panel-body" id="notes-body" hidden>
     <ol>
-      <li><b>Khi nào hiện:</b> hệ thống đã tự chỉnh một lần mà vẫn còn chỗ nghi (R1 câu chữ lọt từ hệ thống; R2–R4 số liệu Toán). Giáo án vẫn giao bình thường (AC S3).</li>
+      <li><b>Khi nào hiện:</b> hệ thống đã tự chỉnh một lần mà vẫn còn chỗ chưa chắc chắn. Giáo án vẫn giao bình thường (AC S3).</li>
       <li><b>Không phải trạng thái hỏng:</b> không chặn thao tác nào, không liên quan hạn mức miễn phí.</li>
-      <li><b>Dòng tóm tắt:</b> một dòng mảnh đầu thân giáo án (dưới tiêu đề và dòng khung, trên mục I). Nền amber-50, viền 1px amber-200, icon amber-700, chữ slate, bo 12. Không đỏ, không rung. Icon + chữ, không chỉ dựa vào màu. role="note".</li>
-      <li><b>Tên hoạt động là nút:</b> cuộn mượt tới hoạt động, focus, viền amber nhẹ 2 giây. Khi bật giảm chuyển động: nhảy thẳng, không hiệu ứng.</li>
-      <li><b>Tại chỗ:</b> chip “Nên soát số liệu” / “Nên soát câu chữ” ngay dưới tiêu đề; câu cần soát gạch chân chấm amber, title và aria-describedby “Câu này nên được soát lại”.</li>
-      <li><b>Dự phòng:</b> nếu hệ thống chỉ biết hoạt động mà không biết câu cụ thể thì chỉ hiện chip, không gạch chân.</li>
-      <li><b>Nút “Đã soát”:</b> bỏ chip và gạch chân, cập nhật dòng tóm tắt. Soát hết thì còn một dòng “Đã soát xong các chỗ được nhắc”, mờ dần sau khoảng 4 giây. Lưu localStorage theo từng giáo án.</li>
-      <li><b>Sửa chữ</b> trong hoạt động được nhắc cũng tính là đã soát.</li>
-      <li><b>Không có nút X</b> trên dòng tóm tắt: đóng = đã soát. Nếu cho ẩn, thầy cô có thể mất lời nhắc mà chưa xem.</li>
-      <li><b>Home:</b> badge giữ “Đã soạn” (“Cần xem lại” đã dành cho trường hợp gần SGK). Thêm dòng phụ amber-700 “Nên soát số liệu · HĐ2”; bấm mở giáo án tại dòng tóm tắt; soát xong thì ẩn.</li>
+      <li><b>Ba loại:</b> “số liệu” (R2–R4, có số đo), “nội dung” (khẳng định không có số, vd. trong cùng phía “không bằng nhau”), “câu chữ” (R1, chữ lọt từ hệ thống). Không hiện mã quy tắc.</li>
+      <li><b>Dòng tóm tắt:</b> “Nên soát lại [số liệu | nội dung | câu chữ] ở [Hoạt động n | mục X]”. Tên vị trí đúng như tiêu đề trong giáo án.</li>
+      <li><b>Nhiều vị trí cùng loại:</b> 2 chỗ “Hoạt động 2 và 3”, từ 3 chỗ “Hoạt động 2, 3 và 4”. Mỗi số là một nút riêng.</li>
+      <li><b>Nhiều loại:</b> gộp một câu theo thứ tự số liệu → nội dung → câu chữ, vd. “Nên soát lại số liệu ở Hoạt động 2 và câu chữ ở mục Phẩm chất”. Câu tự cập nhật khi soát từng chỗ.</li>
+      <li><b>Dòng phụ:</b> “Hệ thống đã tự kiểm tra và còn chỗ chưa chắc chắn. Thầy cô xem nhanh trước khi dùng.”</li>
+      <li><b>Kiểu:</b> nền amber-50, viền 1px amber-200, icon amber-700, chữ slate, bo 12. Không đỏ, không rung, icon + chữ. role="note".</li>
+      <li><b>Nút vị trí:</b> cuộn mượt, focus, viền amber nhẹ 2 giây. Khi bật giảm chuyển động: nhảy thẳng, không hiệu ứng.</li>
+      <li><b>Tại chỗ:</b> chip “Nên soát số liệu / nội dung / câu chữ” ngay dưới tiêu đề, nút “Đã soát”. Câu cần soát gạch chân chấm amber, tooltip và aria “Nên soát lại câu này”.</li>
+      <li><b>Dự phòng:</b> nếu hệ thống chỉ biết vị trí mà không biết câu cụ thể thì chỉ hiện chip.</li>
+      <li><b>Soát xong:</b> “Đã soát xong các chỗ được nhắc”, tự mất sau khoảng 4 giây. Sửa chữ trong phần được nhắc cũng tính là đã soát. Lưu localStorage theo từng giáo án.</li>
+      <li><b>Không có nút X:</b> đóng = đã soát, để lời nhắc không bị ẩn khi chưa xem.</li>
+      <li><b>Home:</b> badge giữ “Đã soạn”; dòng phụ amber-700 theo loại và vị trí (“Nên soát số liệu · HĐ2”, “Nên soát nội dung · HĐ3”; nhiều chỗ: “Nên soát 2 chỗ · HĐ2, HĐ3”). Nếu giáo án đồng thời gần SGK thì badge “Cần xem lại” được ưu tiên, dòng phụ vẫn hiện.</li>
       <li><b>Toast xong giữ nguyên</b> (“Giáo án đã soạn xong” + “Mở”), không thêm toast riêng.</li>
-      <li><b>Xuất file:</b> lời nhắc không bao giờ in ra file. Trên bản xem trước chỉ có một dòng nhẹ “Còn 1 chỗ nên soát ở Hoạt động 2 · Xem lại”. Nút tải vẫn bật.</li>
-      <li><b>Mobile 375:</b> dòng tóm tắt xuống dòng; vùng chạm tên hoạt động và “Đã soát” ≥ 44px; chip nằm dưới tiêu đề.</li>
-      <li><b>A11y:</b> nút thật, viền focus rõ, tương phản AA, gạch chân có mô tả cho trình đọc màn hình, thông báo “đã soát xong” qua vùng aria-live.</li>
-      <li><b>Giọng văn:</b> bình tĩnh, gợi ý (“nên soát”), không dùng từ mang nghĩa hỏng hóc, không nhắc hạn mức.</li>
+      <li><b>Xuất file:</b> “Còn 1 chỗ nên soát ở Hoạt động 2 · Xem lại” (số chỗ và vị trí theo giáo án). Lời nhắc không in vào Word, nút xuất vẫn bật, tải file không làm mất lời nhắc.</li>
+      <li><b>Mobile 375:</b> dòng tóm tắt xuống dòng; vùng chạm ≥ 44px; chip nằm dưới tiêu đề.</li>
+      <li><b>A11y:</b> nút thật, viền focus rõ, tương phản AA, thông báo “đã soát xong” qua aria-live.</li>
     </ol>
-    <p class="ref">Nguồn: ga-postgen-check/ac-v1.md · Q1 phương án (a), S3.</p>
+    <p class="ref">Nguồn copy: ga-postgen-check/ac-v2.md, mục “Copy dòng nhắc”.</p>
   </div>
 </div>
 
@@ -643,19 +659,31 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
   var $ = function(s, r){ return (r || document).querySelector(s); };
   var $$ = function(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var reduced = function(){ return window.matchMedia('(prefers-reduced-motion: reduce)').matches; };
-  var STORE = 'giaoan.reviewNote.v1.';
+  var STORE = 'giaoan.reviewNote.v2.';
 
-  var FLAGS = {
-    hd2: {kind:'num',  name:'Hoạt động 2', short:'HĐ2', target:'hd2'},
-    hd3: {kind:'num',  name:'Hoạt động 3', short:'HĐ3', target:'hd3'},
-    pc:  {kind:'text', name:'Phẩm chất',   short:'Phẩm chất', target:'pc-block'}
+  /* Locations use the exact heading names in the plan */
+  var LOCS = {
+    pc:  {kind:'muc', name:'Phẩm chất',   short:'Phẩm chất', target:'pc-block', order:9},
+    hd2: {kind:'act', n:2, name:'Hoạt động 2', short:'HĐ2', target:'hd2', order:2},
+    hd3: {kind:'act', n:3, name:'Hoạt động 3', short:'HĐ3', target:'hd3', order:3},
+    hd4: {kind:'act', n:4, name:'Hoạt động 4', short:'HĐ4', target:'hd4', order:4}
   };
+  /* Types: số liệu (R2–R4 with measures), nội dung (statement without numbers), câu chữ (R1) */
+  var TYPES = {
+    num:     {word:'số liệu',  chip:'Nên soát số liệu',  order:0},
+    content: {word:'nội dung', chip:'Nên soát nội dung', order:1},
+    text:    {word:'câu chữ',  chip:'Nên soát câu chữ',  order:2}
+  };
+  function F(key){ var p = key.split('-'); return {key:key, loc:p[0], type:p[1]}; }
   var PLANS = {
-    one:      {id:'toan7-goc-song-song-a', flags:['hd2']},
-    two:      {id:'toan7-goc-song-song-b', flags:['hd2','hd3']},
-    phamchat: {id:'toan7-goc-song-song-c', flags:['pc']},
-    reviewed: {id:'toan7-goc-song-song-d', flags:['hd2'], demoAllReviewed:true}
+    one:      {id:'toan7-goc-a', flags:['hd2-num']},
+    two:      {id:'toan7-goc-b', flags:['hd2-num','hd3-content']},
+    three:    {id:'toan7-goc-e', flags:['hd2-num','hd3-num','hd4-num']},
+    mixed:    {id:'toan7-goc-f', flags:['hd2-num','pc-text']},
+    phamchat: {id:'toan7-goc-c', flags:['pc-text']},
+    reviewed: {id:'toan7-goc-d', flags:['hd2-num'], demoAllReviewed:true}
   };
+  var STATES = ['one','two','three','mixed','phamchat','reviewed','home','export'];
 
   var planKey = 'one', reviewed = new Set(), fadeT = null, hideT = null, curState = 'one';
 
@@ -664,43 +692,79 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
     catch(e){ reviewed = new Set(); }
   }
   function save(){ try { localStorage.setItem(STORE + PLANS[planKey].id, JSON.stringify(Array.from(reviewed))); } catch(e){} }
-  function remaining(){ return PLANS[planKey].flags.filter(function(f){ return !reviewed.has(f); }); }
-  function allKind(list, k){ return list.every(function(f){ return FLAGS[f].kind === k; }); }
+  function remaining(){ return PLANS[planKey].flags.filter(function(k){ return !reviewed.has(k); }); }
+  function uniqLocs(keys){
+    var out = [];
+    keys.forEach(function(k){ var l = F(k).loc; if (out.indexOf(l) < 0) out.push(l); });
+    return out.sort(function(a, b){ return LOCS[a].order - LOCS[b].order; });
+  }
+  function joinVa(parts){
+    if (parts.length <= 1) return parts.join('');
+    return parts.slice(0, -1).join(', ') + ' và ' + parts[parts.length - 1];
+  }
+  function link(loc, label, isNum){
+    return '<button type="button" class="rv-link' + (isNum ? ' num' : '') + '" data-go="' + loc + '"' +
+      (isNum ? ' aria-label="' + LOCS[loc].name + '"' : '') + '>' + label + '</button>';
+  }
+  /* "Hoạt động 2" · "Hoạt động 2 và 3" · "Hoạt động 2, 3 và 4" · "mục Phẩm chất" */
+  function locPhrase(locs, linked){
+    var acts = locs.filter(function(l){ return LOCS[l].kind === 'act'; });
+    var mucs = locs.filter(function(l){ return LOCS[l].kind === 'muc'; });
+    var parts = [];
+    if (acts.length){
+      var items = acts.map(function(l, i){
+        var label = i === 0 ? LOCS[l].name : String(LOCS[l].n);
+        return linked ? link(l, label, i > 0) : label;
+      });
+      parts.push(joinVa(items));
+    }
+    if (mucs.length){
+      parts.push('mục ' + joinVa(mucs.map(function(l){ return linked ? link(l, LOCS[l].name) : LOCS[l].name; })));
+    }
+    return parts.join(' và ');
+  }
 
-  /* Plan text: flagged sentence shows the suspicious version; others show the clean version. */
   function applyContent(){
     var p = PLANS[planKey];
     $$('.sus').forEach(function(el){
-      var f = el.dataset.flag;
-      var bad = p.flags.indexOf(f) > -1 && !p.demoAllReviewed;
+      var k = el.dataset.flag;
+      var bad = p.flags.indexOf(k) > -1 && !p.demoAllReviewed;
       el.textContent = bad ? el.dataset.bad : el.dataset.good;
-      var d = document.querySelector('.doc-sus[data-flag="' + f + '"]');
-      if (d) d.textContent = el.textContent;   // Word preview: same text, never any marker
+      var d = document.querySelector('.doc-sus[data-flag="' + k + '"]');
+      if (d) d.textContent = el.textContent;   // Word preview: same text, never a marker
     });
   }
 
   function markers(){
     var rem = remaining();
-    Object.keys(FLAGS).forEach(function(f){
-      var on = rem.indexOf(f) > -1;
-      var row = document.querySelector('.rv-chiprow[data-chip="' + f + '"]');
-      if (row){
-        if (on){
-          var label = FLAGS[f].kind === 'text' ? 'Nên soát câu chữ' : 'Nên soát số liệu';
-          row.innerHTML = '<span class="rv-chip"><svg width="13" height="13" aria-hidden="true"><use href="#i-look"/></svg>' + label +
-            '<button class="rv-done" type="button" data-done="' + f + '" aria-label="Đã soát ' + FLAGS[f].name + '">' +
-            '<svg width="12" height="12" aria-hidden="true"><use href="#i-check"/></svg>Đã soát</button></span>';
-          row.hidden = false;
-        } else { row.hidden = true; row.innerHTML = ''; }
-      }
-      $$('.sus[data-flag="' + f + '"]').forEach(function(s){
-        if (on){ s.classList.add('rv-sus'); s.title = 'Câu này nên được soát lại'; s.setAttribute('aria-describedby', 'rv-desc'); }
-        else { s.classList.remove('rv-sus'); s.removeAttribute('title'); s.removeAttribute('aria-describedby'); }
-      });
+    Object.keys(LOCS).forEach(function(loc){
+      var row = document.querySelector('.rv-chiprow[data-chip="' + loc + '"]');
+      if (!row) return;
+      var here = rem.filter(function(k){ return F(k).loc === loc; });
+      if (!here.length){ row.hidden = true; row.innerHTML = ''; return; }
+      row.innerHTML = here.map(function(k){
+        return '<span class="rv-chip"><svg width="13" height="13" aria-hidden="true"><use href="#i-look"/></svg>' + TYPES[F(k).type].chip +
+          '<button class="rv-done" type="button" data-done="' + k + '" aria-label="Đã soát, ' + LOCS[loc].name + '">' +
+          '<svg width="12" height="12" aria-hidden="true"><use href="#i-check"/></svg>Đã soát</button></span>';
+      }).join('');
+      row.hidden = false;
+    });
+    $$('.sus').forEach(function(s){
+      if (rem.indexOf(s.dataset.flag) > -1){ s.classList.add('rv-sus'); s.title = 'Nên soát lại câu này'; s.setAttribute('aria-describedby', 'rv-desc'); }
+      else { s.classList.remove('rv-sus'); s.removeAttribute('title'); s.removeAttribute('aria-describedby'); }
     });
   }
 
-  function linkBtn(f){ return '<button type="button" class="rv-link" data-go="' + f + '">' + FLAGS[f].name + '</button>'; }
+  function summaryText(rem, linked){
+    var types = [];
+    rem.forEach(function(k){ var t = F(k).type; if (types.indexOf(t) < 0) types.push(t); });
+    types.sort(function(a, b){ return TYPES[a].order - TYPES[b].order; });
+    var groups = types.map(function(t){
+      var keys = rem.filter(function(k){ return F(k).type === t; });
+      return TYPES[t].word + ' ở ' + locPhrase(uniqLocs(keys), linked);
+    });
+    return 'Nên soát lại ' + joinVa(groups);
+  }
 
   function summary(opts){
     opts = opts || {};
@@ -709,11 +773,7 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
     note.classList.remove('is-done', 'fade');
     var rem = remaining();
     if (rem.length){
-      var links = rem.map(linkBtn).join(' và ');
-      var t = allKind(rem, 'text') ? 'Nên soát lại câu chữ ở mục ' + links
-            : allKind(rem, 'num')  ? 'Nên soát lại số liệu ở ' + links
-            : 'Nên soát lại ở ' + links;
-      $('#rv-title').innerHTML = t;
+      $('#rv-title').innerHTML = summaryText(rem, true);
       $('#rv-sub').hidden = false;
       $('#rv-icon').innerHTML = '<use href="#i-look"/>';
       note.hidden = false;
@@ -739,8 +799,10 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
   function homeHint(){
     var rem = remaining(), hint = $('#card-hint');
     if (!rem.length){ hint.hidden = true; $('#row-open').removeAttribute('aria-describedby'); return; }
-    var shorts = rem.map(function(f){ return FLAGS[f].short; }).join(', ');
-    $('#card-hint-text').textContent = (allKind(rem, 'text') ? 'Nên soát câu chữ · ' : 'Nên soát số liệu · ') + shorts;
+    var shorts = uniqLocs(rem).map(function(l){ return LOCS[l].short; }).join(', ');
+    $('#card-hint-text').textContent = rem.length === 1
+      ? 'Nên soát ' + TYPES[F(rem[0]).type].word + ' · ' + shorts
+      : 'Nên soát ' + rem.length + ' chỗ · ' + shorts;
     hint.hidden = false;
     $('#row-open').setAttribute('aria-describedby', 'card-hint-text');
   }
@@ -748,26 +810,26 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
   function exportHint(){
     var rem = remaining(), el = $('#ex-hint');
     if (!rem.length){ el.hidden = true; return; }
-    var names = rem.map(function(f){ return FLAGS[f].name; }).join(' và ');
-    $('#ex-hint-text').textContent = 'Còn ' + rem.length + ' chỗ nên soát ở ' + (allKind(rem, 'text') ? 'mục ' : '') + names;
+    $('#ex-hint-text').textContent = 'Còn ' + rem.length + ' chỗ nên soát ở ' + locPhrase(uniqLocs(rem), false);
     el.hidden = false;
   }
 
   function renderAll(opts){ markers(); summary(opts); homeHint(); exportHint(); }
 
-  function markReviewed(f, via){
-    if (reviewed.has(f) || PLANS[planKey].flags.indexOf(f) < 0) return;
-    reviewed.add(f); save();
+  function markReviewed(keys, via){
+    keys = keys.filter(function(k){ return !reviewed.has(k) && PLANS[planKey].flags.indexOf(k) > -1; });
+    if (!keys.length) return;
+    keys.forEach(function(k){ reviewed.add(k); });
+    save();
     renderAll({confirm: remaining().length === 0});
     if (via === 'button'){
-      var t = document.getElementById(FLAGS[f].target);
+      var t = document.getElementById(LOCS[F(keys[0]).loc].target);
       if (t) t.focus({preventScroll:true});
     }
   }
 
-  /* Jump from summary link: scroll, focus, 2s soft amber ring */
-  function jumpTo(f){
-    var el = document.getElementById(FLAGS[f].target);
+  function jumpTo(loc){
+    var el = document.getElementById(LOCS[loc].target);
     if (!el) return;
     if (el.classList.contains('collapsed')) toggleAct(el.id, true);
     el.scrollIntoView({behavior: reduced() ? 'auto' : 'smooth', block: 'start'});
@@ -798,13 +860,13 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
     var g = e.target.closest('[data-go]');
     if (g){ e.preventDefault(); jumpTo(g.dataset.go); return; }
     var d = e.target.closest('[data-done]');
-    if (d){ e.preventDefault(); markReviewed(d.dataset.done, 'button'); }
+    if (d){ e.preventDefault(); markReviewed([d.dataset.done], 'button'); }
   });
-  /* Editing the flagged activity/section counts as reviewed */
+  /* Editing a flagged activity/section counts as reviewed for every spot there */
   $$('[data-flag-container]').forEach(function(c){
     c.addEventListener('input', function(){
-      var f = c.dataset.flagContainer;
-      if (remaining().indexOf(f) > -1) markReviewed(f, 'edit');
+      var loc = c.dataset.flagContainer;
+      markReviewed(remaining().filter(function(k){ return F(k).loc === loc; }), 'edit');
     });
   });
 
@@ -831,16 +893,16 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
   }
 
   window.setState = function(s){
-    if (['one','two','phamchat','reviewed','home','export'].indexOf(s) < 0) s = 'one';
+    if (STATES.indexOf(s) < 0) s = 'one';
     curState = s;
     $$('.demo-panel button.d[data-s]').forEach(function(b){ b.classList.toggle('active', b.dataset.s === s); });
     setUrl(s);
     var planParam = new URLSearchParams(location.search).get('plan');
-    if (s === 'home' || s === 'export') planKey = (planParam === 'two' || planParam === 'phamchat') ? planParam : 'one';
+    if (s === 'home' || s === 'export') planKey = (PLANS[planParam] && planParam !== 'reviewed') ? planParam : 'one';
     else planKey = s;
     ['hd1','hd2','hd3','hd4'].forEach(function(id){ toggleAct(id, true); });
     if (planKey === 'reviewed'){
-      reviewed = new Set(PLANS.reviewed.flags);   // demo: everything already reviewed -> quiet confirmation once
+      reviewed = new Set(PLANS.reviewed.flags);   // demo: all spots already reviewed -> quiet confirmation once
       applyContent(); show('editor'); renderAll({confirm:true});
       $('#editor-main').scrollTop = 0;
     } else {
@@ -853,10 +915,11 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
   };
 
   window.resetAll = function(){
-    Object.keys(localStorage).filter(function(k){ return k.indexOf(STORE) === 0; })
+    Object.keys(localStorage).filter(function(k){ return k.indexOf('giaoan.reviewNote.') === 0; })
       .forEach(function(k){ localStorage.removeItem(k); });
     window.setState(curState);
   };
+  /* Download is a mock: it never touches the review state */
   window.doExport = function(){ $('#ex-success').hidden = false; };
   window.showToast = function(){
     var t = $('#toast'); t.classList.add('show');
@@ -882,7 +945,6 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
     history.replaceState(null, '', u);
   };
 
-  /* init */
   var params = new URLSearchParams(location.search);
   if (params.get('embed') === '1') document.body.classList.add('embed');
   if (window.matchMedia('(max-width: 720px)').matches || params.get('demo') === '0'){
