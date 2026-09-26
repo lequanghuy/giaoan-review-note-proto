@@ -616,13 +616,15 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
     <button class="d" type="button" data-s="three" onclick="setState('three')">Số liệu · HĐ2, 3, 4</button>
     <button class="d" type="button" data-s="mixed" onclick="setState('mixed')">Số liệu HĐ2 + câu chữ Phẩm chất</button>
     <button class="d" type="button" data-s="phamchat" onclick="setState('phamchat')">Câu chữ · Phẩm chất</button>
+    <button class="d" type="button" data-s="nopos" onclick="setState('nopos')">Chỉ chip · HĐ2 (không có vị trí câu)</button>
     <button class="d" type="button" data-s="reviewed" onclick="setState('reviewed')">Đã soát xong</button>
     <button class="d" type="button" data-s="home" onclick="setState('home')">Home (danh sách)</button>
     <button class="d" type="button" data-s="export" onclick="setState('export')">Xuất file</button>
     <button class="d" type="button" onclick="showToast()">Toast xong (không đổi)</button>
+    <button class="d" type="button" id="demo-revise" onclick="simulateRevise()">Mô phỏng soạn lại (HĐ đang nhắc đổi nội dung)</button>
     <div class="demo-row"><span id="msw-l">Khung mobile 375</span><button class="toggle-sw" id="msw" type="button" role="switch" aria-checked="false" aria-labelledby="msw-l" onclick="setMobile(this.getAttribute('aria-checked')!=='true')"></button></div>
     <button class="demo-reset" type="button" onclick="resetAll()">Đặt lại (xoá localStorage)</button>
-    <p class="demo-foot">“Đã soát” được lưu theo từng giáo án. Bấm Đặt lại để xem lại từ đầu.</p>
+    <p class="demo-foot">“Đã soát” được lưu theo từng giáo án. Gõ sửa trong phần được nhắc không làm mất nhắc (AC v2.1). Bấm Đặt lại để xem lại từ đầu.</p>
   </div>
 </div>
 
@@ -642,7 +644,8 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
       <li><b>Nút vị trí:</b> cuộn mượt, focus, viền amber nhẹ 2 giây. Khi bật giảm chuyển động: nhảy thẳng, không hiệu ứng.</li>
       <li><b>Tại chỗ:</b> chip “Nên soát số liệu / nội dung / câu chữ” ngay dưới tiêu đề, nút “Đã soát”. Câu cần soát gạch chân chấm amber, tooltip và aria “Nên soát lại câu này”.</li>
       <li><b>Dự phòng:</b> nếu hệ thống chỉ biết vị trí mà không biết câu cụ thể thì chỉ hiện chip.</li>
-      <li><b>Soát xong:</b> “Đã soát xong các chỗ được nhắc”, tự mất sau khoảng 4 giây. Sửa chữ trong phần được nhắc cũng tính là đã soát. Lưu localStorage theo từng giáo án.</li>
+      <li><b>Khi nào nhắc mất (AC v2.1, S5):</b> chỉ khi bấm “Đã soát” ở chỗ đó, hoặc khi soạn lại (revise) làm thay đổi nội dung hoạt động đó. Gõ sửa tay chưa lưu KHÔNG làm mất nhắc. Tải lại trang hay xuất file đều không làm mất.</li>
+      <li><b>Soát xong:</b> “Đã soát xong các chỗ được nhắc”, tự mất sau khoảng 4 giây. Prototype lưu localStorage theo từng giáo án; sản phẩm lưu trên server (<code>acknowledgedAt</code>).</li>
       <li><b>Không có nút X:</b> đóng = đã soát, để lời nhắc không bị ẩn khi chưa xem.</li>
       <li><b>Home:</b> badge giữ “Đã soạn”; dòng phụ amber-700 theo loại và vị trí (“Nên soát số liệu · HĐ2”, “Nên soát nội dung · HĐ3”; nhiều chỗ: “Nên soát 2 chỗ · HĐ2, HĐ3”). Nếu giáo án đồng thời gần SGK thì badge “Cần xem lại” được ưu tiên, dòng phụ vẫn hiện.</li>
       <li><b>Toast xong giữ nguyên</b> (“Giáo án đã soạn xong” + “Mở”), không thêm toast riêng.</li>
@@ -650,7 +653,7 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
       <li><b>Mobile 375:</b> dòng tóm tắt xuống dòng; vùng chạm ≥ 44px; chip nằm dưới tiêu đề.</li>
       <li><b>A11y:</b> nút thật, viền focus rõ, tương phản AA, thông báo “đã soát xong” qua aria-live.</li>
     </ol>
-    <p class="ref">Nguồn copy: ga-postgen-check/ac-v2.md, mục “Copy dòng nhắc”.</p>
+    <p class="ref">Nguồn: ga-postgen-check/ac-v2.md (BA v2.1), mục S4, S5 và “Copy dòng nhắc”. Spec FE: spec/fe-spec-review-note.md.</p>
   </div>
 </div>
 
@@ -681,18 +684,27 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
     three:    {id:'toan7-goc-e', flags:['hd2-num','hd3-num','hd4-num']},
     mixed:    {id:'toan7-goc-f', flags:['hd2-num','pc-text']},
     phamchat: {id:'toan7-goc-c', flags:['pc-text']},
-    reviewed: {id:'toan7-goc-d', flags:['hd2-num'], demoAllReviewed:true}
+    reviewed: {id:'toan7-goc-d', flags:['hd2-num'], demoAllReviewed:true},
+    nopos:    {id:'toan7-goc-g', flags:['hd2-num'], noPos:true}   // BE sent no span: chip only, no underline
   };
-  var STATES = ['one','two','three','mixed','phamchat','reviewed','home','export'];
+  var STATES = ['one','two','three','mixed','phamchat','nopos','reviewed','home','export'];
 
-  var planKey = 'one', reviewed = new Set(), fadeT = null, hideT = null, curState = 'one';
+  var planKey = 'one', reviewed = new Set(), revised = new Set(), fadeT = null, hideT = null, curState = 'one';
 
+  /* reviewed = "Đã soát" (ack). revised = cleared because a revise changed that activity. Both persist per plan. */
   function load(){
     try { reviewed = new Set(JSON.parse(localStorage.getItem(STORE + PLANS[planKey].id) || '[]')); }
     catch(e){ reviewed = new Set(); }
+    try { revised = new Set(JSON.parse(localStorage.getItem(STORE + PLANS[planKey].id + '.revised') || '[]')); }
+    catch(e){ revised = new Set(); }
   }
-  function save(){ try { localStorage.setItem(STORE + PLANS[planKey].id, JSON.stringify(Array.from(reviewed))); } catch(e){} }
-  function remaining(){ return PLANS[planKey].flags.filter(function(k){ return !reviewed.has(k); }); }
+  function save(){
+    try {
+      localStorage.setItem(STORE + PLANS[planKey].id, JSON.stringify(Array.from(reviewed)));
+      localStorage.setItem(STORE + PLANS[planKey].id + '.revised', JSON.stringify(Array.from(revised)));
+    } catch(e){}
+  }
+  function remaining(){ return PLANS[planKey].flags.filter(function(k){ return !reviewed.has(k) && !revised.has(k); }); }
   function uniqLocs(keys){
     var out = [];
     keys.forEach(function(k){ var l = F(k).loc; if (out.indexOf(l) < 0) out.push(l); });
@@ -728,7 +740,7 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
     var p = PLANS[planKey];
     $$('.sus').forEach(function(el){
       var k = el.dataset.flag;
-      var bad = p.flags.indexOf(k) > -1 && !p.demoAllReviewed;
+      var bad = p.flags.indexOf(k) > -1 && !p.demoAllReviewed && !revised.has(k);   // a revise rewrites the sentence
       el.textContent = bad ? el.dataset.bad : el.dataset.good;
       var d = document.querySelector('.doc-sus[data-flag="' + k + '"]');
       if (d) d.textContent = el.textContent;   // Word preview: same text, never a marker
@@ -750,7 +762,7 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
       row.hidden = false;
     });
     $$('.sus').forEach(function(s){
-      if (rem.indexOf(s.dataset.flag) > -1){ s.classList.add('rv-sus'); s.title = 'Nên soát lại câu này'; s.setAttribute('aria-describedby', 'rv-desc'); }
+      if (rem.indexOf(s.dataset.flag) > -1 && !PLANS[planKey].noPos){ s.classList.add('rv-sus'); s.title = 'Nên soát lại câu này'; s.setAttribute('aria-describedby', 'rv-desc'); }
       else { s.classList.remove('rv-sus'); s.removeAttribute('title'); s.removeAttribute('aria-describedby'); }
     });
   }
@@ -862,13 +874,19 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
     var d = e.target.closest('[data-done]');
     if (d){ e.preventDefault(); markReviewed([d.dataset.done], 'button'); }
   });
-  /* Editing a flagged activity/section counts as reviewed for every spot there */
-  $$('[data-flag-container]').forEach(function(c){
-    c.addEventListener('input', function(){
-      var loc = c.dataset.flagContainer;
-      markReviewed(remaining().filter(function(k){ return F(k).loc === loc; }), 'edit');
-    });
-  });
+  /* AC v2.1 (S5): typing in a flagged activity/section does NOT clear its note.
+     A note clears only on "Đã soát" (markReviewed) or when a revise changes that activity (simulateRevise). */
+
+  /* Demo: a revise (Yêu cầu soạn lại) returned new text for the first flagged location.
+     Product: BE carryOverWarnings drops warnings of activities whose content changed; FE re-reads plan.postgenWarnings. */
+  window.simulateRevise = function(){
+    var rem = remaining();
+    if (!rem.length) return;
+    var loc = F(rem[0]).loc;
+    rem.filter(function(k){ return F(k).loc === loc; }).forEach(function(k){ revised.add(k); });
+    save(); applyContent();
+    renderAll({confirm: remaining().length === 0});
+  };
 
   var TITLES = {home:'Giáo án của tôi', export:'Xuất file', editor:'Góc tạo bởi một đường thẳng cắt hai đường thẳng song song'};
   function show(name){
@@ -902,6 +920,7 @@ body.embed .demo-panel,body.embed .notes-panel{display:none}
     else planKey = s;
     ['hd1','hd2','hd3','hd4'].forEach(function(id){ toggleAct(id, true); });
     if (planKey === 'reviewed'){
+      revised = new Set();
       reviewed = new Set(PLANS.reviewed.flags);   // demo: all spots already reviewed -> quiet confirmation once
       applyContent(); show('editor'); renderAll({confirm:true});
       $('#editor-main').scrollTop = 0;
