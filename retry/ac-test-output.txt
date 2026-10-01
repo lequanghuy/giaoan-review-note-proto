@@ -1,0 +1,126 @@
+PASS [390] (a) no icon in Saved/Saving/Retrying/Success
+PASS [390] icon present in Error/Hover/Focus/Again
+PASS [390] (e) row height, card height, title position identical across all states · {"cardH":213.14,"hdH":24.14,"titleX":17,"titleY":17}
+PASS [390] (e) label does not jump (right edge and left edge identical across states) · {"labelRight":51,"labelX":238}
+PASS [390] AC6 title row does not wrap (row height = title height)
+PASS [390] AC1/(a) Saved: label "Đã lưu", no icon
+PASS [390] AC1 error: label exactly "Chưa lưu được", no Lỗi/lỗi/sai/máy chủ
+PASS [390] AC1 no toast element in the DOM
+PASS [390] (b) icon is a <button> named "Thử lại" via aria-label (tooltip is aria-hidden, not the only name) · {"aria":"Thử lại","tag":"BUTTON","type":"button","svgHidden":"true","tipHidden":"true"}
+PASS [390] aria-live polite on label
+PASS [390] (c) tooltip hidden at rest
+PASS [390] (c) hover n/a on touch (tooltip is a nicety)
+PASS [390] (c) tooltip shows on keyboard focus-visible, inside card and viewport · {"vis":true,"inCard":true,"inViewport":true,"w":57}
+PASS [390] (c) focus causes no layout shift
+PASS [390] focus ring = 2px solid #2563eb (like .rv-done:focus-visible) · solid 2px rgb(37, 99, 235)
+PASS [390] (c) Esc dismisses focus tooltip
+PASS [390] (c) Esc leaves focus on the icon
+PASS [390] visual 24px, glyph 14px, colour #92400E (7.09:1 on white; glyph needs 3:1) · {"btn":[24,24],"glyph":[14,14],"color":"rgb(146, 64, 14)"}
+PASS [390] (d) tap target >=44x44 (hit-test ±21 in, ±24 out) · {"in":[true,true,true,true,true,true],"out":[false,false,false,false]}
+PASS [390] AC2 click → label "Đang lưu"
+PASS [390] (a) Retrying: no icon element
+PASS [390] (f) focus not lost to <body> at press (on stable label target) · lt
+PASS [390] (f) focus still not <body> while retrying after more keys · lt
+PASS [390] AC2 "Đang lưu" shown >=600 ms · 614ms
+PASS [390] AC3/(g) exactly one PUT for the retry + repeated clicks (requests = 1)
+PASS [390] AC2 fail → back to "Chưa lưu được", icon returns
+PASS [390] AC2 fail → focus is on the icon · save-retry
+PASS [390] AC4 text intact after failed retry
+PASS [390] (f) pointer press: focus not <body> · lt
+PASS [390] AC5 export: sentence unchanged, in viewport, under the clicked button, focus stays · {"gap":14}
+PASS [390] AC5 export: no PUT
+PASS [390] AC5 revise: sentence unchanged, in viewport, under the clicked button, focus stays · {"gap":12}
+PASS [390] AC5 revise: no PUT
+PASS [390] AC5 ws: sentence unchanged, in viewport, under the clicked button, focus stays · {"gap":12}
+PASS [390] AC5 ws: no PUT
+PASS [390] AC2 success → "Đã lưu", icon gone
+PASS [390] AC2 success → focus on the last edited field (textarea), not <body> · ta
+PASS [390] AC5 line gone after success
+PASS [390] AC4 text intact after success
+PASS [390] no page errors
+PASS [720] (a) no icon in Saved/Saving/Retrying/Success
+PASS [720] icon present in Error/Hover/Focus/Again
+PASS [720] (e) row height, card height, title position identical across all states · {"cardH":211.92,"hdH":24.14,"titleX":16.39,"titleY":16.39}
+PASS [720] (e) label does not jump (right edge and left edge identical across states) · {"labelRight":50.39,"labelX":568.61}
+PASS [720] AC6 title row does not wrap (row height = title height)
+PASS [720] AC1/(a) Saved: label "Đã lưu", no icon
+PASS [720] AC1 error: label exactly "Chưa lưu được", no Lỗi/lỗi/sai/máy chủ
+PASS [720] AC1 no toast element in the DOM
+PASS [720] (b) icon is a <button> named "Thử lại" via aria-label (tooltip is aria-hidden, not the only name) · {"aria":"Thử lại","tag":"BUTTON","type":"button","svgHidden":"true","tipHidden":"true"}
+PASS [720] aria-live polite on label
+PASS [720] (c) tooltip hidden at rest
+PASS [720] (c) tooltip shows on hover, inside card and viewport · {"vis":true,"inCard":true,"inViewport":true,"w":57}
+PASS [720] (c) hover causes no layout shift
+PASS [720] (c) Esc dismisses hover tooltip
+PASS [720] (c) tooltip shows on keyboard focus-visible, inside card and viewport · {"vis":true,"inCard":true,"inViewport":true,"w":57}
+PASS [720] (c) focus causes no layout shift
+PASS [720] focus ring = 2px solid #2563eb (like .rv-done:focus-visible) · solid 2px rgb(37, 99, 235)
+PASS [720] (c) Esc dismisses focus tooltip
+PASS [720] (c) Esc leaves focus on the icon
+PASS [720] visual 24px, glyph 14px, colour #92400E (7.09:1 on white; glyph needs 3:1) · {"btn":[24,24],"glyph":[14,14],"color":"rgb(146, 64, 14)"}
+PASS [720] (d) tap target >=44x44 (hit-test ±21 in, ±24 out) · {"in":[true,true,true,true,true,true],"out":[false,false,false,false]}
+PASS [720] AC2 click → label "Đang lưu"
+PASS [720] (a) Retrying: no icon element
+PASS [720] (f) focus not lost to <body> at press (on stable label target) · lt
+PASS [720] (f) focus still not <body> while retrying after more keys · lt
+PASS [720] AC2 "Đang lưu" shown >=600 ms · 607ms
+PASS [720] AC3/(g) exactly one PUT for the retry + repeated clicks (requests = 1)
+PASS [720] AC2 fail → back to "Chưa lưu được", icon returns
+PASS [720] AC2 fail → focus is on the icon · save-retry
+PASS [720] AC4 text intact after failed retry
+PASS [720] (f) pointer press: focus not <body> · lt
+PASS [720] AC5 export: sentence unchanged, in viewport, under the clicked button, focus stays · {"gap":14}
+PASS [720] AC5 export: no PUT
+PASS [720] AC5 revise: sentence unchanged, in viewport, under the clicked button, focus stays · {"gap":12}
+PASS [720] AC5 revise: no PUT
+PASS [720] AC5 ws: sentence unchanged, in viewport, under the clicked button, focus stays · {"gap":12}
+PASS [720] AC5 ws: no PUT
+PASS [720] AC2 success → "Đã lưu", icon gone
+PASS [720] AC2 success → focus on the last edited field (textarea), not <body> · ta
+PASS [720] AC5 line gone after success
+PASS [720] AC4 text intact after success
+PASS [720] no page errors
+PASS [1280] (a) no icon in Saved/Saving/Retrying/Success
+PASS [1280] icon present in Error/Hover/Focus/Again
+PASS [1280] (e) row height, card height, title position identical across all states · {"cardH":211.92,"hdH":24.14,"titleX":16.39,"titleY":16.39}
+PASS [1280] (e) label does not jump (right edge and left edge identical across states) · {"labelRight":50.39,"labelX":660.61}
+PASS [1280] AC6 title row does not wrap (row height = title height)
+PASS [1280] AC1/(a) Saved: label "Đã lưu", no icon
+PASS [1280] AC1 error: label exactly "Chưa lưu được", no Lỗi/lỗi/sai/máy chủ
+PASS [1280] AC1 no toast element in the DOM
+PASS [1280] (b) icon is a <button> named "Thử lại" via aria-label (tooltip is aria-hidden, not the only name) · {"aria":"Thử lại","tag":"BUTTON","type":"button","svgHidden":"true","tipHidden":"true"}
+PASS [1280] aria-live polite on label
+PASS [1280] (c) tooltip hidden at rest
+PASS [1280] (c) tooltip shows on hover, inside card and viewport · {"vis":true,"inCard":true,"inViewport":true,"w":57}
+PASS [1280] (c) hover causes no layout shift
+PASS [1280] (c) Esc dismisses hover tooltip
+PASS [1280] (c) tooltip shows on keyboard focus-visible, inside card and viewport · {"vis":true,"inCard":true,"inViewport":true,"w":57}
+PASS [1280] (c) focus causes no layout shift
+PASS [1280] focus ring = 2px solid #2563eb (like .rv-done:focus-visible) · solid 2px rgb(37, 99, 235)
+PASS [1280] (c) Esc dismisses focus tooltip
+PASS [1280] (c) Esc leaves focus on the icon
+PASS [1280] visual 24px, glyph 14px, colour #92400E (7.09:1 on white; glyph needs 3:1) · {"btn":[24,24],"glyph":[14,14],"color":"rgb(146, 64, 14)"}
+PASS [1280] (d) tap target >=44x44 (hit-test ±21 in, ±24 out) · {"in":[true,true,true,true,true,true],"out":[false,false,false,false]}
+PASS [1280] AC2 click → label "Đang lưu"
+PASS [1280] (a) Retrying: no icon element
+PASS [1280] (f) focus not lost to <body> at press (on stable label target) · lt
+PASS [1280] (f) focus still not <body> while retrying after more keys · lt
+PASS [1280] AC2 "Đang lưu" shown >=600 ms · 610ms
+PASS [1280] AC3/(g) exactly one PUT for the retry + repeated clicks (requests = 1)
+PASS [1280] AC2 fail → back to "Chưa lưu được", icon returns
+PASS [1280] AC2 fail → focus is on the icon · save-retry
+PASS [1280] AC4 text intact after failed retry
+PASS [1280] (f) pointer press: focus not <body> · lt
+PASS [1280] AC5 export: sentence unchanged, in viewport, under the clicked button, focus stays · {"gap":14}
+PASS [1280] AC5 export: no PUT
+PASS [1280] AC5 revise: sentence unchanged, in viewport, under the clicked button, focus stays · {"gap":12}
+PASS [1280] AC5 revise: no PUT
+PASS [1280] AC5 ws: sentence unchanged, in viewport, under the clicked button, focus stays · {"gap":12}
+PASS [1280] AC5 ws: no PUT
+PASS [1280] AC2 success → "Đã lưu", icon gone
+PASS [1280] AC2 success → focus on the last edited field (textarea), not <body> · ta
+PASS [1280] AC5 line gone after success
+PASS [1280] AC4 text intact after success
+PASS [1280] no page errors
+
+124/124 passed

@@ -3,150 +3,185 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Thử lại khi lưu chỉnh sửa · mockup · GiaoAn AI</title>
+<title>Thử lại khi lưu chỉnh sửa (biểu tượng) · mockup v2 · GiaoAn AI</title>
 <style>
 /* Tokens: apps/web/src/app/globals.css (:root) */
 :root{--blue:#2563eb;--blue-h:#1d4ed8;--blue-s:#eff6ff;--blue-b:#bfdbfe;--g50:#f9fafb;--g100:#f3f4f6;--g200:#e5e7eb;--g300:#d1d5db;--g400:#9ca3af;--g500:#6b7280;--g600:#4b5563;--g700:#374151;--g800:#1f2937;--g900:#111827;--green:#059669;--amber:#d97706;--as:#fffbeb;--red:#dc2626;--surface:#fff;--line:var(--g200);--card:var(--surface);--focus-ring:0 0 0 3px rgba(37,99,235,.12)}
 *{box-sizing:border-box}
 html{font-size:14px}
 body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--g50);color:var(--g800);line-height:1.5;-webkit-font-smoothing:antialiased}
-/* plan-editor-frame.tsx: mx-auto max-w-[860px] px-9 pt-5 ; max-[720px]: px-[12px] pt-[12px] */
+/* plan-editor-frame.tsx */
 .frame{margin:0 auto;width:100%;min-width:0;max-width:860px;padding:20px 36px 48px}
 @media (max-width:720px){.frame{padding:12px 12px 48px}}
 /* ui/card.tsx */
 .card{border-radius:10px;border:1px solid var(--line);background:var(--card);padding:16px}
 @media (min-width:640px){.card{padding:1.1rem}}
 .card-title{margin:0;font-size:1.15rem;font-weight:600;line-height:1.5}
-/* ui/button.tsx (cva) */
+/* ui/button.tsx */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;border-radius:8px;padding:9px 16px;font:inherit;font-size:14px;font-weight:500;line-height:1.5;transition:background-color .15s,border-color .15s;cursor:pointer}
 .btn-outline,.btn-secondary{border:1px solid var(--g200);background:#fff;color:var(--g700)}
 .btn-outline:hover,.btn-secondary:hover{border-color:var(--g300);background:var(--g50)}
 .btn:disabled{cursor:not-allowed;opacity:.45}
 .btn-default{background:var(--blue);color:#fff;border:0;box-shadow:0 1px 2px rgba(37,99,235,.25)}
-/* editor-view.tsx header row: mb-3 flex items-center justify-between gap-2 */
+.btn:focus{outline:none}
+.btn:focus-visible{outline:2px solid #2563eb;outline-offset:2px;border-radius:4px}
+/* editor-view.tsx title row */
 .hd{margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:8px}
 .tabs{margin-bottom:12px;display:flex;flex-wrap:wrap;gap:8px}
-/* ui/textarea.tsx */
 .ta{min-height:4.5rem;width:100%;border-radius:8px;border:1px solid var(--g200);background:#fff;padding:9px 12px;font:inherit;font-size:14px;color:var(--g800);outline:none;resize:none}
 .ta:focus{border-color:var(--blue);box-shadow:var(--focus-ring)}
 .fld-l{display:block;margin:0 0 4px;font-size:12px;font-weight:600;color:var(--g600)}
 
-/* ===== SAVE STATUS SLOT (changed part) ===== */
-.save-slot{display:flex;flex-shrink:0;align-items:center;justify-content:flex-end;gap:6px}
-/* existing label: inline-block min-w-[5.5rem] shrink-0 text-right text-[11px] font-medium leading-none text-g500 + aria-live=polite */
-.save-label{display:inline-block;flex-shrink:0;text-align:right;font-size:11px;font-weight:500;line-height:1;color:var(--g500)}
-.save-label{min-width:5.5rem}
-/* error colour = .rv-ackfail in review-note.css (#92400e, 7.09:1 on white) */
-.save-label.is-error{color:#92400e}
-/* retry button = <Button variant="secondary"> small, as the "Thử lại" in plan-status-banner.tsx; py-0.5 so height = title line (24px) */
-.save-retry{position:relative;padding:2px 8px;font-size:12px;line-height:1.5}
-/* tap area 44px high without growing the row: same trick as .rv-done::after in review-note.css */
-.save-retry::after{content:"";position:absolute;left:-4px;right:-4px;top:50%;height:44px;transform:translateY(-50%)}
-.save-retry[aria-disabled="true"]{opacity:.45;cursor:not-allowed}
-.save-retry[aria-disabled="true"]:hover{border-color:var(--g200);background:#fff}
-/* focus ring = review-note.css (.rv-done:focus-visible) */
+/* =====================  SAVE STATUS SLOT (v2, icon)  ===================== */
+.save-slot{display:flex;flex-shrink:0;align-items:center;justify-content:flex-end;gap:10px}
+/* existing label classes: inline-block min-w-[5.5rem] shrink-0 text-right text-[11px] font-medium leading-none text-g500, aria-live=polite */
+.save-label{display:inline-block;flex-shrink:0;min-width:5.5rem;text-align:right;font-size:11px;font-weight:500;line-height:1;color:var(--g500)}
+.save-label.is-error{color:#92400e}                       /* = .rv-ackfail */
+/* inner span = the stable focus target while retrying (label itself stays the live region) */
+.save-label .lt{display:inline-block;padding:2px 0;margin:-2px 0}
+.save-label .lt:focus{outline:none}
+.save-label .lt:focus-visible,.save-label .lt.is-focus{outline:2px solid #2563eb;outline-offset:2px;border-radius:4px}
+/* icon slot: ALWAYS 24px wide, so the label never moves between states */
+.save-act{position:relative;flex:none;width:24px;height:24px}
+.save-retry{position:relative;display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;padding:0;border:1px solid #fde68a;border-radius:8px;background:#fff;color:#92400e;cursor:pointer;transition:background-color .15s,border-color .15s}
+.save-retry svg{width:14px;height:14px;display:block;transition:transform .2s ease}
+.save-retry:hover{background:#f9fafb;border-color:#fcd34d}   /* = .rv-done:hover */
+.save-retry:active{background:#fffbeb;border-color:#f59e0b}
+.save-retry:active svg{transform:rotate(60deg)}   /* pressed: quarter-turn nudge, no extra UI */
+/* 44px tap area, visual stays 24px (same trick as .rv-done::after) */
+.save-retry::after{content:"";position:absolute;left:-11px;right:-11px;top:50%;height:44px;transform:translateY(-50%)}
 .save-retry:focus{outline:none}
-.save-retry:focus-visible,.save-retry.is-focus{outline:2px solid #2563eb;outline-offset:2px;border-radius:4px}
+.save-retry:focus-visible,.save-retry.is-focus{outline:2px solid #2563eb;outline-offset:2px}   /* = .rv-done:focus-visible */
+/* tooltip: same look as .rv-tip (review-note.css). Absolute, right-aligned to the icon, below it: no layout cost, no card-edge clip */
+.save-tip{position:absolute;z-index:40;top:calc(100% + 6px);right:0;padding:4px 8px;border-radius:6px;background:#fffbeb;border:1px solid #fde68a;color:#92400e;font-size:12px;font-weight:600;line-height:1.4;white-space:nowrap;pointer-events:auto;visibility:hidden}
+.save-tip::before{content:"";position:absolute;left:0;right:0;top:-8px;height:8px}  /* hover bridge (WCAG 1.4.13 hoverable) */
+.save-act.tip-on .save-tip{visibility:visible}
+@media (prefers-reduced-motion:reduce){.save-retry,.save-retry svg{transition:none}.save-retry:active svg{transform:none}}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
 
-/* ===== AC5: line under the action row when a save error blocked Xuất / Soạn lại / Tạo phiếu =====
-   same style as .rv-ackfail (review-note.css): 12px / 500 / #92400e. Always in the DOM (aria-live=polite); empty = visually hidden, no layout cost */
+/* AC5 line, same style as .rv-ackfail */
 .acts{margin-top:12px;display:flex;flex-wrap:wrap;align-items:flex-start;gap:12px}
 .act-fail{flex-basis:100%;margin:0;font-size:12px;font-weight:500;line-height:1.4;color:#92400e}
 .act-fail:empty{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
-.btn:focus{outline:none}
-.btn:focus-visible{outline:2px solid #2563eb;outline-offset:2px;border-radius:4px}
 
 /* ===== mockup-only annotation (not part of the app) ===== */
-.board{display:grid;gap:22px}
+.board{display:grid;gap:26px}
 .cap{margin:0 0 6px;font-size:12px;font-weight:600;color:var(--g600)}
-.cap b{color:var(--blue)}
-.cap i{font-style:normal;font-weight:400;color:var(--g500)}
 .demo{margin-top:22px;padding:12px;border:1px dashed var(--g300);border-radius:10px;font-size:13px;color:var(--g600)}
 .demo label{margin-right:12px}
+.v1link{font-size:12px;color:var(--g500);margin:0 0 14px}
+.v1link a{color:var(--blue-h)}
 </style>
 </head>
 <body>
-<div class="frame"><div class="board" id="board"></div></div>
+<div class="frame"><p class="v1link">Bản 2 (biểu tượng). Bản 1 (nút chữ "Thử lại", BA đã PASS): <a href="v1-text/">/retry/v1-text/</a></p><div class="board" id="board"></div></div>
 <script>
-/* One render path for static states and the live demo.
-   view = { status:'saved'|'saving'|'error', streak:number, retrying:boolean }
-   - error (any streak) -> "Chưa lưu được" + [Thử lại]; on a repeat failure the same text is cleared and re-set so aria-live reads it again
-   - saving & streak>0 (retrying; any trigger) -> "Đang lưu" + [Thử lại] aria-disabled
-*/
+/* lucide "rotate-cw" (lucide-react ^0.474 is already a dependency; paths copied inline, viewBox 24, stroke 2, round: same recipe as review-note/icons.tsx) */
+var ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>';
 var TEXT={saved:'Đã lưu',saving:'Đang lưu',error:'Chưa lưu được'};
 var SAMPLE='Nhóm 4 HS vẽ a // b, vẽ đường thẳng c cắt a tại A, cắt b tại B rồi đo các góc so le trong.';
-function labelOf(v){ return TEXT[v.status]; }
-function slotHTML(v,opt){
-  opt=opt||{};
-  var showBtn=v.status==='error'||(v.status==='saving'&&v.streak>0);
-  var busy=v.status==='saving';
-  return '<span class="save-label'+(v.status==='error'?' is-error':'')+'" aria-live="polite">'+labelOf(v)+'</span>'+
-    (showBtn?'<button type="button" class="btn btn-secondary save-retry'+(opt.focus?' is-focus':'')+'"'+(busy?' aria-disabled="true" aria-busy="true"':'')+'>Thử lại</button>':'');
-}
 var BLOCKED='Chưa lưu được nên thao tác này chưa chạy. Thầy cô bấm Thử lại ở đầu giáo án giúp nhé.';
-function actsHTML(opt){
-  return '<div class="acts" id="acts"><button type="button" class="btn btn-secondary" data-act="revise"'+(opt.clicked==='revise'?' data-clicked aria-describedby="actfail"':'')+'>Soạn lại giáo án</button>'+
-   '<button type="button" class="btn btn-outline" data-act="ws"'+(opt.clicked==='ws'?' data-clicked aria-describedby="actfail"':'')+'>Tạo phiếu bài tập</button>'+
-   '<button type="button" class="btn btn-default" data-act="export"'+(opt.clicked==='export'?' data-clicked aria-describedby="actfail"':'')+'>Xuất Word</button>'+
-   '<p class="act-fail" id="actfail" aria-live="polite">'+(opt.blocked?BLOCKED:'')+'</p></div>';
-}
-function cardHTML(v,opt){
+
+/* ---------- card skeleton: built once ---------- */
+function buildCard(opt){
   opt=opt||{};
-  return '<section class="card"><div class="hd"><h2 class="card-title">Giáo án (Phụ lục IV)</h2><div class="save-slot">'+slotHTML(v,opt)+'</div></div>'+
+  var sec=document.createElement('section'); sec.className='card';
+  sec.innerHTML='<div class="hd"><h2 class="card-title">Giáo án (Phụ lục IV)</h2><div class="save-slot"><span class="save-label" aria-live="polite"><span class="lt" tabindex="-1"></span></span><span class="save-act"></span></div></div>'+
    '<div class="tabs"><button type="button" class="btn btn-default">Bản hiện tại</button><button type="button" class="btn btn-outline">So sánh</button></div>'+
-   '<label class="fld-l">b) Nội dung</label><textarea class="ta" rows="2" aria-label="Nội dung">'+(opt.text||SAMPLE)+'</textarea>'+(opt.actions?actsHTML(opt):'')+'</section>';
+   '<label class="fld-l">b) Nội dung</label><textarea class="ta" rows="2" aria-label="Nội dung">'+(opt.text||SAMPLE)+'</textarea>'+
+   (opt.actions?'<div class="acts"><button type="button" class="btn btn-secondary" data-act="revise">Soạn lại giáo án</button><button type="button" class="btn btn-outline" data-act="ws">Tạo phiếu bài tập</button><button type="button" class="btn btn-default" data-act="export">Xuất Word</button><p class="act-fail" id="actfail'+(opt.id||'')+'" aria-live="polite"></p></div>':'');
+  return sec;
+}
+/* ---------- one render path (statics + live). Updates in place, so the label (and focus on it) is never re-created ---------- */
+function applyView(card,v,o){
+  o=o||{};
+  var label=card.querySelector('.save-label'), lt=label.firstChild, act=card.querySelector('.save-act');
+  lt.textContent=TEXT[v.status];
+  label.classList.toggle('is-error',v.status==='error');
+  var btn=act.querySelector('.save-retry');
+  if(v.status==='error'){
+    if(!btn){
+      act.innerHTML='<button type="button" class="save-retry" aria-label="Thử lại">'+ICON+'</button><span class="save-tip" aria-hidden="true">Thử lại</span>';
+      btn=act.firstChild;
+    }
+  } else if(btn){ act.innerHTML=''; btn=null; }
+  if(btn){ btn.classList.toggle('is-focus',!!o.focusRing); act.classList.toggle('tip-on',!!(o.hover||o.focusRing)); }
+  lt.classList.toggle('is-focus',!!o.labelFocus);
+  var f=card.querySelector('.act-fail');
+  if(f){ f.textContent=o.blocked?BLOCKED:''; card.querySelectorAll('[data-act]').forEach(function(b){ if(o.blocked&&b.dataset.act===o.clicked){b.setAttribute('aria-describedby',f.id);b.classList.add('is-clicked');} else {b.removeAttribute('aria-describedby');b.classList.remove('is-clicked');} }); }
+  return btn;
 }
 var STATES=[
- ['now','Hiện tại (PR #36): 3 nhãn, lỗi không có cách bấm',{status:'error',streak:1},{old:true}],
- ['saved','1 · Đã lưu',{status:'saved',streak:0}],
- ['saving','2 · Đang lưu (lần đầu, như hiện tại)',{status:'saving',streak:0}],
- ['error','3 · Lỗi: nhãn + nút Thử lại',{status:'error',streak:1}],
- ['retrying','4 · Đang thử lại: nút giữ chỗ, mờ, giữ focus',{status:'saving',streak:1},{focus:true}],
- ['success','5 · Thử lại xong: về "Đã lưu", nút mất',{status:'saved',streak:0}],
- ['again','6 · Thử lại vẫn lỗi: về "Chưa lưu được", nút bật lại, giữ focus (đọc lại qua aria-live)',{status:'error',streak:2},{focus:true}]
- ,['blocked','7 · AC5: đang lỗi, thầy cô bấm "Xuất Word": dòng giải thích hiện ngay dưới hàng nút, nút vừa bấm giữ focus',{status:'error',streak:1},{actions:true,blocked:true,clicked:'export',keepOut:true}]
+ ['now','Hiện tại (PR #36): chữ "Lưu lỗi", không có cách bấm',{status:'error'},{old:true}],
+ ['saved','1 · Đã lưu (không biểu tượng)',{status:'saved'}],
+ ['saving','2 · Đang lưu, lần tự động (không biểu tượng)',{status:'saving'}],
+ ['error','3 · Lỗi: "Chưa lưu được" + biểu tượng',{status:'error'}],
+ ['hover','4 · Rê chuột vào biểu tượng: tooltip "Thử lại"',{status:'error'},{hover:true}],
+ ['focus','5 · Focus bàn phím (focus-visible): vòng focus + tooltip',{status:'error'},{focusRing:true}],
+ ['retrying','6 · Đang thử lại: "Đang lưu", không biểu tượng, focus chuyển về nhãn',{status:'saving'},{labelFocus:true}],
+ ['success','7 · Thử lại xong: "Đã lưu", focus về ô đang sửa',{status:'saved'}],
+ ['again','8 · Thử lại vẫn lỗi: biểu tượng trở lại và giữ focus',{status:'error'},{focusRing:true,noTip:true}],
+ ['blocked','9 · Đang lỗi, bấm "Xuất Word": dòng giải thích tại nút (AC5)',{status:'error'},{blocked:true,clicked:'export',actions:true}]
 ];
 var board=document.getElementById('board');
 STATES.forEach(function(s){
   var wrap=document.createElement('div'); wrap.id='st-'+s[0]; wrap.dataset.state=s[0];
-  var v=s[2], o=s[3]||{};
-  var html=cardHTML(v,o);
-  if(o.old){ html=html.replace(slotHTML(v,o),'<span class="save-label" aria-live="polite">Lưu lỗi</span>'); }
-  wrap.innerHTML='<p class="cap">'+s[1]+'</p>'+html;
-  board.appendChild(wrap);
+  var o=s[3]||{}; var card=buildCard({actions:o.actions,id:s[0]});
+  var cap=document.createElement('p'); cap.className='cap'; cap.textContent=s[1]; wrap.appendChild(cap); wrap.appendChild(card); board.appendChild(wrap);
+  applyView(card,s[2],o);
+  if(o.noTip) card.querySelector('.save-act').classList.remove('tip-on');
+  if(o.old){ card.querySelector('.lt').textContent='Lưu lỗi'; card.querySelector('.save-label').classList.remove('is-error'); card.querySelector('.save-act').innerHTML=''; }
+  if(o.blocked){ var c=card.querySelector('[data-act='+o.clicked+']'); }
+  if(s[0]==='success'){ card.querySelector('textarea').classList.add('is-focus'); card.querySelector('textarea').style.borderColor='#2563eb'; card.querySelector('textarea').style.boxShadow='0 0 0 3px rgba(37,99,235,.12)'; }
+  if(s[0]==='blocked'){ var eb=card.querySelector('[data-act=export]'); eb.style.outline='2px solid #2563eb'; eb.style.outlineOffset='2px'; eb.style.borderRadius='4px'; }
 });
-/* ----- live demo (only with ?live=1) ----- */
+
+/* ======================  live demo (?live=1)  ====================== */
 if(/[?&]live=1/.test(location.search)){
   var d=document.createElement('div'); d.className='demo';
-  d.innerHTML='<p class="cap"><b>Demo bấm thử</b> <i>(mô phỏng; không thuộc giao diện)</i></p><div id="live"></div>'+
-   '<p><label><input type="checkbox" id="fail" checked> Mạng đang lỗi</label> <span id="cnt">PUT: 0</span> <button type="button" class="btn btn-outline" id="typeBtn">Gõ thêm một ký tự</button> <button type="button" class="btn btn-outline" id="log">Nhật ký aria-live</button></p><pre id="out" style="font-size:12px;margin:0"></pre>';
+  d.innerHTML='<p class="cap"><b>Demo bấm thử</b> (mô phỏng; không thuộc giao diện)</p><div id="live"></div>'+
+   '<p><label><input type="checkbox" id="fail" checked> Mạng đang lỗi</label> <span id="cnt">PUT: 0</span> <button type="button" class="btn btn-outline" id="typeBtn">Gõ thêm một ký tự</button></p><pre id="out" style="font-size:12px;margin:0"></pre>';
   board.appendChild(d);
-  var st={status:'saved',streak:0}, puts=0, blocked=null, live=document.getElementById('live'), out=document.getElementById('out');
-  function paint(keepFocus){
-    var hadFocus=document.activeElement&&document.activeElement.classList&&document.activeElement.classList.contains('save-retry');
-    var ta0=live.querySelector('textarea'), keep=ta0?ta0.value:undefined;
-    live.innerHTML=cardHTML(st,{actions:true,text:keep,blocked:!!blocked&&st.status==='error',clicked:blocked});
-    var b=live.querySelector('.save-retry'); if(b){ b.addEventListener('click',onRetry); if(hadFocus) b.focus(); }
-    live.querySelector('textarea').addEventListener('input',onEdit);
-    live.querySelectorAll('[data-act]').forEach(function(x){ x.addEventListener('click',function(){ onAct(x.dataset.act); }); });
+  var live=document.getElementById('live'), out=document.getElementById('out');
+  var card=buildCard({actions:true,id:'L'}); live.appendChild(card);
+  var st={status:'saved'}, puts=0, blocked=null, hadError=false, esc=false;
+  var ta=card.querySelector('textarea'), act=card.querySelector('.save-act'), label=card.querySelector('.save-label'), lt=label.firstChild;
+  function say(t){ out.textContent+=t+'\n'; }
+  function show(){ var btn=act.querySelector('.save-retry'); if(!btn) return; var vis=(btn.matches(':hover')||act.matches(':hover')||btn.matches(':focus-visible'))&&!esc; act.classList.toggle('tip-on',vis); }
+  function render(){
+    var activeBefore=document.activeElement;
+    var wasOnControl=activeBefore===lt||(activeBefore&&activeBefore.classList&&activeBefore.classList.contains('save-retry'));
+    /* focus rules: move focus BEFORE removing the element that holds it, so it is never lost to <body> */
+    if(wasOnControl){
+      if(st.status==='saving') lt.focus();
+      else if(st.status==='saved') ta.focus();
+    }
+    var btn=applyView(card,st,{blocked:!!blocked&&st.status==='error',clicked:blocked});
+    if(btn){ wire(btn); if(wasOnControl) btn.focus(); }
+    show();
     document.getElementById('cnt').textContent='PUT: '+puts;
   }
-  function say(t){ out.textContent+=t+'\n'; }
-  function onAct(a){ if(st.status==='error'){ blocked=a; paint(); var x=live.querySelector('[data-act='+a+']'); if(x) x.focus(); say('aria-live: '+BLOCKED); } }
-  function run(viaRetry,kbd){
-    puts++; blocked=null; st={status:'saving',streak:st.streak}; paint();
-    setTimeout(function(){ /* min 600ms on retry so the teacher sees something happened */
+  function wire(btn){
+    btn.addEventListener('click',onRetry);
+    act.onmouseenter=function(){esc=false;show();}; act.onmouseleave=function(){esc=false;show();};
+    btn.addEventListener('focus',function(){esc=false;show();}); btn.addEventListener('blur',function(){show();});
+  }
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&act.classList.contains('tip-on')){ esc=true; show(); } });
+  function run(viaRetry){
+    puts++; blocked=null; st={status:'saving'}; render();
+    setTimeout(function(){
       var ok=!document.getElementById('fail').checked;
-      st=ok?{status:'saved',streak:0}:{status:'error',streak:st.streak+1};
-      paint(); say('aria-live: '+labelOf(st));
-      if(ok&&kbd){ live.querySelector('textarea').focus(); }
+      if(ok){ st={status:'saved'}; hadError=false; } else { st={status:'error'}; hadError=true; }
+      render(); say('aria-live: '+TEXT[st.status]);
     }, viaRetry?600:300);
   }
-  function onRetry(e){ if(st.status==='saving') return; run(true,e.detail===0); }
-  function onEdit(){ if(st.status==='saving') return; run(false,false); }
-  document.getElementById('typeBtn').onclick=function(){ onEdit(); };
-  paint();
+  function onRetry(){ if(st.status==='saving') return; run(true); }
+  function onEdit(){ if(st.status==='saving') return; run(false); }
+  function onAct(a){ if(st.status==='error'){ blocked=a; render(); var x=card.querySelector('[data-act='+a+']'); if(x) x.focus(); say('aria-live: '+BLOCKED); } }
+  ta.addEventListener('input',onEdit);
+  document.getElementById('typeBtn').onclick=function(){ ta.value+='x'; onEdit(); };
+  card.querySelectorAll('[data-act]').forEach(function(x){ x.addEventListener('click',function(){ onAct(x.dataset.act); }); });
+  render();
 }
 </script>
 </body>
