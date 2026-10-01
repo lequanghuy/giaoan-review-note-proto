@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Thử lại khi lưu chỉnh sửa · mockup · GiaoAn AI</title>
+<style>
+/* Tokens: apps/web/src/app/globals.css (:root) */
+:root{--blue:#2563eb;--blue-h:#1d4ed8;--blue-s:#eff6ff;--blue-b:#bfdbfe;--g50:#f9fafb;--g100:#f3f4f6;--g200:#e5e7eb;--g300:#d1d5db;--g400:#9ca3af;--g500:#6b7280;--g600:#4b5563;--g700:#374151;--g800:#1f2937;--g900:#111827;--green:#059669;--amber:#d97706;--as:#fffbeb;--red:#dc2626;--surface:#fff;--line:var(--g200);--card:var(--surface);--focus-ring:0 0 0 3px rgba(37,99,235,.12)}
+*{box-sizing:border-box}
+html{font-size:14px}
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--g50);color:var(--g800);line-height:1.5;-webkit-font-smoothing:antialiased}
+/* plan-editor-frame.tsx: mx-auto max-w-[860px] px-9 pt-5 ; max-[720px]: px-[12px] pt-[12px] */
+.frame{margin:0 auto;width:100%;min-width:0;max-width:860px;padding:20px 36px 48px}
+@media (max-width:720px){.frame{padding:12px 12px 48px}}
+/* ui/card.tsx */
+.card{border-radius:10px;border:1px solid var(--line);background:var(--card);padding:16px}
+@media (min-width:640px){.card{padding:1.1rem}}
+.card-title{margin:0;font-size:1.15rem;font-weight:600;line-height:1.5}
+/* ui/button.tsx (cva) */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;border-radius:8px;padding:9px 16px;font:inherit;font-size:14px;font-weight:500;line-height:1.5;transition:background-color .15s,border-color .15s;cursor:pointer}
+.btn-outline,.btn-secondary{border:1px solid var(--g200);background:#fff;color:var(--g700)}
+.btn-outline:hover,.btn-secondary:hover{border-color:var(--g300);background:var(--g50)}
+.btn:disabled{cursor:not-allowed;opacity:.45}
+.btn-default{background:var(--blue);color:#fff;border:0;box-shadow:0 1px 2px rgba(37,99,235,.25)}
+/* editor-view.tsx header row: mb-3 flex items-center justify-between gap-2 */
+.hd{margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tabs{margin-bottom:12px;display:flex;flex-wrap:wrap;gap:8px}
+/* ui/textarea.tsx */
+.ta{min-height:4.5rem;width:100%;border-radius:8px;border:1px solid var(--g200);background:#fff;padding:9px 12px;font:inherit;font-size:14px;color:var(--g800);outline:none;resize:none}
+.ta:focus{border-color:var(--blue);box-shadow:var(--focus-ring)}
+.fld-l{display:block;margin:0 0 4px;font-size:12px;font-weight:600;color:var(--g600)}
+
+/* ===== SAVE STATUS SLOT (changed part) ===== */
+.save-slot{display:flex;flex-shrink:0;align-items:center;justify-content:flex-end;gap:6px}
+/* existing label: inline-block min-w-[5.5rem] shrink-0 text-right text-[11px] font-medium leading-none text-g500 + aria-live=polite */
+.save-label{display:inline-block;flex-shrink:0;text-align:right;font-size:11px;font-weight:500;line-height:1;color:var(--g500)}
+.save-label{min-width:5.5rem}
+/* error colour = .rv-ackfail in review-note.css (#92400e, 7.09:1 on white) */
+.save-label.is-error{color:#92400e}
+/* retry button = <Button variant="secondary"> small, as the "Thử lại" in plan-status-banner.tsx; py-0.5 so height = title line (24px) */
+.save-retry{position:relative;padding:2px 8px;font-size:12px;line-height:1.5}
+/* tap area 44px high without growing the row: same trick as .rv-done::after in review-note.css */
+.save-retry::after{content:"";position:absolute;left:-4px;right:-4px;top:50%;height:44px;transform:translateY(-50%)}
+.save-retry[aria-disabled="true"]{opacity:.45;cursor:not-allowed}
+.save-retry[aria-disabled="true"]:hover{border-color:var(--g200);background:#fff}
+/* focus ring = review-note.css (.rv-done:focus-visible) */
+.save-retry:focus{outline:none}
+.save-retry:focus-visible,.save-retry.is-focus{outline:2px solid #2563eb;outline-offset:2px;border-radius:4px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+
+/* ===== mockup-only annotation (not part of the app) ===== */
+.board{display:grid;gap:22px}
+.cap{margin:0 0 6px;font-size:12px;font-weight:600;color:var(--g600)}
+.cap b{color:var(--blue)}
+.cap i{font-style:normal;font-weight:400;color:var(--g500)}
+.demo{margin-top:22px;padding:12px;border:1px dashed var(--g300);border-radius:10px;font-size:13px;color:var(--g600)}
+.demo label{margin-right:12px}
+</style>
+</head>
+<body>
+<div class="frame"><div class="board" id="board"></div></div>
+<script>
+/* One render path for static states and the live demo.
+   view = { status:'saved'|'saving'|'error', streak:number, retrying:boolean }
+   - error (any streak) -> "Chưa lưu được" + [Thử lại]; on a repeat failure the same text is cleared and re-set so aria-live reads it again
+   - saving & streak>0 (retrying; any trigger) -> "Đang lưu" + [Thử lại] aria-disabled
+*/
+var TEXT={saved:'Đã lưu',saving:'Đang lưu',error:'Chưa lưu được'};
+var SAMPLE='Nhóm 4 HS vẽ a // b, vẽ đường thẳng c cắt a tại A, cắt b tại B rồi đo các góc so le trong.';
+function labelOf(v){ return TEXT[v.status]; }
+function slotHTML(v,opt){
+  opt=opt||{};
+  var showBtn=v.status==='error'||(v.status==='saving'&&v.streak>0);
+  var busy=v.status==='saving';
+  return '<span class="save-label'+(v.status==='error'?' is-error':'')+'" aria-live="polite">'+labelOf(v)+'</span>'+
+    (showBtn?'<button type="button" class="btn btn-secondary save-retry'+(opt.focus?' is-focus':'')+'"'+(busy?' aria-disabled="true" aria-busy="true"':'')+'>Thử lại</button>':'');
+}
+function cardHTML(v,opt){
+  return '<section class="card"><div class="hd"><h2 class="card-title">Giáo án (Phụ lục IV)</h2><div class="save-slot">'+slotHTML(v,opt)+'</div></div>'+
+   '<div class="tabs"><button type="button" class="btn btn-default">Bản hiện tại</button><button type="button" class="btn btn-outline">So sánh</button></div>'+
+   '<label class="fld-l">b) Nội dung</label><textarea class="ta" rows="2" aria-label="Nội dung">'+SAMPLE+'</textarea></section>';
+}
+var STATES=[
+ ['now','Hiện tại (PR #36): 3 nhãn, lỗi không có cách bấm',{status:'error',streak:1},{old:true}],
+ ['saved','1 · Đã lưu',{status:'saved',streak:0}],
+ ['saving','2 · Đang lưu (lần đầu, như hiện tại)',{status:'saving',streak:0}],
+ ['error','3 · Lỗi: nhãn + nút Thử lại',{status:'error',streak:1}],
+ ['retrying','4 · Đang thử lại: nút giữ chỗ, mờ, giữ focus',{status:'saving',streak:1},{focus:true}],
+ ['success','5 · Thử lại xong: về "Đã lưu", nút mất',{status:'saved',streak:0}],
+ ['again','6 · Thử lại vẫn lỗi: về "Chưa lưu được", nút bật lại, giữ focus (đọc lại qua aria-live)',{status:'error',streak:2},{focus:true}]
+];
+var board=document.getElementById('board');
+STATES.forEach(function(s){
+  var wrap=document.createElement('div'); wrap.id='st-'+s[0]; wrap.dataset.state=s[0];
+  var v=s[2], o=s[3]||{};
+  var html=cardHTML(v,o);
+  if(o.old){ html=html.replace(slotHTML(v,o),'<span class="save-label" aria-live="polite">Lưu lỗi</span>'); }
+  wrap.innerHTML='<p class="cap">'+s[1]+'</p>'+html;
+  board.appendChild(wrap);
+});
+/* ----- live demo (only with ?live=1) ----- */
+if(/[?&]live=1/.test(location.search)){
+  var d=document.createElement('div'); d.className='demo';
+  d.innerHTML='<p class="cap"><b>Demo bấm thử</b> <i>(mô phỏng; không thuộc giao diện)</i></p><div id="live"></div>'+
+   '<p><label><input type="checkbox" id="fail" checked> Mạng đang lỗi</label> <button type="button" class="btn btn-outline" id="typeBtn">Gõ thêm một ký tự</button> <button type="button" class="btn btn-outline" id="log">Nhật ký aria-live</button></p><pre id="out" style="font-size:12px;margin:0"></pre>';
+  board.appendChild(d);
+  var st={status:'saved',streak:0}, live=document.getElementById('live'), out=document.getElementById('out');
+  function paint(keepFocus){
+    var hadFocus=document.activeElement&&document.activeElement.classList&&document.activeElement.classList.contains('save-retry');
+    live.innerHTML=cardHTML(st);
+    var b=live.querySelector('.save-retry'); if(b){ b.addEventListener('click',onRetry); if(hadFocus) b.focus(); }
+    live.querySelector('textarea').addEventListener('input',onEdit);
+  }
+  function say(t){ out.textContent+=t+'\n'; }
+  function run(viaRetry,kbd){
+    st={status:'saving',streak:st.streak}; paint();
+    setTimeout(function(){ /* min 600ms on retry so the teacher sees something happened */
+      var ok=!document.getElementById('fail').checked;
+      st=ok?{status:'saved',streak:0}:{status:'error',streak:st.streak+1};
+      paint(); say('aria-live: '+labelOf(st));
+      if(ok&&kbd){ live.querySelector('textarea').focus(); }
+    }, viaRetry?600:300);
+  }
+  function onRetry(e){ if(st.status==='saving') return; run(true,e.detail===0); }
+  function onEdit(){ if(st.status==='saving') return; run(false,false); }
+  document.getElementById('typeBtn').onclick=function(){ onEdit(); };
+  paint();
+}
+</script>
+</body>
+</html>
