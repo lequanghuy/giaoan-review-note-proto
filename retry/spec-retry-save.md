@@ -1,7 +1,20 @@
 # Nút "Thử lại" khi lưu chỉnh sửa tay không được (autosave NEW-02, PR #36)
 
-GiaoAn AI · UI UX Designer · 01/10/2026 · bản đề xuất, chưa BA/Dev FE duyệt
+GiaoAn AI · UI UX Designer · 01/10/2026 · bản đề xuất, chưa BA/Dev FE duyệt · **đã gộp AC chỉnh của BA (AC3–AC6)**
 Mockup: `index.html` (bản box: `mockup.html`) (thêm `?live=1` để bấm thử) · Ảnh: `shots/`
+
+## 0. Tiêu chí nghiệm thu (BA, bản chỉnh)
+
+| # | Tiêu chí | Cách kiểm trong mockup (`?live=1`, script `ac-test.js` chạy ở 390, 720, 1280: 42/42 đạt) |
+| --- | --- | --- |
+| AC1 | (không đổi) | – |
+| AC2 | (không đổi) | – |
+| AC3 | Bấm nút khi nhãn đang là "Đang lưu" thì **không tạo PUT thứ hai** (số request = 1). | Bộ đếm `PUT: n` trong demo. Bấm "Thử lại" rồi bấm thêm 2 lần khi đang "Đang lưu": tăng đúng 1. |
+| AC4 | Văn bản thầy cô đã gõ **còn nguyên** sau mỗi lần lỗi và sau Thử lại (so nội dung trước và sau). | So `textarea.value` sau lỗi, sau Thử lại lỗi, sau Thử lại xong: giống hệt chuỗi đã gõ. |
+| AC5 | Khi đang lỗi mà thầy cô bấm **Xuất**, **Soạn lại** hoặc **Tạo phiếu bài tập**, một dòng giải thích hiện **trong khung nhìn, ngay tại nút vừa bấm**, để thầy cô biết thao tác chưa chạy. | Bấm từng nút: dòng hiện cách nút 12px, nằm trọn trong viewport, focus ở lại nút, không có PUT mới. Xem §3.1. |
+| AC6 | Ở 390px hàng tiêu đề **không xuống dòng**, vùng chạm của nút là **44px**. | Chiều cao hàng = chiều cao tiêu đề (24px). Hit-test ±21px quanh tâm nút đều trúng nút. |
+
+> AC1 và AC2 giữ nguyên theo bản BA đã giao. Tôi không có nguyên văn hai tiêu chí này trong tài liệu được giao lần này, nên không chép lại ở đây.
 
 ## 1. Hiện trạng trong code (`origin/main` @ `3f2c05a`, #36)
 
@@ -62,6 +75,18 @@ Câu "thầy cô bấm lại giúp nhé" của `REVIEW_ACK_ERROR` vẫn đúng �
 - **Hẹp:** đủ chỗ từ 360px. Ở 320px hàng tiêu đề xuống 2 dòng (tiêu đề "Giáo án (Phụ lục IV)" dài 152px). Chấp nhận, hoặc cho tiêu đề `min-w-0 truncate` (hỏi Dev FE).
 - **Không có icon, không có nền, không có viền thẻ đổi màu.**
 
+### 3.1 Dòng giải thích tại nút hành động (AC5)
+
+Hiện `commitPlanBeforeAction` trả `null` khi lưu lỗi và `handleRevise` / `handleWorksheet` / `handleExport` thoát im lặng. Thêm đúng một dòng chữ, không toast, không hộp thoại:
+
+- **Chỗ đặt:** ngay dưới hàng ba nút (Soạn lại giáo án, Tạo phiếu bài tập, Xuất Word), `flex-basis:100%` trong hàng `flex flex-wrap`. Tức là ở đúng cụm nút vừa bấm và trong khung nhìn (nút đang ở trong khung nhìn vì vừa được bấm).
+- **Chữ:** "Chưa lưu được nên thao tác này chưa chạy. Thầy cô bấm Thử lại ở đầu giáo án giúp nhé."
+- **Style:** như `.rv-ackfail`: 12px / 500 / `#92400E` / line-height 1.4, `margin:0`. Phần tử `<p aria-live="polite">` luôn có trong DOM, rỗng thì ẩn kiểu sr-only (không tốn chỗ). Nút vừa bấm có `aria-describedby` trỏ tới dòng này khi dòng hiện.
+- **Khi nào hiện:** bấm một trong ba nút lúc `status === "error"` (hoặc `ensureSaved()` trả `false`). **Khi nào mất:** lưu xong (`saved`), hoặc bấm lại một nút mà lần này lưu được và thao tác chạy.
+- **Focus:** ở lại nút vừa bấm. Không cuộn trang.
+- **Lưu ý hành vi:** bấm một trong ba nút đã gọi `ensureSaved()` nên đã là một lần thử lại. Trong lúc đó nhãn đầu giáo án chuyển "Đang lưu", nút "Thử lại" mờ (§4). Nếu lần đó lỗi thì dòng này hiện. Nếu thành công thì thao tác chạy bình thường và không có dòng nào.
+- **Không thêm nút "Thử lại" thứ hai** ở dòng này (theo yêu cầu không thêm UI). Xem câu hỏi Dev FE 2: khi hàng tiêu đề đã cuộn khỏi màn hình, dòng chỉ chỉ đường. Nếu thầy cô thấy chữ "ở đầu giáo án" bất tiện thì phương án nhẹ nhất là biến cụm "Thử lại" trong dòng thành nút chữ cùng kiểu `.rv-link`.
+
 ## 4. Bảng trạng thái
 
 | # | Trạng thái | Nhãn (`aria-live="polite"`) | Nút "Thử lại" | Focus | Ảnh |
@@ -72,19 +97,21 @@ Câu "thầy cô bấm lại giúp nhé" của `REVIEW_ACK_ERROR` vẫn đúng �
 | 4 | **Đang thử lại** (bấm nút, hoặc gõ tiếp / rời field / Soạn lại / Xuất khi đang lỗi) | Đang lưu (g500) | **vẫn hiện**, `aria-disabled="true"`, `aria-busy="true"`, mờ 45% (cùng `disabled:opacity-45` của Button), không nhận click | **giữ nguyên trên nút** nếu focus đang ở đó | |
 | 5 | **Thử lại xong** | Đã lưu | biến mất | nếu focus đang ở nút (nút sắp biến mất): chuyển về field vừa sửa gần nhất (hoặc `body` nếu không có) | |
 | 6 | **Lại lỗi** | Chưa lưu được | bật lại, bấm được | **vẫn ở nút** | |
+| 7 | **Đang lỗi, bấm Xuất / Soạn lại / Tạo phiếu (AC5)** | Chưa lưu được | bấm được | ở lại nút hành động vừa bấm | `closeup-blocked-action` |
 
 Ghi chú:
 - Dùng `aria-disabled` thay `disabled` ở trạng thái 4 để nút không mất focus (nút `disabled` rơi khỏi thứ tự Tab, trình đọc màn hình mất vị trí). Click khi `aria-disabled` bị bỏ qua trong handler.
 - Nút ở trạng thái 4 hiện **từ lúc status = `saving` mà từ lần lỗi trước chưa có `saved`** (cờ `hadError` trong hook, xoá khi `saved`). Nhờ vậy nút không nhấp nháy mất/hiện khi tự động thử lại.
 - Trạng thái "vẫn lỗi" **dùng lại cùng chữ "Chưa lưu được"**, không thêm bản "Vẫn chưa lưu được". Mockup bản đầu có thử "Vẫn…" nhưng bỏ vì làm nhãn rộng hơn 5.5rem (dịch bố cục), và vì việc lỗi lặp lại đã được báo hiệu bằng đường đi lỗi → "Đang lưu" → lỗi ở aria-live.
 - Không có dòng "Đã lưu lại" hay xác nhận phụ sau khi thử lại xong: nhãn "Đã lưu" vừa đổi là đủ, và nó được đọc qua aria-live. Không cần toast.
-- Bấm nút lúc `saving` (trạng thái 4) không làm gì. Đợi tối thiểu **~600 ms** ở trạng thái "Đang lưu" khi bấm tay, để thầy cô thấy có phản hồi nếu mạng trả lỗi tức thì (gợi ý, hỏi Dev FE).
+- **AC3:** bấm nút lúc `saving` (trạng thái 4) không làm gì và **không tạo PUT thứ hai** (số request = 1). Cài bằng: handler thoát nếu `status === "saving"`, và `retry()` đi qua `pump()` nên có hàng đợi `tail` làm lớp bảo vệ thứ hai.
+- Ngoài ra: đợi tối thiểu **~600 ms** ở trạng thái "Đang lưu" khi bấm tay, để thầy cô thấy có phản hồi nếu mạng trả lỗi tức thì (gợi ý, hỏi Dev FE).
 
 ## 5. Văn bản chưa lưu, và các lần thử lại còn lại
 
 - **Văn bản chưa lưu nằm nguyên trong editor.** Lỗi lưu không xoá, không khôi phục về bản server, không khoá ô nhập. Bấm "Thử lại" gửi **bản đang hiển thị** (`latest`), không phải bản lúc lỗi.
 - **Các cách thử lại cũ giữ nguyên:** gõ tiếp (1 s), rời field, "Soạn lại giáo án", "Tạo phiếu bài tập", "Xuất". Nút chỉ là thêm một đường bấm tay, dùng cùng `pump()`, nên không có hai yêu cầu song song (đã có hàng đợi `tail`).
-- **Khi Soạn lại / Xuất bị chặn vì lưu lỗi:** hiện chỉ thấy nhãn đổi. Nút Thử lại ở cùng hàng cho thầy cô cách sửa. Xem câu hỏi 2.
+- **Khi Soạn lại / Tạo phiếu / Xuất bị chặn vì lưu lỗi:** hiện thao tác thoát im lặng. Theo AC5, thêm dòng giải thích tại nút vừa bấm (§3.1). Nút Thử lại ở đầu giáo án là cách sửa.
 
 ## 6. A11y
 
@@ -119,7 +146,8 @@ Ghi chú:
 
 **Cho Dev FE**
 1. **Lỗi không thể thử lại.** `toSavePlanContent` ném lỗi (dữ liệu sai dạng) hoặc `MAX_SAVE_CHAIN`: bấm Thử lại sẽ lại lỗi mãi. Có tách riêng không (ví dụ chỉ hiện nút khi lỗi là mạng/5xx/409, còn lỗi dữ liệu thì chỉ nhãn)? Đề nghị: cùng một nhãn, vẫn hiện nút (đơn giản nhất), BE/FE log nguyên nhân.
-2. **Hàng tiêu đề cuộn khỏi màn hình.** Trên điện thoại, hàng "Giáo án (Phụ lục IV)" cuộn đi khi thầy cô ở dưới cuối giáo án. Khi bấm "Xuất" bị chặn vì lưu lỗi, thầy cô không thấy nhãn đổi. Có cho nhãn + nút `sticky` trên đầu vùng cuộn (dùng kiểu có sẵn), hoặc cuộn về hàng tiêu đề khi bị chặn? Thiết kế này **không thêm** gì thêm theo yêu cầu, nên để mở.
+2. **Hàng tiêu đề cuộn khỏi màn hình.** AC5 đã giải quyết phần "thầy cô biết thao tác chưa chạy" bằng dòng tại nút. Còn lại: nút Thử lại nằm ở đầu giáo án, nên trên điện thoại thầy cô phải cuộn lên. Có chấp nhận không, hay cho cụm "Thử lại" trong dòng AC5 thành nút chữ (kiểu `.rv-link`) chạy cùng `retry()`? Thiết kế này **không thêm** nút thứ hai theo yêu cầu.
+6. Dòng AC5 có cần giữ lại sau khi thầy cô bấm chỗ khác, hay mất ngay khi `saved`? Đề nghị: chỉ mất khi `saved`.
 3. **Sau 409.** `reloadHead` đặt lại `baseVersion` về head. Bấm Thử lại sẽ gửi văn bản của thầy cô đè lên bản mới của server. Đúng ý không, hay cần thông báo riêng (ngoài phạm vi)?
 4. Độ trễ tối thiểu ~600 ms ở "Đang lưu" khi bấm tay có được không?
 5. Có thêm `min-w-0 truncate` cho tiêu đề thẻ để chịu được 320px không?
@@ -137,3 +165,7 @@ Ghi chú:
 | `shots/mobile-390-all-states.png` | như trên ở 390 (@2x) |
 | `shots/desktop-1280-closeup-error.png` | hàng tiêu đề, trạng thái lỗi, 1280 |
 | `shots/mobile-390-closeup-error.png` | hàng tiêu đề, trạng thái lỗi, 390 (@2x) |
+| `shots/desktop-1280-closeup-blocked-action.png` | AC5: dòng giải thích dưới hàng nút sau khi bấm Xuất Word lúc đang lỗi, 1280 |
+| `shots/mobile-390-closeup-blocked-action.png` | như trên ở 390 (@2x) |
+
+Thẻ thứ 8 (trạng thái 7) có trong cả ba ảnh `*-all-states.png`. Script: `ac-test.js` (kiểm AC3–AC6), `shots.js` (chụp).

@@ -49,6 +49,14 @@ body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--g50);color
 .save-retry:focus-visible,.save-retry.is-focus{outline:2px solid #2563eb;outline-offset:2px;border-radius:4px}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
 
+/* ===== AC5: line under the action row when a save error blocked Xuất / Soạn lại / Tạo phiếu =====
+   same style as .rv-ackfail (review-note.css): 12px / 500 / #92400e. Always in the DOM (aria-live=polite); empty = visually hidden, no layout cost */
+.acts{margin-top:12px;display:flex;flex-wrap:wrap;align-items:flex-start;gap:12px}
+.act-fail{flex-basis:100%;margin:0;font-size:12px;font-weight:500;line-height:1.4;color:#92400e}
+.act-fail:empty{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+.btn:focus{outline:none}
+.btn:focus-visible{outline:2px solid #2563eb;outline-offset:2px;border-radius:4px}
+
 /* ===== mockup-only annotation (not part of the app) ===== */
 .board{display:grid;gap:22px}
 .cap{margin:0 0 6px;font-size:12px;font-weight:600;color:var(--g600)}
@@ -76,10 +84,18 @@ function slotHTML(v,opt){
   return '<span class="save-label'+(v.status==='error'?' is-error':'')+'" aria-live="polite">'+labelOf(v)+'</span>'+
     (showBtn?'<button type="button" class="btn btn-secondary save-retry'+(opt.focus?' is-focus':'')+'"'+(busy?' aria-disabled="true" aria-busy="true"':'')+'>Thử lại</button>':'');
 }
+var BLOCKED='Chưa lưu được nên thao tác này chưa chạy. Thầy cô bấm Thử lại ở đầu giáo án giúp nhé.';
+function actsHTML(opt){
+  return '<div class="acts" id="acts"><button type="button" class="btn btn-secondary" data-act="revise"'+(opt.clicked==='revise'?' data-clicked aria-describedby="actfail"':'')+'>Soạn lại giáo án</button>'+
+   '<button type="button" class="btn btn-outline" data-act="ws"'+(opt.clicked==='ws'?' data-clicked aria-describedby="actfail"':'')+'>Tạo phiếu bài tập</button>'+
+   '<button type="button" class="btn btn-default" data-act="export"'+(opt.clicked==='export'?' data-clicked aria-describedby="actfail"':'')+'>Xuất Word</button>'+
+   '<p class="act-fail" id="actfail" aria-live="polite">'+(opt.blocked?BLOCKED:'')+'</p></div>';
+}
 function cardHTML(v,opt){
+  opt=opt||{};
   return '<section class="card"><div class="hd"><h2 class="card-title">Giáo án (Phụ lục IV)</h2><div class="save-slot">'+slotHTML(v,opt)+'</div></div>'+
    '<div class="tabs"><button type="button" class="btn btn-default">Bản hiện tại</button><button type="button" class="btn btn-outline">So sánh</button></div>'+
-   '<label class="fld-l">b) Nội dung</label><textarea class="ta" rows="2" aria-label="Nội dung">'+SAMPLE+'</textarea></section>';
+   '<label class="fld-l">b) Nội dung</label><textarea class="ta" rows="2" aria-label="Nội dung">'+(opt.text||SAMPLE)+'</textarea>'+(opt.actions?actsHTML(opt):'')+'</section>';
 }
 var STATES=[
  ['now','Hiện tại (PR #36): 3 nhãn, lỗi không có cách bấm',{status:'error',streak:1},{old:true}],
@@ -89,6 +105,7 @@ var STATES=[
  ['retrying','4 · Đang thử lại: nút giữ chỗ, mờ, giữ focus',{status:'saving',streak:1},{focus:true}],
  ['success','5 · Thử lại xong: về "Đã lưu", nút mất',{status:'saved',streak:0}],
  ['again','6 · Thử lại vẫn lỗi: về "Chưa lưu được", nút bật lại, giữ focus (đọc lại qua aria-live)',{status:'error',streak:2},{focus:true}]
+ ,['blocked','7 · AC5: đang lỗi, thầy cô bấm "Xuất Word": dòng giải thích hiện ngay dưới hàng nút, nút vừa bấm giữ focus',{status:'error',streak:1},{actions:true,blocked:true,clicked:'export',keepOut:true}]
 ];
 var board=document.getElementById('board');
 STATES.forEach(function(s){
@@ -103,18 +120,22 @@ STATES.forEach(function(s){
 if(/[?&]live=1/.test(location.search)){
   var d=document.createElement('div'); d.className='demo';
   d.innerHTML='<p class="cap"><b>Demo bấm thử</b> <i>(mô phỏng; không thuộc giao diện)</i></p><div id="live"></div>'+
-   '<p><label><input type="checkbox" id="fail" checked> Mạng đang lỗi</label> <button type="button" class="btn btn-outline" id="typeBtn">Gõ thêm một ký tự</button> <button type="button" class="btn btn-outline" id="log">Nhật ký aria-live</button></p><pre id="out" style="font-size:12px;margin:0"></pre>';
+   '<p><label><input type="checkbox" id="fail" checked> Mạng đang lỗi</label> <span id="cnt">PUT: 0</span> <button type="button" class="btn btn-outline" id="typeBtn">Gõ thêm một ký tự</button> <button type="button" class="btn btn-outline" id="log">Nhật ký aria-live</button></p><pre id="out" style="font-size:12px;margin:0"></pre>';
   board.appendChild(d);
-  var st={status:'saved',streak:0}, live=document.getElementById('live'), out=document.getElementById('out');
+  var st={status:'saved',streak:0}, puts=0, blocked=null, live=document.getElementById('live'), out=document.getElementById('out');
   function paint(keepFocus){
     var hadFocus=document.activeElement&&document.activeElement.classList&&document.activeElement.classList.contains('save-retry');
-    live.innerHTML=cardHTML(st);
+    var ta0=live.querySelector('textarea'), keep=ta0?ta0.value:undefined;
+    live.innerHTML=cardHTML(st,{actions:true,text:keep,blocked:!!blocked&&st.status==='error',clicked:blocked});
     var b=live.querySelector('.save-retry'); if(b){ b.addEventListener('click',onRetry); if(hadFocus) b.focus(); }
     live.querySelector('textarea').addEventListener('input',onEdit);
+    live.querySelectorAll('[data-act]').forEach(function(x){ x.addEventListener('click',function(){ onAct(x.dataset.act); }); });
+    document.getElementById('cnt').textContent='PUT: '+puts;
   }
   function say(t){ out.textContent+=t+'\n'; }
+  function onAct(a){ if(st.status==='error'){ blocked=a; paint(); var x=live.querySelector('[data-act='+a+']'); if(x) x.focus(); say('aria-live: '+BLOCKED); } }
   function run(viaRetry,kbd){
-    st={status:'saving',streak:st.streak}; paint();
+    puts++; blocked=null; st={status:'saving',streak:st.streak}; paint();
     setTimeout(function(){ /* min 600ms on retry so the teacher sees something happened */
       var ok=!document.getElementById('fail').checked;
       st=ok?{status:'saved',streak:0}:{status:'error',streak:st.streak+1};
