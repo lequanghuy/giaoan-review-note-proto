@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NEW-02 sửa theo QA: tên hoạt động cố định (H1) + dòng lý do khi lưu bị từ chối (M2) · mockup · GiaoAn AI</title>
+<style>
+
+/* Tokens: apps/web/src/app/globals.css (:root) */
+:root{--blue:#2563eb;--blue-h:#1d4ed8;--blue-s:#eff6ff;--blue-b:#bfdbfe;--g50:#f9fafb;--g100:#f3f4f6;--g200:#e5e7eb;--g300:#d1d5db;--g400:#9ca3af;--g500:#6b7280;--g600:#4b5563;--g700:#374151;--g800:#1f2937;--g900:#111827;--green:#059669;--amber:#d97706;--as:#fffbeb;--red:#dc2626;--surface:#fff;--line:var(--g200);--card:var(--surface);--focus-ring:0 0 0 3px rgba(37,99,235,.12)}
+*{box-sizing:border-box}
+html{font-size:14px}
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--g50);color:var(--g800);line-height:1.5;-webkit-font-smoothing:antialiased}
+/* plan-editor-frame.tsx */
+.frame{margin:0 auto;width:100%;min-width:0;max-width:860px;padding:20px 36px 48px}
+@media (max-width:720px){.frame{padding:12px 12px 48px}}
+/* ui/card.tsx */
+.card{border-radius:10px;border:1px solid var(--line);background:var(--card);padding:16px}
+@media (min-width:640px){.card{padding:1.1rem}}
+.card-title{margin:0;font-size:1.15rem;font-weight:600;line-height:1.5}
+/* ui/button.tsx */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;border-radius:8px;padding:9px 16px;font:inherit;font-size:14px;font-weight:500;line-height:1.5;transition:background-color .15s,border-color .15s;cursor:pointer}
+.btn-outline,.btn-secondary{border:1px solid var(--g200);background:#fff;color:var(--g700)}
+.btn-outline:hover,.btn-secondary:hover{border-color:var(--g300);background:var(--g50)}
+.btn:disabled{cursor:not-allowed;opacity:.45}
+.btn-default{background:var(--blue);color:#fff;border:0;box-shadow:0 1px 2px rgba(37,99,235,.25)}
+.btn:focus{outline:none}
+.btn:focus-visible{outline:2px solid #2563eb;outline-offset:2px;border-radius:4px}
+/* editor-view.tsx title row */
+.hd{margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tabs{margin-bottom:12px;display:flex;flex-wrap:wrap;gap:8px}
+.ta{min-height:4.5rem;width:100%;border-radius:8px;border:1px solid var(--g200);background:#fff;padding:9px 12px;font:inherit;font-size:14px;color:var(--g800);outline:none;resize:none}
+.ta:focus{border-color:var(--blue);box-shadow:var(--focus-ring)}
+.fld-l{display:block;margin:0 0 4px;font-size:12px;font-weight:600;color:var(--g600)}
+
+/* =====================  SAVE STATUS SLOT (v2, icon)  ===================== */
+.save-slot{display:flex;flex-shrink:0;align-items:center;justify-content:flex-end;gap:10px}
+/* existing label classes: inline-block min-w-[5.5rem] shrink-0 text-right text-[11px] font-medium leading-none text-g500, aria-live=polite */
+.save-label{display:inline-block;flex-shrink:0;min-width:5.5rem;text-align:right;font-size:11px;font-weight:500;line-height:1;color:var(--g500)}
+.save-label.is-error{color:#92400e}                       /* = .rv-ackfail */
+/* inner span = the stable focus target while retrying (label itself stays the live region) */
+.save-label .lt{display:inline-block;padding:2px 0;margin:-2px 0}
+.save-label .lt:focus{outline:none}
+.save-label .lt:focus-visible,.save-label .lt.is-focus{outline:2px solid #2563eb;outline-offset:2px;border-radius:4px}
+/* icon slot: ALWAYS 24px wide, so the label never moves between states */
+.save-act{position:relative;flex:none;width:24px;height:24px}
+.save-retry{position:relative;display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;padding:0;border:1px solid #fde68a;border-radius:8px;background:#fff;color:#92400e;cursor:pointer;transition:background-color .15s,border-color .15s}
+.save-retry svg{width:14px;height:14px;display:block;transition:transform .2s ease}
+.save-retry:hover{background:#f9fafb;border-color:#fcd34d}   /* = .rv-done:hover */
+.save-retry:active{background:#fffbeb;border-color:#f59e0b}
+.save-retry:active svg{transform:rotate(60deg)}   /* pressed: quarter-turn nudge, no extra UI */
+/* 44px tap area, visual stays 24px (same trick as .rv-done::after) */
+.save-retry::after{content:"";position:absolute;left:-11px;right:-11px;top:50%;height:44px;transform:translateY(-50%)}
+.save-retry:focus{outline:none}
+.save-retry:focus-visible,.save-retry.is-focus{outline:2px solid #2563eb;outline-offset:2px}   /* = .rv-done:focus-visible */
+/* tooltip: same look as .rv-tip (review-note.css). Absolute, right-aligned to the icon, below it: no layout cost, no card-edge clip */
+.save-tip{position:absolute;z-index:40;top:calc(100% + 6px);right:0;padding:4px 8px;border-radius:6px;background:#fffbeb;border:1px solid #fde68a;color:#92400e;font-size:12px;font-weight:600;line-height:1.4;white-space:nowrap;pointer-events:auto;visibility:hidden}
+.save-tip::before{content:"";position:absolute;left:0;right:0;top:-8px;height:8px}  /* hover bridge (WCAG 1.4.13 hoverable) */
+.save-act.tip-on .save-tip{visibility:visible}
+@media (prefers-reduced-motion:reduce){.save-retry,.save-retry svg{transition:none}.save-retry:active svg{transform:none}}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+
+/* AC5 line, same style as .rv-ackfail */
+.acts{margin-top:12px;display:flex;flex-wrap:wrap;align-items:flex-start;gap:12px}
+.act-fail{flex-basis:100%;margin:0;font-size:12px;font-weight:500;line-height:1.4;color:#92400e}
+.act-fail:empty{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+
+
+/* =====================  NEW-02 additions  ===================== */
+/* ---- activity shell: activity-editor.tsx (desktop: border-t py-3; <=720: bordered card + 48px header band, PR #29) ---- */
+.h4{margin:0}
+.act{border-top:1px solid var(--line);padding:12px 0}
+.act-hd{margin:0 0 8px;font-weight:600}
+@media (max-width:720px){
+ .act{margin-bottom:14px;overflow:hidden;border:1px solid var(--g200);border-radius:12px;background:#fff;padding:0}
+ .act-hd{margin:0;display:flex;min-height:48px;align-items:center;border-bottom:1px solid var(--g200);background:var(--g50);padding:0 16px;font-weight:700}
+ .act-body{padding:12px 14px 6px}
+}
+/* ui/label.tsx + ui/input.tsx + ui/textarea.tsx */
+.lb{display:block;margin:8px 0 6px;font-size:13px;font-weight:500;color:var(--g700)}
+.inp{display:block;width:100%;border-radius:8px;border:1px solid var(--g200);background:#fff;padding:9px 12px;font:inherit;font-size:14px;color:var(--g800);outline:none}
+textarea.inp{min-height:4.5rem;resize:none;line-height:1.5}
+.inp:focus,.inp.is-focus{border-color:var(--blue);box-shadow:var(--focus-ring)}
+.sec-h{margin:20px 0 4px;font-size:16px;font-weight:600}
+.sub{margin-top:12px;border-left:1px solid var(--line);padding-left:12px}
+.sub-t{margin:0 0 8px;font-weight:500}
+/* review-note.css (.rv-chiprow, .rv-chip, .rv-done), copied */
+.rv-chiprow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 0 0}
+@media (max-width:720px){.rv-chiprow{padding:0}}
+.rv-chip{display:inline-flex;align-items:center;gap:6px;padding:3px 4px 3px 9px;border-radius:20px;background:#fffbeb;border:1px solid #fde68a;color:#92400e;font-size:12px;font-weight:600;line-height:1.4}
+.rv-chip svg{color:#b45309;flex-shrink:0}
+.rv-done{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;min-height:24px;border-radius:20px;background:#fff;border:1px solid #fde68a;color:#334155;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.rv-done svg{color:#059669}
+@media (max-width:720px){.rv-chip{padding:4px 4px 4px 10px}.rv-done{min-height:36px;padding:4px 12px}}
+
+/* ---- H1 AFTER: fixed activity name = semantic <h4>, no input chrome ---- */
+.act-name{margin:8px 0 4px;font-size:15px;font-weight:600;line-height:1.4;color:var(--g900);letter-spacing:0;cursor:default}
+.act-name::selection{background:#bfdbfe}
+/* ---- M2: per-field reason line (= .rv-ackfail) + minimal invalid style (NEW) ---- */
+.field-fail{margin:4px 0 0;font-size:12px;font-weight:500;line-height:1.4;color:#92400e}
+.field-fail:empty{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+.inp[aria-invalid="true"]{border-color:#d97706}                 /* --amber; 3.19:1 on white (non-text >= 3:1) */
+.inp[aria-invalid="true"]:focus,.inp[aria-invalid="true"].is-focus{border-color:var(--blue);box-shadow:var(--focus-ring)}
+.gen-fail{margin:0 0 12px;font-size:12px;font-weight:500;line-height:1.4;color:#92400e}
+.gen-fail:empty{display:none}
+
+/* ===== mockup-only annotation (not part of the app) ===== */
+.board{display:grid;grid-template-columns:minmax(0,1fr);gap:26px}
+.cap{margin:0 0 6px;font-size:12px;font-weight:600;color:var(--g600)}
+.sec{margin:34px 0 0;padding-top:14px;border-top:2px solid var(--g300);font-size:18px;font-weight:700;color:var(--g900)}
+.sec small{display:block;margin-top:2px;font-size:12px;font-weight:500;color:var(--g500)}
+.note{margin:0;font-size:12px;color:var(--g600)}
+.demo{margin-top:22px;padding:12px;border:1px dashed var(--g300);border-radius:10px;font-size:13px;color:var(--g600)}
+.demo label{margin-right:12px}
+.demo p{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.v1link{font-size:12px;color:var(--g500);margin:0 0 14px}
+.v1link a{color:var(--blue-h)}
+.pair{display:grid;gap:18px}
+.tbl{width:100%;border-collapse:collapse;font-size:12px;background:#fff;border:1px solid var(--g200)}
+.tbl th,.tbl td{border:1px solid var(--g200);padding:6px 8px;text-align:left;vertical-align:top}
+.tbl th{background:var(--g50);font-weight:600}
+.tblwrap{overflow-x:auto}
+.tag{display:inline-block;padding:1px 6px;border-radius:10px;background:#fffbeb;border:1px solid #fde68a;color:#92400e;font-size:11px;font-weight:600}
+.tag.cr{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+.hint-mark{outline:1px dashed #d97706;outline-offset:2px}
+@media (max-width:720px){.tbl{font-size:11px}}
+</style>
+</head>
+<body>
+<div class="frame"><p class="v1link" data-mock>NEW-02 sửa theo QA. Thiết kế chờ Huy duyệt trước khi Dev FE làm. Biểu tượng "Thử lại" đã duyệt: <a href="../">/retry/</a> · bản chữ: <a href="../v1-text/">/retry/v1-text/</a> · <a href="?live=1">?live=1</a> (bấm thử)</p>
+<div class="board" id="board"></div></div>
+<script>
+/* ============ shared strings (apps/web/src/lib/save-status.ts) ============ */
+var ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>';
+var LOOK='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/><path d="M11 8v3.2"/><path d="M11 14h.01"/></svg>';
+var CHK='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+var TEXT={saved:'Đã lưu',saving:'Đang lưu',error:'Chưa lưu được'};
+var BLOCKED='Chưa lưu được nên thao tác này chưa chạy. Thầy cô bấm biểu tượng thử lại ở đầu giáo án giúp nhé.';          /* APPROVED, = SAVE_ACTION_BLOCKED on main */
+var BLOCKED_DATA='Chưa lưu được nên thao tác này chưa chạy. Thầy cô sửa mục được nhắc rồi bấm biểu tượng thử lại giúp nhé.'; /* CHANGE REQUEST CR-2 (optional) */
+
+/* ============ M2 rules. Limits = packages/shared/src/save-plan.ts (TEXT_MAX 4000, SHORT_TEXT_MAX 200, LIST_MAX 12, AIDS_MAX 20, minutes 1..180) ============ */
+function parseList(raw,sep){ return raw.split(sep==='nl'?/\n/:/[;\n]/).map(function(x){return x.trim()}).filter(Boolean); }
+/* each field def: k key, label (as shown), type, check(value)->reason|'' (reason = text after the colon) */
+function chk_list(sep,max,unit){ return function(v){ var a=parseList(v,sep); if(!a.length) return 'cần có ít nhất một '+unit+'.'; if(a.some(function(x){return x.length>4000})) return 'mỗi '+unit+' tối đa 4000 ký tự.'; if(a.length>max) return 'tối đa '+max+' '+unit+'.'; return ''; }; }
+function chk_text(max,emptyMsg){ return function(v){ var t=v.trim(); if(!t) return emptyMsg||'cần có nội dung.'; if(t.length>max) return 'tối đa '+max+' ký tự.'; return ''; }; }
+function chk_opt(max){ return function(v){ return v.trim().length>max?'tối đa '+max+' ký tự.':''; }; }
+function chk_min(v){ var n=Number(v); return (v===''||!isFinite(n)||Math.floor(n)!==n||n<1||n>180)?'nhập số phút từ 1 đến 180.':''; }
+function msg(label,reason){ return 'Thầy cô sửa mục '+label+' rồi thử lại: '+reason; }
+var DEFS={
+ knowledge:{label:'Kiến thức',type:'textarea',check:chk_list(';',12,'ý')},
+ aids:{label:'Học liệu (mỗi dòng một mục)',short:'Học liệu',type:'textarea',check:chk_list('nl',20,'dòng')},
+ school:{label:'Trường',type:'input',check:chk_opt(200)},
+ minutes:{label:'Thời lượng (phút)',short:'Thời lượng (phút)',type:'number',check:chk_min},
+ content:{label:'b) Nội dung',type:'textarea',check:chk_text(4000)},
+ assign:{label:'Giao nhiệm vụ',type:'textarea',check:chk_text(4000)},
+ subname:{label:'Tên hoạt động con',type:'input',check:chk_text(200,'cần có tên.')}
+};
+function why(def,v){ var r=def.check(v); return r?msg(def.short||def.label,r):''; }
+var LONG=(function(){var s='';while(s.length<4001)s+='Học sinh quan sát hình vẽ, ghi nhận xét vào vở. ';return s.slice(0,4001)})();
+var LONG201=new Array(202).join('A').slice(0,201);
+var KN_OK='Nhận biết hai đường thẳng song song; Vẽ được đường thẳng song song bằng thước và ê ke';
+var KN13=(function(a){for(var i=1;i<=13;i++)a.push('Ý số '+i);return a.join('; ')})([]);
+var AIDS21=(function(a){for(var i=1;i<=21;i++)a.push('Học liệu '+i);return a.join('\n')})([]);
+var CONTENT_OK='Nhóm 4 HS vẽ a // b, vẽ đường thẳng c cắt a tại A, cắt b tại B rồi đo các góc so le trong.';
+
+/* ============ builders ============ */
+var uid=0;
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;')}
+function fieldNode(key,value,opt){
+  opt=opt||{}; var d=DEFS[key], id='f'+(++uid)+'-'+key;
+  var w=document.createElement('div'); w.className='fld'; w.dataset.key=key;
+  var ctl;
+  if(d.type==='textarea') ctl='<textarea class="inp" id="'+id+'" rows="2">'+esc(value)+'</textarea>';
+  else if(d.type==='number') ctl='<input class="inp" id="'+id+'" type="number" min="1" value="'+esc(value)+'"/>';
+  else ctl='<input class="inp" id="'+id+'" type="text" value="'+esc(value)+'"/>';
+  w.innerHTML='<label class="lb" for="'+id+'">'+d.label+'</label>'+ctl+'<p class="field-fail" id="'+id+'-why" aria-live="polite"></p>';
+  w.control=w.querySelector('.inp'); w.line=w.querySelector('.field-fail');
+  return w;
+}
+function setBad(w,text,focusRing){
+  var c=w.control;
+  if(text){ c.setAttribute('aria-invalid','true'); c.setAttribute('aria-describedby',w.line.id); if(w.line.textContent!==text) w.line.textContent=text; }
+  else { c.removeAttribute('aria-invalid'); c.removeAttribute('aria-describedby'); if(w.line.textContent) w.line.textContent=''; }
+  c.classList.toggle('is-focus',!!focusRing);
+}
+function header(title){
+  return '<div class="hd"><h2 class="card-title">'+(title||'Giáo án (Phụ lục IV)')+'</h2><div class="save-slot"><span class="save-label" aria-live="polite"><span class="lt" tabindex="-1"></span></span><span class="save-act"></span></div></div>';
+}
+function status(card,s,o){
+  o=o||{};
+  var label=card.querySelector('.save-label'), lt=label.firstChild, act=card.querySelector('.save-act');
+  lt.textContent=TEXT[s]; label.classList.toggle('is-error',s==='error');
+  var btn=act.querySelector('.save-retry');
+  if(s==='error'){ if(!btn){ act.innerHTML='<button type="button" class="save-retry" aria-label="Thử lại">'+ICON+'</button><span class="save-tip" aria-hidden="true">Thử lại</span>'; btn=act.firstChild; } }
+  else if(btn){ act.innerHTML=''; btn=null; }
+  if(btn){ btn.classList.toggle('is-focus',!!o.ring); act.classList.toggle('tip-on',!!o.tip); }
+  lt.classList.toggle('is-focus',!!o.labelFocus);
+  return btn;
+}
+function mini(s,o){ var c=document.createElement('section'); c.className='card'; c.innerHTML=header(); status(c,s,o); return c; }
+function add(host,el){ host.appendChild(el); return el; }
+function block(id,cap,el,attrs){ var w=document.createElement('div'); w.id=id; if(attrs)for(var k in attrs)w.dataset[k]=attrs[k]; var p=document.createElement('p'); p.className='cap'; p.setAttribute('data-mock',''); p.textContent=cap; w.appendChild(p); w.appendChild(el); return w; }
+function section(title,sub,id){ var h=document.createElement('h2'); h.className='sec'; h.id=id; h.setAttribute('data-mock',''); h.innerHTML=title+'<small>'+sub+'</small>'; return h; }
+var board=document.getElementById('board');
+
+/* ============ H1: activity shell ============ */
+var NAMES=['Mở đầu','Hình thành kiến thức mới','Luyện tập','Vận dụng'];
+function chips(){ return '<div class="rv-chiprow"><span class="rv-chip">'+LOOK+'Nên soát nội dung<button type="button" class="rv-done" aria-label="Đã soát, nội dung">'+CHK+'Đã soát</button></span></div>'; }
+function activity(i,mode,withSub){ /* mode: 'input' (hiện tại) | 'heading' (đề xuất) */
+  var a=document.createElement('div'); a.className='act'; a.dataset.mode=mode; a.dataset.idx=i;
+  var nm=NAMES[i], id='act'+(++uid);
+  var nameHtml = mode==='input'
+    ? '<label class="lb" for="'+id+'-name">Tên hoạt động</label><input class="inp" id="'+id+'-name" type="text" value="'+esc(nm)+'"/>'
+    : '<h4 class="act-name" id="'+id+'-name">'+nm+'</h4>';
+  var sub = withSub ? '<div class="sub"><p class="sub-t">Hoạt động con 1</p><label class="lb" for="'+id+'-sn">Tên hoạt động con</label><input class="inp" id="'+id+'-sn" type="text" value="Khám phá hai đường thẳng song song"/><label class="lb" for="'+id+'-so">a) Mục tiêu</label><textarea class="inp" id="'+id+'-so" rows="2">Học sinh nhận biết được hai đường thẳng song song.</textarea></div>' : '';
+  a.innerHTML='<p class="act-hd">Hoạt động '+(i+1)+'</p><div class="act-body">'+chips()+nameHtml+
+    '<label class="lb" for="'+id+'-m">Thời lượng (phút)</label><input class="inp" id="'+id+'-m" type="number" min="1" value="'+[10,20,10,5][i]+'"/>'+
+    '<label class="lb" for="'+id+'-o">a) Mục tiêu</label><textarea class="inp" id="'+id+'-o" rows="2">Học sinh nêu được tình huống mở đầu về hai đường thẳng song song.</textarea>'+sub+'</div>';
+  return a;
+}
+function shell(title){ var c=document.createElement('section'); c.className='card'; c.innerHTML=header(title); return c; }
+
+board.appendChild(section('H1 · Tên 4 hoạt động lớn: từ ô nhập thành tiêu đề cố định','Trước/sau cùng một khối. Tên hoạt động con vẫn là ô nhập. Cùng một bản mockup này đổi theo độ rộng cửa sổ (1280 / 720 / 390).','sec-h1'));
+['input','heading'].forEach(function(mode,j){
+  var c=shell('III. Tiến trình dạy học'); status(c,'saved'); c.querySelector('.hd').insertAdjacentHTML('afterend','');
+  c.appendChild(activity(0,mode,false));
+  board.appendChild(block('h1-'+(j?'after':'before'), j?'SAU (đề xuất): tên là tiêu đề <h4>, không tab được, không gõ được':'TRƯỚC (hiện tại): ô nhập "Tên hoạt động" (gõ được, gõ sai là cả giáo án không lưu được)',c,{h1:mode}));
+});
+(function(){ var c=shell('III. Tiến trình dạy học'); status(c,'saved');
+  c.appendChild(activity(1,'heading',true));
+  board.appendChild(block('h1-forming','SAU, hoạt động có hoạt động con: tên lớn là tiêu đề cố định; tên hoạt động con vẫn là ô nhập có viền',c,{h1:'forming'}));
+  var c2=shell('III. Tiến trình dạy học'); status(c2,'saved');
+  [2,3].forEach(function(i){ var a=activity(i,'heading',false); a.querySelector('.rv-chiprow').remove(); c2.appendChild(a); });
+  board.appendChild(block('h1-others','SAU, hai hoạt động còn lại (không có nhắc soát): Luyện tập, Vận dụng',c2,{h1:'others'}));
+})();
+
+/* ============ M2 per rule ============ */
+board.appendChild(section('M2 · Dòng lý do khi nội dung không hợp lệ (từng quy tắc)','Dòng nằm ngay dưới ô có vấn đề. Nhãn trạng thái và biểu tượng giữ nguyên đã duyệt. Giới hạn lấy từ packages/shared/src/save-plan.ts.','sec-m2'));
+var CASES=[
+ ['r-kn-empty','Kiến thức để trống','knowledge','',''],
+ ['r-kn-many','Kiến thức quá 12 ý','knowledge',KN13,''],
+ ['r-aids-many','Học liệu quá 20 dòng','aids',AIDS21,''],
+ ['r-content-empty','b) Nội dung chỉ có dấu cách','content','   ',''],
+ ['r-content-long','b) Nội dung dài hơn 4000 ký tự','content',LONG,''],
+ ['r-minutes','Thời lượng ngoài khoảng 1 đến 180 (ví dụ 500)','minutes','500',''],
+ ['r-assign-empty','Giao nhiệm vụ để trống','assign','',''],
+ ['r-subname-empty','Tên hoạt động con để trống','subname','',''],
+ ['r-subname-long','Tên hoạt động con dài hơn 200 ký tự','subname',LONG201,''],
+ ['r-school-long','Trường dài hơn 200 ký tự','school',LONG201,'']
+];
+CASES.forEach(function(r){
+  var c=mini('error'); var w=fieldNode(r[2],r[3]); c.appendChild(w);
+  setBad(w,why(DEFS[r[2]],r[3]));
+  c.dataset.rule=r[0];
+  board.appendChild(block(r[0],r[1],c,{rule:r[0],key:r[2]}));
+});
+
+/* ============ multi-field ============ */
+board.appendChild(section('Nhiều ô không hợp lệ cùng lúc','Recommend: hiện dòng ở TẤT CẢ các ô (mỗi ô một dòng), không gộp "ô đầu tiên + số lượng".','sec-multi'));
+(function(){
+  var c=mini('error'); var list=[['knowledge',''],['minutes','500'],['content',LONG]];
+  list.forEach(function(x){ var w=fieldNode(x[0],x[1]); c.appendChild(w); setBad(w,why(DEFS[x[0]],x[1])); });
+  board.appendChild(block('multi','3 ô cùng không hợp lệ: 3 dòng, mỗi dòng dưới ô của nó',c,{multi:'1'}));
+})();
+
+/* ============ clearing ============ */
+board.appendChild(section('Dòng biến mất khi sửa xong','Không cần bấm gì. Sửa đúng ô nào thì dòng của ô đó biến mất ngay; giáo án tự lưu sau khi ô cuối cùng đúng.','sec-clear'));
+(function(){
+  var steps=[['clr-1','1 · Bị từ chối: ô Kiến thức trống, dòng hiện, nhãn "Chưa lưu được"','error',''],
+             ['clr-2','2 · Thầy cô gõ lại một ý: dòng và viền cam biến mất ngay (nhãn vẫn "Chưa lưu được" cho đến khi tự lưu)','error','Nhận biết hai đường thẳng song song'],
+             ['clr-3','3 · Tự lưu xong: "Đã lưu", biểu tượng biến mất','saved','Nhận biết hai đường thẳng song song']];
+  steps.forEach(function(s,i){ var c=mini(s[2]); var w=fieldNode('knowledge',s[3]); c.appendChild(w);
+    if(i===0) setBad(w,why(DEFS.knowledge,'')); if(i===1) w.control.classList.add('is-focus');
+    board.appendChild(block(s[0],s[1],c,{clear:String(i+1)})); });
+})();
+
+/* ============ icon on data error ============ */
+board.appendChild(section('Biểu tượng "Thử lại" khi lỗi dữ liệu','Recommend: GIỮ biểu tượng (đúng kiểu đã duyệt). Bấm khi còn ô chưa hợp lệ: không gửi gì lên, chuyển focus đến ô đầu tiên có dòng lý do.','sec-icon'));
+(function(){
+  var c=mini('error',{ring:true,tip:true}); var w=fieldNode('knowledge',''); c.appendChild(w); setBad(w,why(DEFS.knowledge,''));
+  board.appendChild(block('icon-1','a · Có lỗi dữ liệu: nhãn + biểu tượng y như lỗi mạng, kèm dòng dưới ô (rê chuột/focus: tooltip "Thử lại")',c,{icon:'1'}));
+  var c2=mini('error'); var w2=fieldNode('knowledge',''); c2.appendChild(w2); setBad(w2,why(DEFS.knowledge,''),true);
+  board.appendChild(block('icon-2','b · Sau khi bấm biểu tượng: không "Đang lưu" giả, focus nằm ở ô cần sửa (con trỏ nhấp nháy), dòng lý do được đọc lại',c2,{icon:'2'}));
+  var c3=mini('error'); c3.insertAdjacentHTML('beforeend','<div class="acts"><button type="button" class="btn btn-secondary">Soạn lại giáo án</button><button type="button" class="btn btn-outline">Tạo phiếu bài tập</button><button type="button" class="btn btn-default">Xuất Word</button><p class="act-fail" id="hint-appr">'+BLOCKED+'</p></div>');
+  board.appendChild(block('hint-approved','c · Dòng bên dưới Xuất/Soạn lại/Tạo phiếu: GIỮ NGUYÊN câu đã duyệt (vẫn đúng khi lỗi dữ liệu)',c3,{hint:'approved'}));
+  var c4=mini('error'); c4.insertAdjacentHTML('beforeend','<div class="acts"><button type="button" class="btn btn-secondary">Soạn lại giáo án</button><button type="button" class="btn btn-outline">Tạo phiếu bài tập</button><button type="button" class="btn btn-default">Xuất Word</button><p class="act-fail" id="hint-data">'+BLOCKED_DATA+'</p></div>');
+  board.appendChild(block('hint-data-var','d · CR-2 (tùy chọn, CẦN DUYỆT): biến thể khi lỗi là dữ liệu. Chỉ thêm "sửa mục được nhắc"',c4,{hint:'data'}));
+})();
+
+/* ============ network vs data ============ */
+board.appendChild(section('Lỗi mạng và lỗi dữ liệu: khác nhau ở đâu','Lỗi mạng (mất kết nối, 5xx, xung đột phiên bản) giữ nguyên luồng đã duyệt. Chỉ thêm các dòng ở cột phải.','sec-net'));
+(function(){
+  var t=document.createElement('div'); t.className='tblwrap'; t.id='net-table';
+  t.innerHTML='<table class="tbl"><thead><tr><th></th><th>Lỗi mạng / máy không lưu được (mất kết nối, 5xx, xung đột 409): ĐÃ DUYỆT</th><th>Lỗi dữ liệu (nội dung không hợp lệ): MỚI</th></tr></thead><tbody>'+
+  '<tr><th>Nhãn đầu giáo án</th><td>"Chưa lưu được"</td><td>"Chưa lưu được" (y hệt)</td></tr>'+
+  '<tr><th>Biểu tượng</th><td>Có, kiểu đã duyệt</td><td>Có, y hệt (không đổi màu, không vô hiệu)</td></tr>'+
+  '<tr><th>Bấm biểu tượng</th><td>"Đang lưu" ít nhất 600 ms, gửi lại; xong thì focus về ô đang sửa, lỗi lại thì focus về biểu tượng</td><td>Không gửi gì, không "Đang lưu"; focus chuyển đến ô đầu tiên có dòng lý do (CR-3)</td></tr>'+
+  '<tr><th>Dòng dưới ô</th><td>Không có</td><td>Có, ngay dưới từng ô cần sửa: "Thầy cô sửa mục … rồi thử lại: …"</td></tr>'+
+  '<tr><th>Viền ô</th><td>Không đổi</td><td>Viền cam #D97706 (mới); khi đang gõ vào ô thì viền xanh như mọi ô</td></tr>'+
+  '<tr><th>Dòng dưới Xuất / Soạn lại / Tạo phiếu</th><td>Câu đã duyệt, giữ nguyên</td><td>Giữ câu đã duyệt (vẫn đúng). Tùy chọn CR-2: "…sửa mục được nhắc rồi bấm biểu tượng thử lại giúp nhé."</td></tr>'+
+  '<tr><th>Tự thử lại</th><td>Có: mỗi lần sửa tiếp (sau 1 giây) hoặc bấm biểu tượng</td><td>Có: ngay khi ô cuối cùng hợp lệ, giáo án tự lưu sau 1 giây, không cần bấm</td></tr>'+
+  '<tr><th>Khi nào hết</th><td>Lưu thành công thì "Đã lưu", biểu tượng mất</td><td>Dòng của ô nào mất ngay khi ô đó hợp lệ; nhãn về "Đã lưu" khi tự lưu xong</td></tr>'+
+  '<tr><th>Gửi lên (PUT)</th><td>Có (và lỗi)</td><td>Không gửi trong lúc ô còn không hợp lệ</td></tr></tbody></table>';
+  board.appendChild(t);
+  var pair=document.createElement('div'); pair.className='pair'; pair.id='net-pair';
+  var a=mini('error'); var wa=fieldNode('content',CONTENT_OK); a.appendChild(wa);
+  var b=mini('error'); var wb=fieldNode('content','   '); b.appendChild(wb); setBad(wb,why(DEFS.content,'   '));
+  pair.appendChild(block('net-a','Lỗi mạng: nhãn + biểu tượng, KHÔNG có dòng dưới ô',a,{kind:'net'}));
+  pair.appendChild(block('net-b','Lỗi dữ liệu: nhãn + biểu tượng + dòng dưới ô cần sửa',b,{kind:'data'}));
+  board.appendChild(pair);
+})();
+
+/* ============ LIVE ============ */
+if(/[?&]live=1/.test(location.search)){
+  board.appendChild(section('Bấm thử (?live=1)','Mô phỏng: không có máy chủ thật. Tự lưu sau 800 ms (thật là 1 giây). PUT chỉ được đếm khi nội dung hợp lệ.','sec-live'));
+  var d=document.createElement('div'); d.className='demo'; d.id='livebox';
+  d.innerHTML='<p class="cap" data-mock><b>Demo bấm thử</b> (không thuộc giao diện)</p><div id="live"></div>'+
+   '<p data-mock><label><input type="checkbox" id="fail"> Mạng đang lỗi</label><label><input type="checkbox" id="cr2"> Bật CR-2 (câu dưới nút khi lỗi dữ liệu)</label> <span id="cnt">PUT: 0</span></p>'+
+   '<p data-mock id="helpers"><button type="button" class="btn btn-outline" id="h-kn">Xóa hết Kiến thức</button> <button type="button" class="btn btn-outline" id="h-long">Dán 4001 ký tự vào b) Nội dung</button> <button type="button" class="btn btn-outline" id="h-min">Thời lượng = 500</button> <button type="button" class="btn btn-outline" id="h-sub">Xóa tên hoạt động con</button> <button type="button" class="btn btn-outline" id="h-fix">Sửa tất cả</button></p><pre id="out" data-mock style="font-size:12px;margin:0"></pre>';
+  board.appendChild(d);
+  var live=document.getElementById('live'), out=document.getElementById('out');
+  var card=document.createElement('section'); card.className='card'; card.innerHTML=header();
+  var F={}; /* key -> fieldNode */
+  var order=['knowledge','school','minutes','content','subname'];
+  var init={knowledge:KN_OK,school:'THCS Nguyễn Du',minutes:'10',content:CONTENT_OK,subname:'Khám phá hai đường thẳng song song'};
+  var h=document.createElement('h3'); h.className='sec-h'; h.textContent='I. Mục tiêu'; card.appendChild(h);
+  F.knowledge=fieldNode('knowledge',init.knowledge); card.appendChild(F.knowledge);
+  F.school=fieldNode('school',init.school); card.appendChild(F.school);
+  var act=document.createElement('div'); act.className='act'; act.innerHTML='<p class="act-hd">Hoạt động 1</p><div class="act-body"><h4 class="act-name" id="live-h">Mở đầu</h4></div>';
+  var body=act.querySelector('.act-body');
+  F.minutes=fieldNode('minutes',init.minutes); body.appendChild(F.minutes);
+  F.content=fieldNode('content',init.content); body.appendChild(F.content);
+  var sub=document.createElement('div'); sub.className='sub'; sub.innerHTML='<p class="sub-t">Hoạt động con 1</p>'; body.appendChild(sub);
+  F.subname=fieldNode('subname',init.subname); sub.appendChild(F.subname);
+  card.appendChild(act);
+  var acts=document.createElement('div'); acts.className='acts';
+  acts.innerHTML='<button type="button" class="btn btn-secondary" data-act="revise">Soạn lại giáo án</button><button type="button" class="btn btn-outline" data-act="ws">Tạo phiếu bài tập</button><button type="button" class="btn btn-default" data-act="export">Xuất Word</button><p class="act-fail" id="live-hint" aria-live="polite"></p>';
+  card.appendChild(acts); live.appendChild(card);
+  var hint=acts.querySelector('.act-fail');
+  var st='saved', kind=null, puts=0, timer=null, blockedBy=null, esc2=false;
+  var slot=card.querySelector('.save-act'), label=card.querySelector('.save-label'), lt=label.firstChild;
+  function say(t){ out.textContent+=t+'\n'; }
+  function val(k){ return F[k].control.value; }
+  function bad(){ return order.filter(function(k){ return !!DEFS[k].check(val(k)); }); }
+  function tipShow(){ var b=slot.querySelector('.save-retry'); if(!b) return; var vis=(b.matches(':hover')||slot.matches(':hover')||b.matches(':focus-visible'))&&!esc2; slot.classList.toggle('tip-on',vis); }
+  function render(){
+    var prev=document.activeElement, onCtl=prev===lt||(prev&&prev.classList&&prev.classList.contains('save-retry'));
+    if(onCtl){ if(st==='saving') lt.focus(); else if(st==='saved'&&F.lastEdited) F.lastEdited.control.focus(); }
+    var btn=status(card,st); if(btn){ btn.onclick=onRetry; slot.onmouseenter=slot.onmouseleave=function(){esc2=false;tipShow()}; btn.onfocus=function(){esc2=false;tipShow()}; btn.onblur=tipShow; if(onCtl) btn.focus(); }
+    tipShow();
+    hint.textContent=(blockedBy&&st==='error')?((kind==='data'&&document.getElementById('cr2').checked)?BLOCKED_DATA:BLOCKED):'';
+    document.getElementById('cnt').textContent='PUT: '+puts;
+  }
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&slot.classList.contains('tip-on')){ esc2=true; tipShow(); } });
+  function lines(keys){ order.forEach(function(k){ setBad(F[k], keys.indexOf(k)>=0? why(DEFS[k],val(k)) : ''); }); }
+  function attempt(viaRetry){
+    clearTimeout(timer); var keys=bad();
+    if(keys.length){ kind='data'; st='error'; lines(keys); render(); say('aria-live: '+keys.length+' dòng lý do · không PUT'); return keys; }
+    lines([]); puts++; blockedBy=null; kind=null; st='saving'; render();
+    setTimeout(function(){
+      var ok=!document.getElementById('fail').checked;
+      if(ok){ st='saved'; kind=null; blockedBy=null; } else { st='error'; kind='net'; }
+      render(); say('aria-live: '+TEXT[st]);
+    }, viaRetry?600:300);
+  }
+  function onRetry(){
+    if(st==='saving') return;
+    var keys=bad();
+    if(keys.length){ lines(keys); F[keys[0]].control.focus(); F[keys[0]].control.scrollIntoView({block:'center'}); say('focus → '+DEFS[keys[0]].label); return; }
+    attempt(true);
+  }
+  order.forEach(function(k){ F[k].control.addEventListener('input',function(){
+    F.lastEdited=F[k];
+    /* clear-on-fix: re-check ONLY this field, locally, no network */
+    if(F[k].line.textContent && !DEFS[k].check(val(k))) setBad(F[k],'');
+    clearTimeout(timer); timer=setTimeout(function(){ if(st!=='saving') attempt(false); },800);
+  }); });
+  acts.querySelectorAll('[data-act]').forEach(function(b){ b.addEventListener('click',function(){ if(st==='error'){ blockedBy=b.dataset.act; render(); b.focus(); say('aria-live: '+hint.textContent); } }); });
+  function set(k,v){ F[k].control.value=v; F[k].control.dispatchEvent(new Event('input',{bubbles:true})); }
+  document.getElementById('h-kn').onclick=function(){ set('knowledge',''); };
+  document.getElementById('h-long').onclick=function(){ set('content',LONG); };
+  document.getElementById('h-min').onclick=function(){ set('minutes','500'); };
+  document.getElementById('h-sub').onclick=function(){ set('subname',''); };
+  document.getElementById('h-fix').onclick=function(){ set('knowledge',init.knowledge); set('content',init.content); set('minutes','10'); set('subname',init.subname); };
+  render();
+}
+</script>
+</body>
+</html>

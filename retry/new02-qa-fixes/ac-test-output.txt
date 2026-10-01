@@ -1,0 +1,205 @@
+PASS [1280] page loads without script errors
+PASS [1280] no horizontal overflow of the page · 1280
+PASS [1280] H1 4 top-level names shown as headings: Mở đầu / Hình thành kiến thức mới / Luyện tập / Vận dụng · Mở đầu | Hình thành kiến thức mới | Luyện tập | Vận dụng
+PASS [1280] H1 headings are <h4> (semantic), not input/textarea/button
+PASS [1280] H1 headings have no tabindex / contenteditable / role override / readonly / disabled / aria-disabled
+PASS [1280] H1 headings are not focusable (focus() does nothing)
+PASS [1280] H1 Tab walk never lands on a heading (next stops are the real fields) · INPUT#act2-m > TEXTAREA#act2-o > BUTTON > INPUT#act3-m > TEXTAREA#act3-o
+PASS [1280] H1 "after" block has NO "Tên hoạt động" label and no input with the activity name
+PASS [1280] H1 "before" block (current) still has the input (test fixture sanity)
+PASS [1280] H1 sub-activity name is a normal input: not readonly/disabled, tabbable, visible border + white bg + its label · {"ro":false,"border":"1px rgb(229, 231, 235)","bg":"rgb(255, 255, 255)","tab":0,"label":"Tên hoạt động con"}
+PASS [1280] H1 sub-activity name accepts typing
+PASS [1280] H1 heading style: 15px / 600 / #111827, no border, transparent bg, no padding, cursor default, opacity 1 · {"fs":"15px","fw":"600","color":"rgb(17, 24, 39)","border":"0px","bg":"rgba(0, 0, 0, 0)","pad":"0px 0px","cursor":"default","opacity":"1","contrast":17.7,"lines":1}
+PASS [1280] H1 heading contrast on white >= 7:1 (not greyed) · 17.7
+PASS [1280] H1 longest name "Hình thành kiến thức mới" stays on 1 line
+PASS [1280] H1 activity header band unchanged (height/position identical before vs after) · {"bandH":21,"bandTop":0}
+PASS [1280] H1 review chips do not move (same distance to the band, same x) · dy=0 dx=0
+PASS [1280] H1 heading left edge == chip left edge == following label left edge (== old input left edge) · {"headX":0,"labelX":0,"inputX":0}
+PASS [1280] H1 block height changes by a fixed one-time delta (label+input removed), documented · delta=-45.5px
+PASS [1280] H1 clicking the heading does not focus anything / no caret
+PASS [1280] H1 typing after clicking the heading changes nothing
+PASS [1280] M2 each of 10 rules: error line fully inside the viewport
+PASS [1280] M2 each rule: line is 1-2 lines · r-kn-empty:1l r-kn-many:1l r-aids-many:1l r-content-empty:1l r-content-long:1l r-minutes:1l r-assign-empty:1l r-subname-empty:1l r-subname-long:1l r-school-long:1l
+PASS [1280] M2 each rule: copy = "Thầy cô sửa mục <tên mục> rồi thử lại: <lý do>"
+PASS [1280] M2 each rule: reason text has the real limit (ít nhất một / 12 / 20 / 4000 / 1 đến 180 / 200)
+PASS [1280] M2 each rule: no banned word (lỗi, sai, máy chủ, 400, validation, undefined...)
+PASS [1280] M2 each rule: aria-invalid=true, aria-describedby -> line id, line aria-live=polite, directly under field, amber border #D97706
+PASS [1280] M2 each rule: status label stays "Chưa lưu được" and the approved icon is present
+PASS [1280] M2 status row geometry (height, title x, label x/right edge, icon 24x24) identical across all 10 rules · 24.14,16.39,16.39,660.61,50.39,24,24
+PASS [1280] approved icon untouched: 24x24, #92400E, border #FDE68A, radius 8, 14px glyph, aria-label & tooltip "Thử lại" · {"w":24,"h":24,"color":"rgb(146, 64, 14)","border":"rgb(253, 230, 138)","radius":"8px","aria":"Thử lại","svg":14,"tip":"Thử lại"}
+PASS [1280] approved blocked-action hint (static) is the exact approved text
+PASS [1280] CR-2 hint variant has no banned word and starts with the approved first sentence
+PASS [1280] M2 multi: 3 invalid fields -> 3 lines + 3 aria-invalid, each in viewport horizontally · {"n":3,"inv":3,"ids":3,"vis":true}
+PASS [1280] M2 clearing storyboard: line+aria-invalid go away on edit, label becomes "Đã lưu" and icon goes away after save · [[true,true,"Chưa lưu được",true],[false,false,"Chưa lưu được",true],[false,false,"Đã lưu",false]]
+PASS [1280] network-vs-data table present (9 rows) and pair shows line only on the data card
+PASS [1280] no banned word anywhere in teacher-facing UI text (excl. annotations)
+PASS [1280] live: starts "Đã lưu", no icon, PUT 0, no lines
+PASS [1280] live: heading in live card is h4, no tabindex, not focusable
+PASS [1280] live: no PUT while typing (valid content, debounce running)
+PASS [1280] live: valid content -> 1 PUT, back to "Đã lưu"
+PASS [1280] live: Kiến thức emptied -> label "Chưa lưu được" + icon, 1 line, ZERO new PUT
+PASS [1280] live: focus NOT stolen (still in Kiến thức) when the reason line appears
+PASS [1280] live: line text = approved pattern, Kiến thức · Thầy cô sửa mục Kiến thức rồi thử lại: cần có ít nhất một ý.
+PASS [1280] live: aria-invalid + aria-describedby + polite on the live line
+PASS [1280] live: status row geometry identical to "Đã lưu" state (no shift of the row) · 24.14,16.39,16.39,634.61,50.39
+PASS [1280] live: the field itself and everything above it did not move; the heading below moved by the same amount as the other content (only the line) · [8233.8,8233.8]
+PASS [1280] live: content below moved by exactly the line (height + 4px margin), nothing else · shift=20.8 line=16.796875
+PASS [1280] live: typing in another field while Kiến thức is invalid -> still 0 new PUT, still "Chưa lưu được", line stays
+PASS [1280] live: focus stays in the field being typed (no focus steal)
+PASS [1280] live: Xuất Word during data error -> the APPROVED blocked-action hint (CR-2 off)
+PASS [1280] live: CR-2 on -> variant text (no banned word)
+PASS [1280] live: icon click on data error -> no PUT, label stays "Chưa lưu được" (never flashes "Đang lưu"), icon still there
+PASS [1280] live: icon click moves focus to the first field with a reason line (Kiến thức)
+PASS [1280] live: 3 invalid fields -> 3 lines at once, 3 aria-invalid, 0 PUT
+PASS [1280] live: all 3 lines inside viewport width and <=2 lines each · [[275,1005,1280,1],[275,1005,1280,1],[275,1005,1280,1]]
+PASS [1280] live: fixing one field clears ITS line immediately (<=40ms, before any save); the other 2 stay
+PASS [1280] live: still no PUT while 2 fields remain invalid
+PASS [1280] live: all fixed -> all lines gone at once
+PASS [1280] live: after the last fix: auto-save -> exactly 1 more PUT, "Đã lưu", icon gone
+PASS [1280] live: positions return to the original after clearing (no residual space) · {"knowledge":8233.8,"school":8330.3,"minutes":8466.3,"content":8540.8,"subname":8668.8,"h":8411.8}
+PASS [1280] live: NETWORK error -> "Chưa lưu được" + icon, NO reason line, no aria-invalid, 1 PUT sent
+PASS [1280] live: NETWORK retry shows "Đang lưu" (approved flow) and sends a PUT
+PASS [1280] live: NETWORK retry fails again -> icon back
+PASS [1280] live: NETWORK retry succeeds -> "Đã lưu", icon gone, focus back to the last edited field
+PASS [1280] live: sub-activity name emptied -> its own line, 0 PUT even though network is also down
+PASS [1280] live: typing in the sub-activity name clears its line instantly
+PASS [1280] live: then the (still failing) network is the only error: label "Chưa lưu được", no line
+PASS [1280] live: no script errors
+PASS [720] page loads without script errors
+PASS [720] no horizontal overflow of the page · 720
+PASS [720] H1 4 top-level names shown as headings: Mở đầu / Hình thành kiến thức mới / Luyện tập / Vận dụng · Mở đầu | Hình thành kiến thức mới | Luyện tập | Vận dụng
+PASS [720] H1 headings are <h4> (semantic), not input/textarea/button
+PASS [720] H1 headings have no tabindex / contenteditable / role override / readonly / disabled / aria-disabled
+PASS [720] H1 headings are not focusable (focus() does nothing)
+PASS [720] H1 Tab walk never lands on a heading (next stops are the real fields) · INPUT#act2-m > TEXTAREA#act2-o > BUTTON > INPUT#act3-m > TEXTAREA#act3-o
+PASS [720] H1 "after" block has NO "Tên hoạt động" label and no input with the activity name
+PASS [720] H1 "before" block (current) still has the input (test fixture sanity)
+PASS [720] H1 sub-activity name is a normal input: not readonly/disabled, tabbable, visible border + white bg + its label · {"ro":false,"border":"1px rgb(229, 231, 235)","bg":"rgb(255, 255, 255)","tab":0,"label":"Tên hoạt động con"}
+PASS [720] H1 sub-activity name accepts typing
+PASS [720] H1 heading style: 15px / 600 / #111827, no border, transparent bg, no padding, cursor default, opacity 1 · {"fs":"15px","fw":"600","color":"rgb(17, 24, 39)","border":"0px","bg":"rgba(0, 0, 0, 0)","pad":"0px 0px","cursor":"default","opacity":"1","contrast":17.7,"lines":1}
+PASS [720] H1 heading contrast on white >= 7:1 (not greyed) · 17.7
+PASS [720] H1 longest name "Hình thành kiến thức mới" stays on 1 line
+PASS [720] H1 activity header band unchanged (height/position identical before vs after) · {"bandH":48,"bandTop":0}
+PASS [720] H1 review chips do not move (same distance to the band, same x) · dy=0 dx=0
+PASS [720] H1 heading left edge == chip left edge == following label left edge (== old input left edge) · {"headX":0,"labelX":0,"inputX":0}
+PASS [720] H1 block height changes by a fixed one-time delta (label+input removed), documented · delta=-45.5px
+PASS [720] H1 390/720: heading sits BELOW the 48px band and the chip row, inside the 14px body padding
+PASS [720] H1 clicking the heading does not focus anything / no caret
+PASS [720] H1 typing after clicking the heading changes nothing
+PASS [720] M2 each of 10 rules: error line fully inside the viewport
+PASS [720] M2 each rule: line is 1-2 lines · r-kn-empty:1l r-kn-many:1l r-aids-many:1l r-content-empty:1l r-content-long:1l r-minutes:1l r-assign-empty:1l r-subname-empty:1l r-subname-long:1l r-school-long:1l
+PASS [720] M2 each rule: copy = "Thầy cô sửa mục <tên mục> rồi thử lại: <lý do>"
+PASS [720] M2 each rule: reason text has the real limit (ít nhất một / 12 / 20 / 4000 / 1 đến 180 / 200)
+PASS [720] M2 each rule: no banned word (lỗi, sai, máy chủ, 400, validation, undefined...)
+PASS [720] M2 each rule: aria-invalid=true, aria-describedby -> line id, line aria-live=polite, directly under field, amber border #D97706
+PASS [720] M2 each rule: status label stays "Chưa lưu được" and the approved icon is present
+PASS [720] M2 status row geometry (height, title x, label x/right edge, icon 24x24) identical across all 10 rules · 24.14,16.39,16.39,568.61,50.39,24,24
+PASS [720] approved icon untouched: 24x24, #92400E, border #FDE68A, radius 8, 14px glyph, aria-label & tooltip "Thử lại" · {"w":24,"h":24,"color":"rgb(146, 64, 14)","border":"rgb(253, 230, 138)","radius":"8px","aria":"Thử lại","svg":14,"tip":"Thử lại"}
+PASS [720] approved blocked-action hint (static) is the exact approved text
+PASS [720] CR-2 hint variant has no banned word and starts with the approved first sentence
+PASS [720] M2 multi: 3 invalid fields -> 3 lines + 3 aria-invalid, each in viewport horizontally · {"n":3,"inv":3,"ids":3,"vis":true}
+PASS [720] M2 clearing storyboard: line+aria-invalid go away on edit, label becomes "Đã lưu" and icon goes away after save · [[true,true,"Chưa lưu được",true],[false,false,"Chưa lưu được",true],[false,false,"Đã lưu",false]]
+PASS [720] network-vs-data table present (9 rows) and pair shows line only on the data card
+PASS [720] no banned word anywhere in teacher-facing UI text (excl. annotations)
+PASS [720] live: starts "Đã lưu", no icon, PUT 0, no lines
+PASS [720] live: heading in live card is h4, no tabindex, not focusable
+PASS [720] live: no PUT while typing (valid content, debounce running)
+PASS [720] live: valid content -> 1 PUT, back to "Đã lưu"
+PASS [720] live: Kiến thức emptied -> label "Chưa lưu được" + icon, 1 line, ZERO new PUT
+PASS [720] live: focus NOT stolen (still in Kiến thức) when the reason line appears
+PASS [720] live: line text = approved pattern, Kiến thức · Thầy cô sửa mục Kiến thức rồi thử lại: cần có ít nhất một ý.
+PASS [720] live: aria-invalid + aria-describedby + polite on the live line
+PASS [720] live: status row geometry identical to "Đã lưu" state (no shift of the row) · 24.14,16.39,16.39,542.61,50.39
+PASS [720] live: the field itself and everything above it did not move; the heading below moved by the same amount as the other content (only the line) · [8420.8,8420.8]
+PASS [720] live: content below moved by exactly the line (height + 4px margin), nothing else · shift=20.8 line=16.796875
+PASS [720] live: typing in another field while Kiến thức is invalid -> still 0 new PUT, still "Chưa lưu được", line stays
+PASS [720] live: focus stays in the field being typed (no focus steal)
+PASS [720] live: Xuất Word during data error -> the APPROVED blocked-action hint (CR-2 off)
+PASS [720] live: CR-2 on -> variant text (no banned word)
+PASS [720] live: icon click on data error -> no PUT, label stays "Chưa lưu được" (never flashes "Đang lưu"), icon still there
+PASS [720] live: icon click moves focus to the first field with a reason line (Kiến thức)
+PASS [720] live: 3 invalid fields -> 3 lines at once, 3 aria-invalid, 0 PUT
+PASS [720] live: all 3 lines inside viewport width and <=2 lines each · [[41,679,720,1],[56,664,720,1],[56,664,720,1]]
+PASS [720] live: fixing one field clears ITS line immediately (<=40ms, before any save); the other 2 stay
+PASS [720] live: still no PUT while 2 fields remain invalid
+PASS [720] live: all fixed -> all lines gone at once
+PASS [720] live: after the last fix: auto-save -> exactly 1 more PUT, "Đã lưu", icon gone
+PASS [720] live: positions return to the original after clearing (no residual space) · {"knowledge":8420.8,"school":8517.3,"minutes":8681.8,"content":8756.3,"subname":8884.3,"h":8627.3}
+PASS [720] live: NETWORK error -> "Chưa lưu được" + icon, NO reason line, no aria-invalid, 1 PUT sent
+PASS [720] live: NETWORK retry shows "Đang lưu" (approved flow) and sends a PUT
+PASS [720] live: NETWORK retry fails again -> icon back
+PASS [720] live: NETWORK retry succeeds -> "Đã lưu", icon gone, focus back to the last edited field
+PASS [720] live: sub-activity name emptied -> its own line, 0 PUT even though network is also down
+PASS [720] live: typing in the sub-activity name clears its line instantly
+PASS [720] live: then the (still failing) network is the only error: label "Chưa lưu được", no line
+PASS [720] live: no script errors
+PASS [390] page loads without script errors
+PASS [390] no horizontal overflow of the page · 390
+PASS [390] H1 4 top-level names shown as headings: Mở đầu / Hình thành kiến thức mới / Luyện tập / Vận dụng · Mở đầu | Hình thành kiến thức mới | Luyện tập | Vận dụng
+PASS [390] H1 headings are <h4> (semantic), not input/textarea/button
+PASS [390] H1 headings have no tabindex / contenteditable / role override / readonly / disabled / aria-disabled
+PASS [390] H1 headings are not focusable (focus() does nothing)
+PASS [390] H1 Tab walk never lands on a heading (next stops are the real fields) · INPUT#act2-m > TEXTAREA#act2-o > BUTTON > INPUT#act3-m > TEXTAREA#act3-o
+PASS [390] H1 "after" block has NO "Tên hoạt động" label and no input with the activity name
+PASS [390] H1 "before" block (current) still has the input (test fixture sanity)
+PASS [390] H1 sub-activity name is a normal input: not readonly/disabled, tabbable, visible border + white bg + its label · {"ro":false,"border":"1px rgb(229, 231, 235)","bg":"rgb(255, 255, 255)","tab":0,"label":"Tên hoạt động con"}
+PASS [390] H1 sub-activity name accepts typing
+PASS [390] H1 heading style: 15px / 600 / #111827, no border, transparent bg, no padding, cursor default, opacity 1 · {"fs":"15px","fw":"600","color":"rgb(17, 24, 39)","border":"0px","bg":"rgba(0, 0, 0, 0)","pad":"0px 0px","cursor":"default","opacity":"1","contrast":17.7,"lines":1}
+PASS [390] H1 heading contrast on white >= 7:1 (not greyed) · 17.7
+PASS [390] H1 longest name "Hình thành kiến thức mới" stays on 1 line
+PASS [390] H1 activity header band unchanged (height/position identical before vs after) · {"bandH":48,"bandTop":0}
+PASS [390] H1 review chips do not move (same distance to the band, same x) · dy=0 dx=0
+PASS [390] H1 heading left edge == chip left edge == following label left edge (== old input left edge) · {"headX":0,"labelX":0,"inputX":0}
+PASS [390] H1 block height changes by a fixed one-time delta (label+input removed), documented · delta=-45.5px
+PASS [390] H1 390/720: heading sits BELOW the 48px band and the chip row, inside the 14px body padding
+PASS [390] H1 clicking the heading does not focus anything / no caret
+PASS [390] H1 typing after clicking the heading changes nothing
+PASS [390] M2 each of 10 rules: error line fully inside the viewport
+PASS [390] M2 each rule: line is 1-2 lines · r-kn-empty:2l r-kn-many:1l r-aids-many:1l r-content-empty:1l r-content-long:2l r-minutes:2l r-assign-empty:2l r-subname-empty:2l r-subname-long:2l r-school-long:1l
+PASS [390] M2 each rule: copy = "Thầy cô sửa mục <tên mục> rồi thử lại: <lý do>"
+PASS [390] M2 each rule: reason text has the real limit (ít nhất một / 12 / 20 / 4000 / 1 đến 180 / 200)
+PASS [390] M2 each rule: no banned word (lỗi, sai, máy chủ, 400, validation, undefined...)
+PASS [390] M2 each rule: aria-invalid=true, aria-describedby -> line id, line aria-live=polite, directly under field, amber border #D97706
+PASS [390] M2 each rule: status label stays "Chưa lưu được" and the approved icon is present
+PASS [390] M2 status row geometry (height, title x, label x/right edge, icon 24x24) identical across all 10 rules · 24.14,17,17,238,51,24,24
+PASS [390] approved icon untouched: 24x24, #92400E, border #FDE68A, radius 8, 14px glyph, aria-label & tooltip "Thử lại" · {"w":24,"h":24,"color":"rgb(146, 64, 14)","border":"rgb(253, 230, 138)","radius":"8px","aria":"Thử lại","svg":14,"tip":"Thử lại"}
+PASS [390] approved blocked-action hint (static) is the exact approved text
+PASS [390] CR-2 hint variant has no banned word and starts with the approved first sentence
+PASS [390] M2 multi: 3 invalid fields -> 3 lines + 3 aria-invalid, each in viewport horizontally · {"n":3,"inv":3,"ids":3,"vis":true}
+PASS [390] M2 clearing storyboard: line+aria-invalid go away on edit, label becomes "Đã lưu" and icon goes away after save · [[true,true,"Chưa lưu được",true],[false,false,"Chưa lưu được",true],[false,false,"Đã lưu",false]]
+PASS [390] network-vs-data table present (9 rows) and pair shows line only on the data card
+PASS [390] no banned word anywhere in teacher-facing UI text (excl. annotations)
+PASS [390] live: starts "Đã lưu", no icon, PUT 0, no lines
+PASS [390] live: heading in live card is h4, no tabindex, not focusable
+PASS [390] live: no PUT while typing (valid content, debounce running)
+PASS [390] live: valid content -> 1 PUT, back to "Đã lưu"
+PASS [390] live: Kiến thức emptied -> label "Chưa lưu được" + icon, 1 line, ZERO new PUT
+PASS [390] live: focus NOT stolen (still in Kiến thức) when the reason line appears
+PASS [390] live: line text = approved pattern, Kiến thức · Thầy cô sửa mục Kiến thức rồi thử lại: cần có ít nhất một ý.
+PASS [390] live: aria-invalid + aria-describedby + polite on the live line
+PASS [390] live: status row geometry identical to "Đã lưu" state (no shift of the row) · 24.14,17,17,212,51
+PASS [390] live: the field itself and everything above it did not move; the heading below moved by the same amount as the other content (only the line) · [9396.8,9396.8]
+PASS [390] live: content below moved by exactly the line (height + 4px margin), nothing else · shift=37.6 line=33.59375
+PASS [390] live: typing in another field while Kiến thức is invalid -> still 0 new PUT, still "Chưa lưu được", line stays
+PASS [390] live: focus stays in the field being typed (no focus steal)
+PASS [390] live: Xuất Word during data error -> the APPROVED blocked-action hint (CR-2 off)
+PASS [390] live: CR-2 on -> variant text (no banned word)
+PASS [390] live: icon click on data error -> no PUT, label stays "Chưa lưu được" (never flashes "Đang lưu"), icon still there
+PASS [390] live: icon click moves focus to the first field with a reason line (Kiến thức)
+PASS [390] live: 3 invalid fields -> 3 lines at once, 3 aria-invalid, 0 PUT
+PASS [390] live: all 3 lines inside viewport width and <=2 lines each · [[42,348,390,2],[57,333,390,2],[57,333,390,2]]
+PASS [390] live: fixing one field clears ITS line immediately (<=40ms, before any save); the other 2 stay
+PASS [390] live: still no PUT while 2 fields remain invalid
+PASS [390] live: all fixed -> all lines gone at once
+PASS [390] live: after the last fix: auto-save -> exactly 1 more PUT, "Đã lưu", icon gone
+PASS [390] live: positions return to the original after clearing (no residual space) · {"knowledge":9396.8,"school":9493.3,"minutes":9657.8,"content":9732.3,"subname":9860.3,"h":9603.3}
+PASS [390] live: NETWORK error -> "Chưa lưu được" + icon, NO reason line, no aria-invalid, 1 PUT sent
+PASS [390] live: NETWORK retry shows "Đang lưu" (approved flow) and sends a PUT
+PASS [390] live: NETWORK retry fails again -> icon back
+PASS [390] live: NETWORK retry succeeds -> "Đã lưu", icon gone, focus back to the last edited field
+PASS [390] live: sub-activity name emptied -> its own line, 0 PUT even though network is also down
+PASS [390] live: typing in the sub-activity name clears its line instantly
+PASS [390] live: then the (still failing) network is the only error: label "Chưa lưu được", no line
+PASS [390] live: no script errors
+
+203/203 passed
