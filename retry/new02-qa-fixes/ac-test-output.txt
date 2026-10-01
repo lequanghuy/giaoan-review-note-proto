@@ -31,7 +31,8 @@ PASS [1280] approved blocked-action hint (static) is the exact approved text
 PASS [1280] CR-2 hint variant has no banned word and starts with the approved first sentence
 PASS [1280] M2 multi: 3 invalid fields -> 3 lines + 3 aria-invalid, each in viewport horizontally · {"n":3,"inv":3,"ids":3,"vis":true}
 PASS [1280] M2 clearing storyboard: line+aria-invalid go away on edit, label becomes "Đã lưu" and icon goes away after save · [[true,true,"Chưa lưu được",true],[false,false,"Chưa lưu được",true],[false,false,"Đã lưu",false]]
-PASS [1280] network-vs-data table present (9 rows) and pair shows line only on the data card
+PASS [1280] data error with UNKNOWN field: label "Chưa lưu được" + icon only; no line, no aria-invalid, normal border · {"lab":"Chưa lưu được","icon":true,"lines":0,"inv":0,"bc":"rgb(229, 231, 235)"}
+PASS [1280] network-vs-data table present (10 rows) and pair shows line only on the data card
 PASS [1280] no banned word anywhere in teacher-facing UI text (excl. annotations)
 PASS [1280] live: starts "Đã lưu", no icon, PUT 0, no lines
 PASS [1280] live: heading in live card is h4, no tabindex, not focusable
@@ -42,7 +43,7 @@ PASS [1280] live: focus NOT stolen (still in Kiến thức) when the reason line
 PASS [1280] live: line text = approved pattern, Kiến thức · Thầy cô sửa mục Kiến thức rồi thử lại: cần có ít nhất một ý.
 PASS [1280] live: aria-invalid + aria-describedby + polite on the live line
 PASS [1280] live: status row geometry identical to "Đã lưu" state (no shift of the row) · 24.14,16.39,16.39,634.61,50.39
-PASS [1280] live: the field itself and everything above it did not move; the heading below moved by the same amount as the other content (only the line) · [8233.8,8233.8]
+PASS [1280] live: the field itself and everything above it did not move; the heading below moved by the same amount as the other content (only the line) · [8536.2,8536.2]
 PASS [1280] live: content below moved by exactly the line (height + 4px margin), nothing else · shift=20.8 line=16.796875
 PASS [1280] live: typing in another field while Kiến thức is invalid -> still 0 new PUT, still "Chưa lưu được", line stays
 PASS [1280] live: focus stays in the field being typed (no focus steal)
@@ -56,11 +57,15 @@ PASS [1280] live: fixing one field clears ITS line immediately (<=40ms, before a
 PASS [1280] live: still no PUT while 2 fields remain invalid
 PASS [1280] live: all fixed -> all lines gone at once
 PASS [1280] live: after the last fix: auto-save -> exactly 1 more PUT, "Đã lưu", icon gone
-PASS [1280] live: positions return to the original after clearing (no residual space) · {"knowledge":8233.8,"school":8330.3,"minutes":8466.3,"content":8540.8,"subname":8668.8,"h":8411.8}
+PASS [1280] live: positions return to the original after clearing (no residual space) · {"knowledge":8536.2,"school":8632.7,"minutes":8768.7,"content":8843.2,"subname":8971.2,"h":8714.2}
 PASS [1280] live: NETWORK error -> "Chưa lưu được" + icon, NO reason line, no aria-invalid, 1 PUT sent
 PASS [1280] live: NETWORK retry shows "Đang lưu" (approved flow) and sends a PUT
 PASS [1280] live: NETWORK retry fails again -> icon back
 PASS [1280] live: NETWORK retry succeeds -> "Đã lưu", icon gone, focus back to the last edited field
+PASS [1280] live: server rejects, field unknown -> "Chưa lưu được" + icon, NO line, NO aria-invalid, 1 PUT sent
+PASS [1280] live: unknown-field rejection, icon click -> approved flow ("Đang lưu", PUT sent)
+PASS [1280] live: still rejected -> icon back, still no line
+PASS [1280] live: after the rejection stops -> "Đã lưu", icon gone
 PASS [1280] live: sub-activity name emptied -> its own line, 0 PUT even though network is also down
 PASS [1280] live: typing in the sub-activity name clears its line instantly
 PASS [1280] live: then the (still failing) network is the only error: label "Chưa lưu được", no line
@@ -99,7 +104,8 @@ PASS [720] approved blocked-action hint (static) is the exact approved text
 PASS [720] CR-2 hint variant has no banned word and starts with the approved first sentence
 PASS [720] M2 multi: 3 invalid fields -> 3 lines + 3 aria-invalid, each in viewport horizontally · {"n":3,"inv":3,"ids":3,"vis":true}
 PASS [720] M2 clearing storyboard: line+aria-invalid go away on edit, label becomes "Đã lưu" and icon goes away after save · [[true,true,"Chưa lưu được",true],[false,false,"Chưa lưu được",true],[false,false,"Đã lưu",false]]
-PASS [720] network-vs-data table present (9 rows) and pair shows line only on the data card
+PASS [720] data error with UNKNOWN field: label "Chưa lưu được" + icon only; no line, no aria-invalid, normal border · {"lab":"Chưa lưu được","icon":true,"lines":0,"inv":0,"bc":"rgb(229, 231, 235)"}
+PASS [720] network-vs-data table present (10 rows) and pair shows line only on the data card
 PASS [720] no banned word anywhere in teacher-facing UI text (excl. annotations)
 PASS [720] live: starts "Đã lưu", no icon, PUT 0, no lines
 PASS [720] live: heading in live card is h4, no tabindex, not focusable
@@ -110,7 +116,7 @@ PASS [720] live: focus NOT stolen (still in Kiến thức) when the reason line 
 PASS [720] live: line text = approved pattern, Kiến thức · Thầy cô sửa mục Kiến thức rồi thử lại: cần có ít nhất một ý.
 PASS [720] live: aria-invalid + aria-describedby + polite on the live line
 PASS [720] live: status row geometry identical to "Đã lưu" state (no shift of the row) · 24.14,16.39,16.39,542.61,50.39
-PASS [720] live: the field itself and everything above it did not move; the heading below moved by the same amount as the other content (only the line) · [8420.8,8420.8]
+PASS [720] live: the field itself and everything above it did not move; the heading below moved by the same amount as the other content (only the line) · [8717.2,8717.2]
 PASS [720] live: content below moved by exactly the line (height + 4px margin), nothing else · shift=20.8 line=16.796875
 PASS [720] live: typing in another field while Kiến thức is invalid -> still 0 new PUT, still "Chưa lưu được", line stays
 PASS [720] live: focus stays in the field being typed (no focus steal)
@@ -124,11 +130,15 @@ PASS [720] live: fixing one field clears ITS line immediately (<=40ms, before an
 PASS [720] live: still no PUT while 2 fields remain invalid
 PASS [720] live: all fixed -> all lines gone at once
 PASS [720] live: after the last fix: auto-save -> exactly 1 more PUT, "Đã lưu", icon gone
-PASS [720] live: positions return to the original after clearing (no residual space) · {"knowledge":8420.8,"school":8517.3,"minutes":8681.8,"content":8756.3,"subname":8884.3,"h":8627.3}
+PASS [720] live: positions return to the original after clearing (no residual space) · {"knowledge":8717.2,"school":8813.7,"minutes":8978.2,"content":9052.7,"subname":9180.7,"h":8923.7}
 PASS [720] live: NETWORK error -> "Chưa lưu được" + icon, NO reason line, no aria-invalid, 1 PUT sent
 PASS [720] live: NETWORK retry shows "Đang lưu" (approved flow) and sends a PUT
 PASS [720] live: NETWORK retry fails again -> icon back
 PASS [720] live: NETWORK retry succeeds -> "Đã lưu", icon gone, focus back to the last edited field
+PASS [720] live: server rejects, field unknown -> "Chưa lưu được" + icon, NO line, NO aria-invalid, 1 PUT sent
+PASS [720] live: unknown-field rejection, icon click -> approved flow ("Đang lưu", PUT sent)
+PASS [720] live: still rejected -> icon back, still no line
+PASS [720] live: after the rejection stops -> "Đã lưu", icon gone
 PASS [720] live: sub-activity name emptied -> its own line, 0 PUT even though network is also down
 PASS [720] live: typing in the sub-activity name clears its line instantly
 PASS [720] live: then the (still failing) network is the only error: label "Chưa lưu được", no line
@@ -167,7 +177,8 @@ PASS [390] approved blocked-action hint (static) is the exact approved text
 PASS [390] CR-2 hint variant has no banned word and starts with the approved first sentence
 PASS [390] M2 multi: 3 invalid fields -> 3 lines + 3 aria-invalid, each in viewport horizontally · {"n":3,"inv":3,"ids":3,"vis":true}
 PASS [390] M2 clearing storyboard: line+aria-invalid go away on edit, label becomes "Đã lưu" and icon goes away after save · [[true,true,"Chưa lưu được",true],[false,false,"Chưa lưu được",true],[false,false,"Đã lưu",false]]
-PASS [390] network-vs-data table present (9 rows) and pair shows line only on the data card
+PASS [390] data error with UNKNOWN field: label "Chưa lưu được" + icon only; no line, no aria-invalid, normal border · {"lab":"Chưa lưu được","icon":true,"lines":0,"inv":0,"bc":"rgb(229, 231, 235)"}
+PASS [390] network-vs-data table present (10 rows) and pair shows line only on the data card
 PASS [390] no banned word anywhere in teacher-facing UI text (excl. annotations)
 PASS [390] live: starts "Đã lưu", no icon, PUT 0, no lines
 PASS [390] live: heading in live card is h4, no tabindex, not focusable
@@ -178,8 +189,8 @@ PASS [390] live: focus NOT stolen (still in Kiến thức) when the reason line 
 PASS [390] live: line text = approved pattern, Kiến thức · Thầy cô sửa mục Kiến thức rồi thử lại: cần có ít nhất một ý.
 PASS [390] live: aria-invalid + aria-describedby + polite on the live line
 PASS [390] live: status row geometry identical to "Đã lưu" state (no shift of the row) · 24.14,17,17,212,51
-PASS [390] live: the field itself and everything above it did not move; the heading below moved by the same amount as the other content (only the line) · [9396.8,9396.8]
-PASS [390] live: content below moved by exactly the line (height + 4px margin), nothing else · shift=37.6 line=33.59375
+PASS [390] live: the field itself and everything above it did not move; the heading below moved by the same amount as the other content (only the line) · [9729,9729]
+PASS [390] live: content below moved by exactly the line (height + 4px margin), nothing else · shift=37.5 line=33.59375
 PASS [390] live: typing in another field while Kiến thức is invalid -> still 0 new PUT, still "Chưa lưu được", line stays
 PASS [390] live: focus stays in the field being typed (no focus steal)
 PASS [390] live: Xuất Word during data error -> the APPROVED blocked-action hint (CR-2 off)
@@ -192,14 +203,18 @@ PASS [390] live: fixing one field clears ITS line immediately (<=40ms, before an
 PASS [390] live: still no PUT while 2 fields remain invalid
 PASS [390] live: all fixed -> all lines gone at once
 PASS [390] live: after the last fix: auto-save -> exactly 1 more PUT, "Đã lưu", icon gone
-PASS [390] live: positions return to the original after clearing (no residual space) · {"knowledge":9396.8,"school":9493.3,"minutes":9657.8,"content":9732.3,"subname":9860.3,"h":9603.3}
+PASS [390] live: positions return to the original after clearing (no residual space) · {"knowledge":9729,"school":9825.5,"minutes":9990,"content":10064.5,"subname":10192.5,"h":9935.5}
 PASS [390] live: NETWORK error -> "Chưa lưu được" + icon, NO reason line, no aria-invalid, 1 PUT sent
 PASS [390] live: NETWORK retry shows "Đang lưu" (approved flow) and sends a PUT
 PASS [390] live: NETWORK retry fails again -> icon back
 PASS [390] live: NETWORK retry succeeds -> "Đã lưu", icon gone, focus back to the last edited field
+PASS [390] live: server rejects, field unknown -> "Chưa lưu được" + icon, NO line, NO aria-invalid, 1 PUT sent
+PASS [390] live: unknown-field rejection, icon click -> approved flow ("Đang lưu", PUT sent)
+PASS [390] live: still rejected -> icon back, still no line
+PASS [390] live: after the rejection stops -> "Đã lưu", icon gone
 PASS [390] live: sub-activity name emptied -> its own line, 0 PUT even though network is also down
 PASS [390] live: typing in the sub-activity name clears its line instantly
 PASS [390] live: then the (still failing) network is the only error: label "Chưa lưu được", no line
 PASS [390] live: no script errors
 
-203/203 passed
+218/218 passed

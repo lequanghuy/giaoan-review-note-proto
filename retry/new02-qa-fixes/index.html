@@ -300,6 +300,7 @@ board.appendChild(section('Lỗi mạng và lỗi dữ liệu: khác nhau ở đ
   '<tr><th>Dòng dưới Xuất / Soạn lại / Tạo phiếu</th><td>Câu đã duyệt, giữ nguyên</td><td>Giữ câu đã duyệt (vẫn đúng). Tùy chọn CR-2: "…sửa mục được nhắc rồi bấm biểu tượng thử lại giúp nhé."</td></tr>'+
   '<tr><th>Tự thử lại</th><td>Có: mỗi lần sửa tiếp (sau 1 giây) hoặc bấm biểu tượng</td><td>Có: ngay khi ô cuối cùng hợp lệ, giáo án tự lưu sau 1 giây, không cần bấm</td></tr>'+
   '<tr><th>Khi nào hết</th><td>Lưu thành công thì "Đã lưu", biểu tượng mất</td><td>Dòng của ô nào mất ngay khi ô đó hợp lệ; nhãn về "Đã lưu" khi tự lưu xong</td></tr>'+
+  '<tr><th>Lỗi dữ liệu nhưng không biết ô nào</th><td>(không áp dụng)</td><td>Chỉ nhãn "Chưa lưu được" + biểu tượng; không có dòng, không viền cam; bấm biểu tượng chạy luồng đã duyệt (Đang lưu, gửi lại)</td></tr>'+
   '<tr><th>Gửi lên (PUT)</th><td>Có (và lỗi)</td><td>Không gửi trong lúc ô còn không hợp lệ</td></tr></tbody></table>';
   board.appendChild(t);
   var pair=document.createElement('div'); pair.className='pair'; pair.id='net-pair';
@@ -307,6 +308,8 @@ board.appendChild(section('Lỗi mạng và lỗi dữ liệu: khác nhau ở đ
   var b=mini('error'); var wb=fieldNode('content','   '); b.appendChild(wb); setBad(wb,why(DEFS.content,'   '));
   pair.appendChild(block('net-a','Lỗi mạng: nhãn + biểu tượng, KHÔNG có dòng dưới ô',a,{kind:'net'}));
   pair.appendChild(block('net-b','Lỗi dữ liệu: nhãn + biểu tượng + dòng dưới ô cần sửa',b,{kind:'data'}));
+  var unk=mini('error'); var wu=fieldNode('content',CONTENT_OK); unk.appendChild(wu);
+  pair.appendChild(block('net-c','Lỗi dữ liệu nhưng không xác định được ô nào (ví dụ máy trả về từ chối mà không chỉ ô): CHỈ nhãn "Chưa lưu được" + biểu tượng, KHÔNG bịa dòng lý do, không viền cam',unk,{kind:'data-unknown'}));
   board.appendChild(pair);
 })();
 
@@ -315,7 +318,7 @@ if(/[?&]live=1/.test(location.search)){
   board.appendChild(section('Bấm thử (?live=1)','Mô phỏng: không có máy chủ thật. Tự lưu sau 800 ms (thật là 1 giây). PUT chỉ được đếm khi nội dung hợp lệ.','sec-live'));
   var d=document.createElement('div'); d.className='demo'; d.id='livebox';
   d.innerHTML='<p class="cap" data-mock><b>Demo bấm thử</b> (không thuộc giao diện)</p><div id="live"></div>'+
-   '<p data-mock><label><input type="checkbox" id="fail"> Mạng đang lỗi</label><label><input type="checkbox" id="cr2"> Bật CR-2 (câu dưới nút khi lỗi dữ liệu)</label> <span id="cnt">PUT: 0</span></p>'+
+   '<p data-mock><label><input type="checkbox" id="fail"> Mạng đang lỗi</label><label><input type="checkbox" id="rej"> Máy từ chối nội dung nhưng không chỉ ô nào</label><label><input type="checkbox" id="cr2"> Bật CR-2 (câu dưới nút khi lỗi dữ liệu)</label> <span id="cnt">PUT: 0</span></p>'+
    '<p data-mock id="helpers"><button type="button" class="btn btn-outline" id="h-kn">Xóa hết Kiến thức</button> <button type="button" class="btn btn-outline" id="h-long">Dán 4001 ký tự vào b) Nội dung</button> <button type="button" class="btn btn-outline" id="h-min">Thời lượng = 500</button> <button type="button" class="btn btn-outline" id="h-sub">Xóa tên hoạt động con</button> <button type="button" class="btn btn-outline" id="h-fix">Sửa tất cả</button></p><pre id="out" data-mock style="font-size:12px;margin:0"></pre>';
   board.appendChild(d);
   var live=document.getElementById('live'), out=document.getElementById('out');
@@ -358,8 +361,8 @@ if(/[?&]live=1/.test(location.search)){
     if(keys.length){ kind='data'; st='error'; lines(keys); render(); say('aria-live: '+keys.length+' dòng lý do · không PUT'); return keys; }
     lines([]); puts++; blockedBy=null; kind=null; st='saving'; render();
     setTimeout(function(){
-      var ok=!document.getElementById('fail').checked;
-      if(ok){ st='saved'; kind=null; blockedBy=null; } else { st='error'; kind='net'; }
+      var ok=!document.getElementById('fail').checked&&!document.getElementById('rej').checked;
+      if(ok){ st='saved'; kind=null; blockedBy=null; } else { st='error'; kind=document.getElementById('rej').checked?'data-unknown':'net'; }
       render(); say('aria-live: '+TEXT[st]);
     }, viaRetry?600:300);
   }

@@ -93,8 +93,10 @@ for (const w of [1280,720,390]){
  // clear steps (static)
  const cs=await pg.evaluate(()=>[1,2,3].map(n=>{const c=document.querySelector('#clr-'+n+' .card');return {line:c.querySelector('.field-fail').textContent!=='',inv:c.querySelector('.inp').hasAttribute('aria-invalid'),lab:c.querySelector('.save-label').textContent,icon:!!c.querySelector('.save-retry'),h:c.getBoundingClientRect().height}}));
  ok(T+'M2 clearing storyboard: line+aria-invalid go away on edit, label becomes "Đã lưu" and icon goes away after save', cs[0].line&&cs[0].inv&&!cs[1].line&&!cs[1].inv&&cs[1].lab==='Chưa lưu được'&&cs[1].icon&&cs[2].lab==='Đã lưu'&&!cs[2].icon, JSON.stringify(cs.map(x=>[x.line,x.inv,x.lab,x.icon])));
+ const unk=await pg.evaluate(()=>{const c=document.querySelector('#net-c .card');return {lab:c.querySelector('.save-label').textContent,icon:!!c.querySelector('.save-retry'),lines:[...c.querySelectorAll('.field-fail')].filter(x=>x.textContent).length,inv:c.querySelectorAll('[aria-invalid]').length,bc:getComputedStyle(c.querySelector('.inp')).borderTopColor}});
+ ok(T+'data error with UNKNOWN field: label "Chưa lưu được" + icon only; no line, no aria-invalid, normal border', unk.lab==='Chưa lưu được'&&unk.icon&&unk.lines===0&&unk.inv===0&&unk.bc==='rgb(229, 231, 235)', JSON.stringify(unk));
  // network vs data table
- ok(T+'network-vs-data table present (9 rows) and pair shows line only on the data card', await pg.evaluate(()=>document.querySelectorAll('#net-table tbody tr').length===9&&document.querySelectorAll('#net-a .field-fail:not(:empty)').length===0&&document.querySelectorAll('#net-b .field-fail:not(:empty)').length===1));
+ ok(T+'network-vs-data table present (10 rows) and pair shows line only on the data card', await pg.evaluate(()=>document.querySelectorAll('#net-table tbody tr').length===10&&document.querySelectorAll('#net-a .field-fail:not(:empty)').length===0&&document.querySelectorAll('#net-b .field-fail:not(:empty)').length===1));
  // banned words over ALL teacher-facing text in the page (annotations [data-mock] and the table are excluded)
  const txt=await pg.evaluate(()=>{const c=document.body.cloneNode(true);c.querySelectorAll('[data-mock],#net-table,textarea,input,script,style').forEach(e=>e.remove());return c.innerText});
  const bad=txt.match(BANNED); ok(T+'no banned word anywhere in teacher-facing UI text (excl. annotations)', !bad, bad?('found: '+bad[0]):'');
@@ -170,6 +172,15 @@ for (const w of [1280,720,390]){
  await lp.waitForTimeout(900); ok(T+'live: NETWORK retry fails again -> icon back', (await lab())==='Chưa lưu được'&&(await icon()));
  await lp.evaluate(()=>{document.getElementById('fail').checked=false}); await lp.click(live('.save-retry')); await lp.waitForTimeout(1000);
  ok(T+'live: NETWORK retry succeeds -> "Đã lưu", icon gone, focus back to the last edited field', (await lab())==='Đã lưu'&&!(await icon())&&await lp.evaluate(()=>document.activeElement.closest('.fld')?.dataset.key==='school'));
+ // data error, field unknown: label + icon only, approved retry flow, no invented line
+ await lp.evaluate(()=>{document.getElementById('fail').checked=false;document.getElementById('rej').checked=true});
+ const pu=await puts(); await lp.click(fld('school')); await lp.keyboard.type('y'); await lp.waitForTimeout(1500);
+ ok(T+'live: server rejects, field unknown -> "Chưa lưu được" + icon, NO line, NO aria-invalid, 1 PUT sent', (await lab())==='Chưa lưu được'&&(await icon())&&(await nlines())===0&&(await puts())===pu+1&&await lp.evaluate(()=>document.querySelectorAll('#live [aria-invalid]').length===0));
+ await lp.click(live('.save-retry')); await lp.waitForTimeout(150);
+ ok(T+'live: unknown-field rejection, icon click -> approved flow ("Đang lưu", PUT sent)', (await lab())==='Đang lưu'&&(await puts())===pu+2);
+ await lp.waitForTimeout(900); ok(T+'live: still rejected -> icon back, still no line', (await lab())==='Chưa lưu được'&&(await icon())&&(await nlines())===0);
+ await lp.evaluate(()=>{document.getElementById('rej').checked=false}); await lp.click(live('.save-retry')); await lp.waitForTimeout(1000);
+ ok(T+'live: after the rejection stops -> "Đã lưu", icon gone', (await lab())==='Đã lưu'&&!(await icon()));
  // data error then network error at once: data wins for the line, no PUT
  await lp.evaluate(()=>{document.getElementById('fail').checked=true}); await lp.click('#h-sub'); await lp.waitForTimeout(1300);
  const ps=await puts();

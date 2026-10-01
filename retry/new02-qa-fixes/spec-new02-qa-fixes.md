@@ -1,7 +1,7 @@
 # NEW-02 QA fixes · H1 (tên hoạt động cố định) + M2 (dòng lý do khi lưu bị từ chối)
 
 Trạng thái: **chờ Huy duyệt, Dev FE chưa làm.** Một PR, chỉ FE. Nguồn: `ga-postgen-check/qa-run-new02/results.md` (H1, M2, L1), code `origin/main` b735fd9.
-Mockup: `/retry/new02-qa-fixes/` · bấm thử: `?live=1` · kiểm tra tự động: `ac-test.js` (203/203, 3 độ rộng).
+Mockup: `/retry/new02-qa-fixes/` · bấm thử: `?live=1` · kiểm tra tự động: `ac-test.js` (3 độ rộng; xem ac-test-output.txt).
 Giữ nguyên (đã duyệt): biểu tượng thử lại, tooltip "Thử lại", nhãn "Đã lưu / Đang lưu / Chưa lưu được", ô 24px luôn chiếm chỗ, dòng chặn dưới Xuất/Soạn lại/Tạo phiếu.
 
 ## 1. Quy tắc và giới hạn trong code (nguồn của bảng copy)
@@ -87,8 +87,9 @@ Lưu ý Dev: hiển thị `ACTIVITY_SLOT_NAMES[index]` (tên chuẩn), không hi
 | Dòng dưới ô | không | có, mỗi ô sai |
 | Hint dưới Xuất/Soạn lại/Tạo phiếu | câu đã duyệt | câu đã duyệt (hoặc CR-2) |
 | Gửi PUT | có | không, đến khi mọi ô hợp lệ |
+| Lỗi dữ liệu nhưng không xác định được ô | (không áp dụng) | **Chỉ** nhãn + biểu tượng, không dòng, không viền cam, không `aria-invalid`; bấm biểu tượng chạy luồng đã duyệt (Đang lưu, gửi lại) |
 | Hết khi | lưu được | từng ô hợp lệ, rồi tự lưu |
-Server trả 400/422 (nếu client lọt) nên dùng cùng giao diện: nếu body có chỉ ra ô thì hiện dòng ở ô đó; nếu không xác định được ô thì chỉ dùng luồng "Chưa lưu được" + biểu tượng (không bịa dòng). Xem câu hỏi mở 1.
+Server trả 400/422 (nếu client lọt) nên dùng cùng giao diện: nếu body có chỉ ra ô thì hiện dòng ở ô đó; nếu không xác định được ô thì chỉ hiện nhãn "Chưa lưu được" + biểu tượng (không bịa dòng; mockup có trạng thái `#net-c` và nút bật "Máy từ chối nội dung nhưng không chỉ ô nào" ở `?live=1`). Xem câu hỏi mở 1.
 
 ## 4. a11y
 - Dòng: `aria-live="polite"` trên mỗi `<p>`, rỗng khi hết lỗi. Đọc khi xuất hiện, không ngắt lời đang đọc. Khi nhiều dòng cùng hiện, bộ đọc sẽ lần lượt đọc từng dòng (chấp nhận được; nếu Dev thấy rườm thì chỉ đặt live ở dòng của ô đang gõ).
