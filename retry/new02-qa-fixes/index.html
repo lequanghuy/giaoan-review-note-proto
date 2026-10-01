@@ -135,9 +135,9 @@ var ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-widt
 var LOOK='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/><path d="M11 8v3.2"/><path d="M11 14h.01"/></svg>';
 var CHK='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 var TEXT={saved:'Đã lưu',saving:'Đang lưu',error:'Chưa lưu được'};
-/* Huy 2026-10-01: rút gọn. Thay SAVE_ACTION_BLOCKED (save-status.ts) bằng 2 câu theo loại lỗi */
-var BLOCKED='Chưa lưu được nên chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án.';   /* lỗi mạng / 5xx / 409 / không biết ô nào */
-var BLOCKED_DATA='Chưa lưu được nên chưa chạy. Sửa các ô được đánh dấu.';            /* lỗi dữ liệu có ô được đánh dấu */
+/* Huy duyệt bản A (01/10): thay SAVE_ACTION_BLOCKED (save-status.ts) bằng 2 câu theo loại lỗi */
+var BLOCKED='Chưa lưu được nên thao tác này chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án.';   /* lỗi mạng / 5xx / 409 / không biết ô nào */
+var BLOCKED_DATA='Chưa lưu được nên thao tác này chưa chạy. Sửa các ô có dòng nhắc bên dưới.';            /* lỗi dữ liệu có ô được đánh dấu */
 
 /* ============ M2 rules. Limits = packages/shared/src/save-plan.ts (TEXT_MAX 4000, SHORT_TEXT_MAX 200, LIST_MAX 12, AIDS_MAX 20, minutes 1..180) ============ */
 function parseList(raw,sep){ return raw.split(sep==='nl'?/\n/:/[;\n]/).map(function(x){return x.trim()}).filter(Boolean); }
@@ -284,9 +284,9 @@ board.appendChild(section('Biểu tượng "Thử lại" khi lỗi dữ liệu',
   var c2=mini('error'); var w2=fieldNode('knowledge',''); c2.appendChild(w2); setBad(w2,why(DEFS.knowledge,''),true);
   board.appendChild(block('icon-2','b · Sau khi bấm biểu tượng: không "Đang lưu" giả, focus nằm ở ô cần sửa (con trỏ nhấp nháy), dòng lý do được đọc lại',c2,{icon:'2'}));
   var c3=mini('error'); c3.insertAdjacentHTML('beforeend','<div class="acts"><button type="button" class="btn btn-secondary">Soạn lại giáo án</button><button type="button" class="btn btn-outline">Tạo phiếu bài tập</button><button type="button" class="btn btn-default">Xuất Word</button><p class="act-fail" id="hint-net-p">'+BLOCKED+'</p></div>');
-  board.appendChild(block('hint-net','c · Dòng dưới Xuất/Soạn lại/Tạo phiếu, LỖI MẠNG (và lỗi dữ liệu không biết ô nào): câu ngắn mới',c3,{hint:'net'}));
+  board.appendChild(block('hint-net','c · Dòng dưới Xuất/Soạn lại/Tạo phiếu, LỖI MẠNG (và lỗi dữ liệu không biết ô nào): bản A đã duyệt',c3,{hint:'net'}));
   var c4=mini('error'); c4.insertAdjacentHTML('beforeend','<div class="acts"><button type="button" class="btn btn-secondary">Soạn lại giáo án</button><button type="button" class="btn btn-outline">Tạo phiếu bài tập</button><button type="button" class="btn btn-default">Xuất Word</button><p class="act-fail" id="hint-data-p">'+BLOCKED_DATA+'</p></div>');
-  board.appendChild(block('hint-data','d · Cùng dòng, LỖI DỮ LIỆU có ô được đánh dấu: câu ngắn mới',c4,{hint:'data'}));
+  board.appendChild(block('hint-data','d · Cùng dòng, LỖI DỮ LIỆU có ô được đánh dấu: bản A đã duyệt',c4,{hint:'data'}));
 })();
 
 /* ============ network vs data ============ */
@@ -299,7 +299,7 @@ board.appendChild(section('Lỗi mạng và lỗi dữ liệu: khác nhau ở đ
   '<tr><th>Bấm biểu tượng</th><td>"Đang lưu" ít nhất 600 ms, gửi lại; xong thì focus về ô đang sửa, lỗi lại thì focus về biểu tượng</td><td>Không gửi gì, không "Đang lưu"; focus chuyển đến ô đầu tiên có dòng lý do (CR-3)</td></tr>'+
   '<tr><th>Dòng dưới ô</th><td>Không có</td><td>Có, ngay dưới từng ô cần sửa, chỉ nêu trọng tâm: "Cần có ít nhất một ý."</td></tr>'+
   '<tr><th>Viền ô</th><td>Không đổi</td><td>Viền cam #D97706 (mới); khi đang gõ vào ô thì viền xanh như mọi ô</td></tr>'+
-  '<tr><th>Dòng dưới Xuất / Soạn lại / Tạo phiếu</th><td>"Chưa lưu được nên chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án."</td><td>"Chưa lưu được nên chưa chạy. Sửa các ô được đánh dấu."</td></tr>'+
+  '<tr><th>Dòng dưới Xuất / Soạn lại / Tạo phiếu</th><td>"Chưa lưu được nên thao tác này chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án."</td><td>"Chưa lưu được nên thao tác này chưa chạy. Sửa các ô có dòng nhắc bên dưới."</td></tr>'+
   '<tr><th>Tự thử lại</th><td>Có: mỗi lần sửa tiếp (sau 1 giây) hoặc bấm biểu tượng</td><td>Có: ngay khi ô cuối cùng hợp lệ, giáo án tự lưu sau 1 giây, không cần bấm</td></tr>'+
   '<tr><th>Khi nào hết</th><td>Lưu thành công thì "Đã lưu", biểu tượng mất</td><td>Dòng của ô nào mất ngay khi ô đó hợp lệ; nhãn về "Đã lưu" khi tự lưu xong</td></tr>'+
   '<tr><th>Lỗi dữ liệu nhưng không biết ô nào</th><td>(không áp dụng)</td><td>Chỉ nhãn "Chưa lưu được" + biểu tượng; không có dòng, không viền cam; bấm biểu tượng chạy luồng đã duyệt (Đang lưu, gửi lại)</td></tr>'+

@@ -8,7 +8,7 @@ const b=await chromium.launch({executablePath:'/usr/bin/google-chrome',args:['--
 const res=[]; const ok=(n,c,d)=>res.push((c?'PASS ':'FAIL ')+n+(d?' · '+d:''));
 const RULES={'r-kn-empty':'Kiến thức','r-kn-many':'Kiến thức','r-aids-many':'Học liệu','r-content-empty':'b) Nội dung','r-content-long':'b) Nội dung','r-minutes':'Thời lượng (phút)','r-assign-empty':'Giao nhiệm vụ','r-subname-empty':'Tên hoạt động con','r-subname-long':'Tên hoạt động con','r-school-long':'Trường'};
 const EXPECT={'r-kn-empty':'Cần có ít nhất một ý.','r-kn-many':'Tối đa 12 ý (ngăn bằng ; hoặc xuống dòng).','r-aids-many':'Tối đa 20 dòng.','r-content-empty':'Cần có nội dung.','r-content-long':'Tối đa 4000 ký tự.','r-minutes':'Nhập số phút từ 1 đến 180.','r-assign-empty':'Cần có nội dung.','r-subname-empty':'Cần có tên.','r-subname-long':'Tối đa 200 ký tự.','r-school-long':'Tối đa 200 ký tự.'};
-const HINT_NET='Chưa lưu được nên chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án.', HINT_DATA='Chưa lưu được nên chưa chạy. Sửa các ô được đánh dấu.';
+const HINT_NET='Chưa lưu được nên thao tác này chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án.', HINT_DATA='Chưa lưu được nên thao tác này chưa chạy. Sửa các ô có dòng nhắc bên dưới.';
 for (const w of [1280,720,390]){
  const T=`[${w}] `;
  const ctx=await b.newContext({viewport:{width:w,height:800},hasTouch:w<720});
@@ -147,7 +147,7 @@ for (const w of [1280,720,390]){
  // click Xuất while data error: approved hint text, unchanged
  await lp.click(live('[data-act=export]')); 
  await lp.click(live('[data-act=export]'));
- ok(T+'live: AC-G Xuất Word during DATA error -> "Chưa lưu được nên chưa chạy. Sửa các ô được đánh dấu."', await lp.evaluate(h=>document.getElementById('live-hint').textContent===h,HINT_DATA));
+ ok(T+'live: AC-G Xuất Word during DATA error -> "Chưa lưu được nên thao tác này chưa chạy. Sửa các ô có dòng nhắc bên dưới."', await lp.evaluate(h=>document.getElementById('live-hint').textContent===h,HINT_DATA));
  ok(T+'live: AC-G hint <=2 lines and inside the viewport', await lp.evaluate(()=>{const e=document.getElementById('live-hint'),r=e.getBoundingClientRect();return Math.round(r.height/parseFloat(getComputedStyle(e).lineHeight))<=2&&r.left>=0&&r.right<=innerWidth}));
  await lp.click(live('[data-act=revise]'));
  ok(T+'live: AC-G Soạn lại during DATA error -> same data sentence', await lp.evaluate(h=>document.getElementById('live-hint').textContent===h,HINT_DATA));
@@ -181,7 +181,7 @@ for (const w of [1280,720,390]){
  await lp.evaluate(()=>{document.getElementById('fail').checked=true;document.getElementById('rej').checked=false});
  await lp.click(fld('school')); await lp.keyboard.type('n'); await lp.waitForTimeout(1500);
  await lp.click(live('[data-act=export]'));
- ok(T+'live: AC-A Xuất Word during NETWORK error -> "Chưa lưu được nên chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án."', (await lab())==='Chưa lưu được'&&await lp.evaluate(h=>document.getElementById('live-hint').textContent===h,HINT_NET));
+ ok(T+'live: AC-A Xuất Word during NETWORK error -> "Chưa lưu được nên thao tác này chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án."', (await lab())==='Chưa lưu được'&&await lp.evaluate(h=>document.getElementById('live-hint').textContent===h,HINT_NET));
  await lp.evaluate(()=>{document.getElementById('fail').checked=false}); await lp.click(live('.save-retry')); await lp.waitForTimeout(1000);
  ok(T+'live: hint disappears after a successful save', await lp.evaluate(()=>document.getElementById('live-hint').textContent===''));
  // minutes are NOT silently changed to 1 (L1)

@@ -50,7 +50,7 @@ PASS [1280] live: the field itself and everything above it did not move; the hea
 PASS [1280] live: content below moved by exactly the line (height + 4px margin), nothing else · shift=20.8 line=16.796875
 PASS [1280] live: typing in another field while Kiến thức is invalid -> still 0 new PUT, still "Chưa lưu được", line stays
 PASS [1280] live: focus stays in the field being typed (no focus steal)
-PASS [1280] live: AC-G Xuất Word during DATA error -> "Chưa lưu được nên chưa chạy. Sửa các ô được đánh dấu."
+PASS [1280] live: AC-G Xuất Word during DATA error -> "Chưa lưu được nên thao tác này chưa chạy. Sửa các ô có dòng nhắc bên dưới."
 PASS [1280] live: AC-G hint <=2 lines and inside the viewport
 PASS [1280] live: AC-G Soạn lại during DATA error -> same data sentence
 PASS [1280] live: icon click on data error -> no PUT, label stays "Chưa lưu được" (never flashes "Đang lưu"), icon still there
@@ -66,7 +66,7 @@ PASS [1280] live: NETWORK error -> "Chưa lưu được" + icon, NO reason line,
 PASS [1280] live: NETWORK retry shows "Đang lưu" (approved flow) and sends a PUT
 PASS [1280] live: NETWORK retry fails again -> icon back
 PASS [1280] live: NETWORK retry succeeds -> "Đã lưu", icon gone, focus back to the last edited field
-PASS [1280] live: AC-A Xuất Word during NETWORK error -> "Chưa lưu được nên chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án."
+PASS [1280] live: AC-A Xuất Word during NETWORK error -> "Chưa lưu được nên thao tác này chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án."
 PASS [1280] live: hint disappears after a successful save
 PASS [1280] live: L1 minutes emptied stays EMPTY (not snapped to 1) and shows "Nhập số phút từ 1 đến 180."
 PASS [1280] live: minutes 0 stays 0 with the line
@@ -131,7 +131,7 @@ PASS [720] live: the field itself and everything above it did not move; the head
 PASS [720] live: content below moved by exactly the line (height + 4px margin), nothing else · shift=20.8 line=16.796875
 PASS [720] live: typing in another field while Kiến thức is invalid -> still 0 new PUT, still "Chưa lưu được", line stays
 PASS [720] live: focus stays in the field being typed (no focus steal)
-PASS [720] live: AC-G Xuất Word during DATA error -> "Chưa lưu được nên chưa chạy. Sửa các ô được đánh dấu."
+PASS [720] live: AC-G Xuất Word during DATA error -> "Chưa lưu được nên thao tác này chưa chạy. Sửa các ô có dòng nhắc bên dưới."
 PASS [720] live: AC-G hint <=2 lines and inside the viewport
 PASS [720] live: AC-G Soạn lại during DATA error -> same data sentence
 PASS [720] live: icon click on data error -> no PUT, label stays "Chưa lưu được" (never flashes "Đang lưu"), icon still there
@@ -147,7 +147,7 @@ PASS [720] live: NETWORK error -> "Chưa lưu được" + icon, NO reason line, 
 PASS [720] live: NETWORK retry shows "Đang lưu" (approved flow) and sends a PUT
 PASS [720] live: NETWORK retry fails again -> icon back
 PASS [720] live: NETWORK retry succeeds -> "Đã lưu", icon gone, focus back to the last edited field
-PASS [720] live: AC-A Xuất Word during NETWORK error -> "Chưa lưu được nên chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án."
+PASS [720] live: AC-A Xuất Word during NETWORK error -> "Chưa lưu được nên thao tác này chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án."
 PASS [720] live: hint disappears after a successful save
 PASS [720] live: L1 minutes emptied stays EMPTY (not snapped to 1) and shows "Nhập số phút từ 1 đến 180."
 PASS [720] live: minutes 0 stays 0 with the line
@@ -208,11 +208,11 @@ PASS [390] live: line text = "Cần có ít nhất một ý." · Cần có ít n
 PASS [390] live: field has its own label read before the line (label[for] + aria-describedby, no aria-label override needed)
 PASS [390] live: aria-invalid + aria-describedby + polite on the live line
 PASS [390] live: status row geometry identical to "Đã lưu" state (no shift of the row) · 24.14,17,17,212,51
-PASS [390] live: the field itself and everything above it did not move; the heading below moved by the same amount as the other content (only the line) · [9492.6,9492.6]
+PASS [390] live: the field itself and everything above it did not move; the heading below moved by the same amount as the other content (only the line) · [9543.9,9543.9]
 PASS [390] live: content below moved by exactly the line (height + 4px margin), nothing else · shift=20.8 line=16.796875
 PASS [390] live: typing in another field while Kiến thức is invalid -> still 0 new PUT, still "Chưa lưu được", line stays
 PASS [390] live: focus stays in the field being typed (no focus steal)
-PASS [390] live: AC-G Xuất Word during DATA error -> "Chưa lưu được nên chưa chạy. Sửa các ô được đánh dấu."
+PASS [390] live: AC-G Xuất Word during DATA error -> "Chưa lưu được nên thao tác này chưa chạy. Sửa các ô có dòng nhắc bên dưới."
 PASS [390] live: AC-G hint <=2 lines and inside the viewport
 PASS [390] live: AC-G Soạn lại during DATA error -> same data sentence
 PASS [390] live: icon click on data error -> no PUT, label stays "Chưa lưu được" (never flashes "Đang lưu"), icon still there
@@ -223,12 +223,12 @@ PASS [390] live: fixing one field clears ITS line immediately (<=40ms, before an
 PASS [390] live: still no PUT while 2 fields remain invalid
 PASS [390] live: all fixed -> all lines gone at once
 PASS [390] live: after the last fix: auto-save -> exactly 1 more PUT, "Đã lưu", icon gone
-PASS [390] live: positions return to the original after clearing (no residual space) · {"knowledge":9492.6,"school":9589.1,"minutes":9753.6,"content":9828.1,"subname":9956.1,"h":9699.1}
+PASS [390] live: positions return to the original after clearing (no residual space) · {"knowledge":9543.9,"school":9640.4,"minutes":9804.9,"content":9879.4,"subname":10007.4,"h":9750.4}
 PASS [390] live: NETWORK error -> "Chưa lưu được" + icon, NO reason line, no aria-invalid, 1 PUT sent
 PASS [390] live: NETWORK retry shows "Đang lưu" (approved flow) and sends a PUT
 PASS [390] live: NETWORK retry fails again -> icon back
 PASS [390] live: NETWORK retry succeeds -> "Đã lưu", icon gone, focus back to the last edited field
-PASS [390] live: AC-A Xuất Word during NETWORK error -> "Chưa lưu được nên chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án."
+PASS [390] live: AC-A Xuất Word during NETWORK error -> "Chưa lưu được nên thao tác này chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án."
 PASS [390] live: hint disappears after a successful save
 PASS [390] live: L1 minutes emptied stays EMPTY (not snapped to 1) and shows "Nhập số phút từ 1 đến 180."
 PASS [390] live: minutes 0 stays 0 with the line
