@@ -7,7 +7,8 @@ const BANNED = /lỗi|\bsai\b|máy chủ|\b400\b|\b422\b|\b409\b|validation|unde
 const b=await chromium.launch({executablePath:'/usr/bin/google-chrome',args:['--headless=new']});
 const res=[]; const ok=(n,c,d)=>res.push((c?'PASS ':'FAIL ')+n+(d?' · '+d:''));
 const RULES={'r-kn-empty':'Kiến thức','r-kn-many':'Kiến thức','r-aids-many':'Học liệu','r-content-empty':'b) Nội dung','r-content-long':'b) Nội dung','r-minutes':'Thời lượng (phút)','r-assign-empty':'Giao nhiệm vụ','r-subname-empty':'Tên hoạt động con','r-subname-long':'Tên hoạt động con','r-school-long':'Trường'};
-const EXPECT={'r-kn-empty':/cần có ít nhất một ý\.$/,'r-kn-many':/tối đa 12 ý\.$/,'r-aids-many':/tối đa 20 dòng\.$/,'r-content-empty':/cần có nội dung\.$/,'r-content-long':/tối đa 4000 ký tự\.$/,'r-minutes':/từ 1 đến 180\.$/,'r-assign-empty':/cần có nội dung\.$/,'r-subname-empty':/cần có tên\.$/,'r-subname-long':/tối đa 200 ký tự\.$/,'r-school-long':/tối đa 200 ký tự\.$/};
+const EXPECT={'r-kn-empty':'Cần có ít nhất một ý.','r-kn-many':'Tối đa 12 ý (ngăn bằng ; hoặc xuống dòng).','r-aids-many':'Tối đa 20 dòng.','r-content-empty':'Cần có nội dung.','r-content-long':'Tối đa 4000 ký tự.','r-minutes':'Nhập số phút từ 1 đến 180.','r-assign-empty':'Cần có nội dung.','r-subname-empty':'Cần có tên.','r-subname-long':'Tối đa 200 ký tự.','r-school-long':'Tối đa 200 ký tự.'};
+const HINT_NET='Chưa lưu được nên chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án.', HINT_DATA='Chưa lưu được nên chưa chạy. Sửa các ô được đánh dấu.';
 for (const w of [1280,720,390]){
  const T=`[${w}] `;
  const ctx=await b.newContext({viewport:{width:w,height:800},hasTouch:w<720});
@@ -60,33 +61,35 @@ for (const w of [1280,720,390]){
 
  // ================= M2 static per rule =================
  const geoOf=async id=>pg.evaluate(id=>{const c=document.getElementById(id).querySelector('.card'),cr=c.getBoundingClientRect(),h=c.querySelector('.hd').getBoundingClientRect(),t=c.querySelector('.card-title').getBoundingClientRect(),l=c.querySelector('.save-label').getBoundingClientRect(),a=c.querySelector('.save-retry').getBoundingClientRect();return [h.height,h.top-cr.top,t.left-cr.left,l.left-cr.left,cr.right-l.right,a.width,a.height].map(v=>+v.toFixed(2)).join(',')},id);
- const g0=await geoOf('r-kn-empty'); let allSame=true, allIn=true, allLines=true, allAria=true, allCopy=true, allBanned=true, allLabel=true, allExpect=true; const info=[];
+ const g0=await geoOf('r-kn-empty'); let one=0, allSame=true, allIn=true, allLines=true, allAria=true, allCopy=true, allBanned=true, allLabel=true, allExpect=true; const info=[];
  for(const id of Object.keys(RULES)){
   await pg.evaluate(id=>document.getElementById(id).scrollIntoView({block:'center'}),id);
-  const r=await pg.evaluate(id=>{const c=document.getElementById(id).querySelector('.card');const f=c.querySelector('.fld'),p=f.querySelector('.field-fail'),i=f.querySelector('.inp'),lb=f.querySelector('label'),pr=p.getBoundingClientRect();const lh=parseFloat(getComputedStyle(p).lineHeight);return {txt:p.textContent,left:pr.left,right:pr.right,top:pr.top,bottom:pr.bottom,iw:innerWidth,ih:innerHeight,lines:Math.round(pr.height/lh),inv:i.getAttribute('aria-invalid'),desc:i.getAttribute('aria-describedby'),pid:p.id,live:p.getAttribute('aria-live'),label:c.querySelector('.save-label').textContent,icon:!!c.querySelector('.save-retry'),under:pr.top>=i.getBoundingClientRect().bottom-0.5&&pr.top-i.getBoundingClientRect().bottom<=6,bc:getComputedStyle(i).borderTopColor,fldLabel:lb.textContent,hasOtherLines:c.querySelectorAll('.field-fail:not(:empty)').length,wrapped:pr.width}},id);
+  const r=await pg.evaluate(id=>{const c=document.getElementById(id).querySelector('.card');const f=c.querySelector('.fld'),p=f.querySelector('.field-fail'),i=f.querySelector('.inp'),lb=f.querySelector('label'),pr=p.getBoundingClientRect();const lh=parseFloat(getComputedStyle(p).lineHeight);return {txt:p.textContent,left:pr.left,right:pr.right,top:pr.top,bottom:pr.bottom,iw:innerWidth,ih:innerHeight,lines:Math.round(pr.height/lh),inv:i.getAttribute('aria-invalid'),desc:i.getAttribute('aria-describedby'),pid:p.id,live:p.getAttribute('aria-live'),label:c.querySelector('.save-label').textContent,icon:!!c.querySelector('.save-retry'),under:pr.top>=i.getBoundingClientRect().bottom-0.5&&pr.top-i.getBoundingClientRect().bottom<=6,bc:getComputedStyle(i).borderTopColor,fldLabel:lb.textContent,hasOtherLines:c.querySelectorAll('.field-fail:not(:empty)').length,hasLabel:!!document.querySelector('label[for="'+i.id+'"]')&&lb.textContent.length>0,wrapped:pr.width}},id);
   const nm=RULES[id].replace(/ \(mỗi dòng một mục\)/,'');
   allSame = allSame && (await geoOf(id))===g0;
   allIn = allIn && r.left>=0 && r.right<=r.iw && r.top>=0 && r.bottom<=r.ih;
   allLines = allLines && r.lines>=1 && r.lines<=2;
   allAria = allAria && r.inv==='true' && r.desc===r.pid && r.live==='polite' && r.under && r.bc==='rgb(217, 119, 6)';
-  allCopy = allCopy && r.txt.startsWith('Thầy cô sửa mục '+nm+' rồi thử lại: ');
-  allExpect = allExpect && EXPECT[id].test(r.txt);
+  allCopy = allCopy && !/Thầy cô|sửa mục|rồi thử lại|giúp nhé/.test(r.txt) && r.txt.indexOf(nm)<0 && /^[A-ZÀ-Ỹ]/.test(r.txt) && r.txt.length<=60 && r.hasLabel;
+  allExpect = allExpect && r.txt===EXPECT[id]; if(r.txt!==EXPECT[id]) info.push('MISMATCH '+id+': '+r.txt); if(r.lines===1) one++;
   allBanned = allBanned && !BANNED.test(r.txt);
   allLabel = allLabel && r.label==='Chưa lưu được' && r.icon;
   info.push(`${id}:${r.lines}l`);
  }
  ok(T+'M2 each of 10 rules: error line fully inside the viewport', allIn);
  ok(T+'M2 each rule: line is 1-2 lines', allLines, info.join(' '));
- ok(T+'M2 each rule: copy = "Thầy cô sửa mục <tên mục> rồi thử lại: <lý do>"', allCopy);
- ok(T+'M2 each rule: reason text has the real limit (ít nhất một / 12 / 20 / 4000 / 1 đến 180 / 200)', allExpect);
+ ok(T+'M2 each rule: SHORT copy (Huy 2026-10-01): capitalised, no opener, no field name, <=60 chars; the field keeps its own <label for> that is read before the line', allCopy);
+ ok(T+'M2 each rule: reason text is EXACTLY the final short sentence (real limits 12 / 20 / 4000 / 1-180 / 200)', allExpect);
+ ok(T+'M2 short lines: 1 line for the large majority (>=9 of 10), none over 2'+(w===390?' (390)':''), one>=9, `one-line=${one}/10`);
  ok(T+'M2 each rule: no banned word (lỗi, sai, máy chủ, 400, validation, undefined...)', allBanned);
  ok(T+'M2 each rule: aria-invalid=true, aria-describedby -> line id, line aria-live=polite, directly under field, amber border #D97706', allAria);
  ok(T+'M2 each rule: status label stays "Chưa lưu được" and the approved icon is present', allLabel);
  ok(T+'M2 status row geometry (height, title x, label x/right edge, icon 24x24) identical across all 10 rules', allSame, g0);
  const ic=await pg.evaluate(()=>{const b=document.querySelector('#icon-1 .save-retry'),cs=getComputedStyle(b);return {w:b.offsetWidth,h:b.offsetHeight,color:cs.color,border:cs.borderTopColor,radius:cs.borderTopLeftRadius,aria:b.getAttribute('aria-label'),svg:b.querySelector('svg').getBoundingClientRect().width,tip:document.querySelector('#icon-1 .save-tip').textContent}});
  ok(T+'approved icon untouched: 24x24, #92400E, border #FDE68A, radius 8, 14px glyph, aria-label & tooltip "Thử lại"', ic.w===24&&ic.h===24&&ic.color==='rgb(146, 64, 14)'&&ic.border==='rgb(253, 230, 138)'&&ic.radius==='8px'&&ic.svg===14&&ic.aria==='Thử lại'&&ic.tip==='Thử lại', JSON.stringify(ic));
- ok(T+'approved blocked-action hint (static) is the exact approved text', await pg.evaluate(()=>document.querySelector('#hint-approved .act-fail').textContent==='Chưa lưu được nên thao tác này chưa chạy. Thầy cô bấm biểu tượng thử lại ở đầu giáo án giúp nhé.'));
- ok(T+'CR-2 hint variant has no banned word and starts with the approved first sentence', await pg.evaluate(()=>{const t=document.querySelector('#hint-data').textContent;return t.startsWith('Chưa lưu được nên thao tác này chưa chạy. ')&&!/lỗi|\bsai\b|máy chủ/i.test(t)}));
+ ok(T+'AC-A static hint, network/unknown field: exact short sentence', await pg.evaluate((h)=>document.querySelector('#hint-net-p').textContent===h,HINT_NET));
+ ok(T+'AC-G static hint, data error with marked fields: exact short sentence', await pg.evaluate((h)=>document.querySelector('#hint-data-p').textContent===h,HINT_DATA));
+ ok(T+'both hints: <=2 lines, inside viewport, no banned word', await pg.evaluate(()=>['#hint-net-p','#hint-data-p'].every(s=>{const e=document.querySelector(s),r=e.getBoundingClientRect();return Math.round(r.height/parseFloat(getComputedStyle(e).lineHeight))<=2&&r.left>=0&&r.right<=innerWidth&&!/lỗi|\bsai\b|máy chủ|\b400\b|validation|undefined/i.test(e.textContent)})));
  // multi
  const mu=await pg.evaluate(()=>{const c=document.querySelector('#multi .card');const ls=[...c.querySelectorAll('.field-fail:not(:empty)')];return {n:ls.length,inv:c.querySelectorAll('[aria-invalid=true]').length,ids:new Set(ls.map(x=>x.id)).size,vis:ls.every(l=>{const r=l.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth})}});
  ok(T+'M2 multi: 3 invalid fields -> 3 lines + 3 aria-invalid, each in viewport horizontally', mu.n===3&&mu.inv===3&&mu.ids===3&&mu.vis, JSON.stringify(mu));
@@ -127,7 +130,8 @@ for (const w of [1280,720,390]){
  ok(T+'live: Kiến thức emptied -> label "Chưa lưu được" + icon, 1 line, ZERO new PUT', (await lab())==='Chưa lưu được'&&(await icon())&&(await nlines())===1&&(await puts())===1);
  ok(T+'live: focus NOT stolen (still in Kiến thức) when the reason line appears', await lp.evaluate(()=>document.activeElement.closest('.fld')?.dataset.key==='knowledge'));
  const lineTxt=await lp.evaluate(()=>document.querySelector('#live .fld[data-key=knowledge] .field-fail').textContent);
- ok(T+'live: line text = approved pattern, Kiến thức', lineTxt==='Thầy cô sửa mục Kiến thức rồi thử lại: cần có ít nhất một ý.', lineTxt);
+ ok(T+'live: line text = "Cần có ít nhất một ý."', lineTxt==='Cần có ít nhất một ý.', lineTxt);
+ ok(T+'live: field has its own label read before the line (label[for] + aria-describedby, no aria-label override needed)', await lp.evaluate(()=>{const i=document.querySelector('#live .fld[data-key=knowledge] .inp');return document.querySelector('label[for="'+i.id+'"]').textContent==='Kiến thức'&&i.getAttribute('aria-describedby')&&!i.hasAttribute('aria-label')}));
  const va=await lp.evaluate(()=>{const i=document.querySelector('#live .fld[data-key=knowledge] .inp'),p=i.closest('.fld').querySelector('.field-fail');return i.getAttribute('aria-invalid')==='true'&&i.getAttribute('aria-describedby')===p.id&&p.getAttribute('aria-live')==='polite'});
  ok(T+'live: aria-invalid + aria-describedby + polite on the live line', va);
  ok(T+'live: status row geometry identical to "Đã lưu" state (no shift of the row)', (await hdG())===hd0, hd0);
@@ -142,10 +146,11 @@ for (const w of [1280,720,390]){
  ok(T+'live: focus stays in the field being typed (no focus steal)', await lp.evaluate(()=>document.activeElement.closest('.fld')?.dataset.key==='content'));
  // click Xuất while data error: approved hint text, unchanged
  await lp.click(live('[data-act=export]')); 
- ok(T+'live: Xuất Word during data error -> the APPROVED blocked-action hint (CR-2 off)', await lp.evaluate(()=>document.getElementById('live-hint').textContent==='Chưa lưu được nên thao tác này chưa chạy. Thầy cô bấm biểu tượng thử lại ở đầu giáo án giúp nhé.'));
- await lp.evaluate(()=>{document.getElementById('cr2').checked=true}); await lp.click(live('[data-act=revise]'));
- ok(T+'live: CR-2 on -> variant text (no banned word)', await lp.evaluate(()=>{const t=document.getElementById('live-hint').textContent;return t.includes('sửa mục được nhắc')&&!/lỗi|\bsai\b|máy chủ/i.test(t)}));
- await lp.evaluate(()=>{document.getElementById('cr2').checked=false});
+ await lp.click(live('[data-act=export]'));
+ ok(T+'live: AC-G Xuất Word during DATA error -> "Chưa lưu được nên chưa chạy. Sửa các ô được đánh dấu."', await lp.evaluate(h=>document.getElementById('live-hint').textContent===h,HINT_DATA));
+ ok(T+'live: AC-G hint <=2 lines and inside the viewport', await lp.evaluate(()=>{const e=document.getElementById('live-hint'),r=e.getBoundingClientRect();return Math.round(r.height/parseFloat(getComputedStyle(e).lineHeight))<=2&&r.left>=0&&r.right<=innerWidth}));
+ await lp.click(live('[data-act=revise]'));
+ ok(T+'live: AC-G Soạn lại during DATA error -> same data sentence', await lp.evaluate(h=>document.getElementById('live-hint').textContent===h,HINT_DATA));
  // click retry icon with data error: no PUT, no "Đang lưu", focus to the first invalid field
  await lp.click(live('.save-retry')); await lp.waitForTimeout(900);
  ok(T+'live: icon click on data error -> no PUT, label stays "Chưa lưu được" (never flashes "Đang lưu"), icon still there', (await puts())===1&&(await lab())==='Chưa lưu được'&&(await icon()));
@@ -172,6 +177,18 @@ for (const w of [1280,720,390]){
  await lp.waitForTimeout(900); ok(T+'live: NETWORK retry fails again -> icon back', (await lab())==='Chưa lưu được'&&(await icon()));
  await lp.evaluate(()=>{document.getElementById('fail').checked=false}); await lp.click(live('.save-retry')); await lp.waitForTimeout(1000);
  ok(T+'live: NETWORK retry succeeds -> "Đã lưu", icon gone, focus back to the last edited field', (await lab())==='Đã lưu'&&!(await icon())&&await lp.evaluate(()=>document.activeElement.closest('.fld')?.dataset.key==='school'));
+ // AC-A: hint on NETWORK error (network still down from earlier step? set explicitly)
+ await lp.evaluate(()=>{document.getElementById('fail').checked=true;document.getElementById('rej').checked=false});
+ await lp.click(fld('school')); await lp.keyboard.type('n'); await lp.waitForTimeout(1500);
+ await lp.click(live('[data-act=export]'));
+ ok(T+'live: AC-A Xuất Word during NETWORK error -> "Chưa lưu được nên chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án."', (await lab())==='Chưa lưu được'&&await lp.evaluate(h=>document.getElementById('live-hint').textContent===h,HINT_NET));
+ await lp.evaluate(()=>{document.getElementById('fail').checked=false}); await lp.click(live('.save-retry')); await lp.waitForTimeout(1000);
+ ok(T+'live: hint disappears after a successful save', await lp.evaluate(()=>document.getElementById('live-hint').textContent===''));
+ // minutes are NOT silently changed to 1 (L1)
+ await lp.fill(fld('minutes'),''); await lp.waitForTimeout(1300);
+ ok(T+'live: L1 minutes emptied stays EMPTY (not snapped to 1) and shows "Nhập số phút từ 1 đến 180."', (await lp.inputValue(fld('minutes')))===''&&await lp.evaluate(()=>document.querySelector('#live .fld[data-key=minutes] .field-fail').textContent==='Nhập số phút từ 1 đến 180.'));
+ await lp.fill(fld('minutes'),'0'); ok(T+'live: minutes 0 stays 0 with the line', (await lp.inputValue(fld('minutes')))==='0'&&(await nlines())===1);
+ await lp.fill(fld('minutes'),'10'); await lp.waitForTimeout(1300);
  // data error, field unknown: label + icon only, approved retry flow, no invented line
  await lp.evaluate(()=>{document.getElementById('fail').checked=false;document.getElementById('rej').checked=true});
  const pu=await puts(); await lp.click(fld('school')); await lp.keyboard.type('y'); await lp.waitForTimeout(1500);
@@ -184,7 +201,7 @@ for (const w of [1280,720,390]){
  // data error then network error at once: data wins for the line, no PUT
  await lp.evaluate(()=>{document.getElementById('fail').checked=true}); await lp.click('#h-sub'); await lp.waitForTimeout(1300);
  const ps=await puts();
- ok(T+'live: sub-activity name emptied -> its own line, 0 PUT even though network is also down', (await nlines())===1&&await lp.evaluate(()=>document.querySelector('#live .fld[data-key=subname] .field-fail').textContent==='Thầy cô sửa mục Tên hoạt động con rồi thử lại: cần có tên.'));
+ ok(T+'live: sub-activity name emptied -> its own line, 0 PUT even though network is also down', (await nlines())===1&&await lp.evaluate(()=>document.querySelector('#live .fld[data-key=subname] .field-fail').textContent==='Cần có tên.'));
  await lp.click(fld('subname')); await lp.keyboard.type('Tên con'); await lp.waitForTimeout(40);
  ok(T+'live: typing in the sub-activity name clears its line instantly', (await nlines())===0);
  await lp.waitForTimeout(1500);

@@ -20,15 +20,17 @@ PASS [1280] H1 clicking the heading does not focus anything / no caret
 PASS [1280] H1 typing after clicking the heading changes nothing
 PASS [1280] M2 each of 10 rules: error line fully inside the viewport
 PASS [1280] M2 each rule: line is 1-2 lines · r-kn-empty:1l r-kn-many:1l r-aids-many:1l r-content-empty:1l r-content-long:1l r-minutes:1l r-assign-empty:1l r-subname-empty:1l r-subname-long:1l r-school-long:1l
-PASS [1280] M2 each rule: copy = "Thầy cô sửa mục <tên mục> rồi thử lại: <lý do>"
-PASS [1280] M2 each rule: reason text has the real limit (ít nhất một / 12 / 20 / 4000 / 1 đến 180 / 200)
+PASS [1280] M2 each rule: SHORT copy (Huy 2026-10-01): capitalised, no opener, no field name, <=60 chars; the field keeps its own <label for> that is read before the line
+PASS [1280] M2 each rule: reason text is EXACTLY the final short sentence (real limits 12 / 20 / 4000 / 1-180 / 200)
+PASS [1280] M2 short lines: 1 line for the large majority (>=9 of 10), none over 2 · one-line=10/10
 PASS [1280] M2 each rule: no banned word (lỗi, sai, máy chủ, 400, validation, undefined...)
 PASS [1280] M2 each rule: aria-invalid=true, aria-describedby -> line id, line aria-live=polite, directly under field, amber border #D97706
 PASS [1280] M2 each rule: status label stays "Chưa lưu được" and the approved icon is present
 PASS [1280] M2 status row geometry (height, title x, label x/right edge, icon 24x24) identical across all 10 rules · 24.14,16.39,16.39,660.61,50.39,24,24
 PASS [1280] approved icon untouched: 24x24, #92400E, border #FDE68A, radius 8, 14px glyph, aria-label & tooltip "Thử lại" · {"w":24,"h":24,"color":"rgb(146, 64, 14)","border":"rgb(253, 230, 138)","radius":"8px","aria":"Thử lại","svg":14,"tip":"Thử lại"}
-PASS [1280] approved blocked-action hint (static) is the exact approved text
-PASS [1280] CR-2 hint variant has no banned word and starts with the approved first sentence
+PASS [1280] AC-A static hint, network/unknown field: exact short sentence
+PASS [1280] AC-G static hint, data error with marked fields: exact short sentence
+PASS [1280] both hints: <=2 lines, inside viewport, no banned word
 PASS [1280] M2 multi: 3 invalid fields -> 3 lines + 3 aria-invalid, each in viewport horizontally · {"n":3,"inv":3,"ids":3,"vis":true}
 PASS [1280] M2 clearing storyboard: line+aria-invalid go away on edit, label becomes "Đã lưu" and icon goes away after save · [[true,true,"Chưa lưu được",true],[false,false,"Chưa lưu được",true],[false,false,"Đã lưu",false]]
 PASS [1280] data error with UNKNOWN field: label "Chưa lưu được" + icon only; no line, no aria-invalid, normal border · {"lab":"Chưa lưu được","icon":true,"lines":0,"inv":0,"bc":"rgb(229, 231, 235)"}
@@ -40,15 +42,17 @@ PASS [1280] live: no PUT while typing (valid content, debounce running)
 PASS [1280] live: valid content -> 1 PUT, back to "Đã lưu"
 PASS [1280] live: Kiến thức emptied -> label "Chưa lưu được" + icon, 1 line, ZERO new PUT
 PASS [1280] live: focus NOT stolen (still in Kiến thức) when the reason line appears
-PASS [1280] live: line text = approved pattern, Kiến thức · Thầy cô sửa mục Kiến thức rồi thử lại: cần có ít nhất một ý.
+PASS [1280] live: line text = "Cần có ít nhất một ý." · Cần có ít nhất một ý.
+PASS [1280] live: field has its own label read before the line (label[for] + aria-describedby, no aria-label override needed)
 PASS [1280] live: aria-invalid + aria-describedby + polite on the live line
 PASS [1280] live: status row geometry identical to "Đã lưu" state (no shift of the row) · 24.14,16.39,16.39,634.61,50.39
 PASS [1280] live: the field itself and everything above it did not move; the heading below moved by the same amount as the other content (only the line) · [8536.2,8536.2]
 PASS [1280] live: content below moved by exactly the line (height + 4px margin), nothing else · shift=20.8 line=16.796875
 PASS [1280] live: typing in another field while Kiến thức is invalid -> still 0 new PUT, still "Chưa lưu được", line stays
 PASS [1280] live: focus stays in the field being typed (no focus steal)
-PASS [1280] live: Xuất Word during data error -> the APPROVED blocked-action hint (CR-2 off)
-PASS [1280] live: CR-2 on -> variant text (no banned word)
+PASS [1280] live: AC-G Xuất Word during DATA error -> "Chưa lưu được nên chưa chạy. Sửa các ô được đánh dấu."
+PASS [1280] live: AC-G hint <=2 lines and inside the viewport
+PASS [1280] live: AC-G Soạn lại during DATA error -> same data sentence
 PASS [1280] live: icon click on data error -> no PUT, label stays "Chưa lưu được" (never flashes "Đang lưu"), icon still there
 PASS [1280] live: icon click moves focus to the first field with a reason line (Kiến thức)
 PASS [1280] live: 3 invalid fields -> 3 lines at once, 3 aria-invalid, 0 PUT
@@ -62,6 +66,10 @@ PASS [1280] live: NETWORK error -> "Chưa lưu được" + icon, NO reason line,
 PASS [1280] live: NETWORK retry shows "Đang lưu" (approved flow) and sends a PUT
 PASS [1280] live: NETWORK retry fails again -> icon back
 PASS [1280] live: NETWORK retry succeeds -> "Đã lưu", icon gone, focus back to the last edited field
+PASS [1280] live: AC-A Xuất Word during NETWORK error -> "Chưa lưu được nên chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án."
+PASS [1280] live: hint disappears after a successful save
+PASS [1280] live: L1 minutes emptied stays EMPTY (not snapped to 1) and shows "Nhập số phút từ 1 đến 180."
+PASS [1280] live: minutes 0 stays 0 with the line
 PASS [1280] live: server rejects, field unknown -> "Chưa lưu được" + icon, NO line, NO aria-invalid, 1 PUT sent
 PASS [1280] live: unknown-field rejection, icon click -> approved flow ("Đang lưu", PUT sent)
 PASS [1280] live: still rejected -> icon back, still no line
@@ -93,15 +101,17 @@ PASS [720] H1 clicking the heading does not focus anything / no caret
 PASS [720] H1 typing after clicking the heading changes nothing
 PASS [720] M2 each of 10 rules: error line fully inside the viewport
 PASS [720] M2 each rule: line is 1-2 lines · r-kn-empty:1l r-kn-many:1l r-aids-many:1l r-content-empty:1l r-content-long:1l r-minutes:1l r-assign-empty:1l r-subname-empty:1l r-subname-long:1l r-school-long:1l
-PASS [720] M2 each rule: copy = "Thầy cô sửa mục <tên mục> rồi thử lại: <lý do>"
-PASS [720] M2 each rule: reason text has the real limit (ít nhất một / 12 / 20 / 4000 / 1 đến 180 / 200)
+PASS [720] M2 each rule: SHORT copy (Huy 2026-10-01): capitalised, no opener, no field name, <=60 chars; the field keeps its own <label for> that is read before the line
+PASS [720] M2 each rule: reason text is EXACTLY the final short sentence (real limits 12 / 20 / 4000 / 1-180 / 200)
+PASS [720] M2 short lines: 1 line for the large majority (>=9 of 10), none over 2 · one-line=10/10
 PASS [720] M2 each rule: no banned word (lỗi, sai, máy chủ, 400, validation, undefined...)
 PASS [720] M2 each rule: aria-invalid=true, aria-describedby -> line id, line aria-live=polite, directly under field, amber border #D97706
 PASS [720] M2 each rule: status label stays "Chưa lưu được" and the approved icon is present
 PASS [720] M2 status row geometry (height, title x, label x/right edge, icon 24x24) identical across all 10 rules · 24.14,16.39,16.39,568.61,50.39,24,24
 PASS [720] approved icon untouched: 24x24, #92400E, border #FDE68A, radius 8, 14px glyph, aria-label & tooltip "Thử lại" · {"w":24,"h":24,"color":"rgb(146, 64, 14)","border":"rgb(253, 230, 138)","radius":"8px","aria":"Thử lại","svg":14,"tip":"Thử lại"}
-PASS [720] approved blocked-action hint (static) is the exact approved text
-PASS [720] CR-2 hint variant has no banned word and starts with the approved first sentence
+PASS [720] AC-A static hint, network/unknown field: exact short sentence
+PASS [720] AC-G static hint, data error with marked fields: exact short sentence
+PASS [720] both hints: <=2 lines, inside viewport, no banned word
 PASS [720] M2 multi: 3 invalid fields -> 3 lines + 3 aria-invalid, each in viewport horizontally · {"n":3,"inv":3,"ids":3,"vis":true}
 PASS [720] M2 clearing storyboard: line+aria-invalid go away on edit, label becomes "Đã lưu" and icon goes away after save · [[true,true,"Chưa lưu được",true],[false,false,"Chưa lưu được",true],[false,false,"Đã lưu",false]]
 PASS [720] data error with UNKNOWN field: label "Chưa lưu được" + icon only; no line, no aria-invalid, normal border · {"lab":"Chưa lưu được","icon":true,"lines":0,"inv":0,"bc":"rgb(229, 231, 235)"}
@@ -113,15 +123,17 @@ PASS [720] live: no PUT while typing (valid content, debounce running)
 PASS [720] live: valid content -> 1 PUT, back to "Đã lưu"
 PASS [720] live: Kiến thức emptied -> label "Chưa lưu được" + icon, 1 line, ZERO new PUT
 PASS [720] live: focus NOT stolen (still in Kiến thức) when the reason line appears
-PASS [720] live: line text = approved pattern, Kiến thức · Thầy cô sửa mục Kiến thức rồi thử lại: cần có ít nhất một ý.
+PASS [720] live: line text = "Cần có ít nhất một ý." · Cần có ít nhất một ý.
+PASS [720] live: field has its own label read before the line (label[for] + aria-describedby, no aria-label override needed)
 PASS [720] live: aria-invalid + aria-describedby + polite on the live line
 PASS [720] live: status row geometry identical to "Đã lưu" state (no shift of the row) · 24.14,16.39,16.39,542.61,50.39
 PASS [720] live: the field itself and everything above it did not move; the heading below moved by the same amount as the other content (only the line) · [8717.2,8717.2]
 PASS [720] live: content below moved by exactly the line (height + 4px margin), nothing else · shift=20.8 line=16.796875
 PASS [720] live: typing in another field while Kiến thức is invalid -> still 0 new PUT, still "Chưa lưu được", line stays
 PASS [720] live: focus stays in the field being typed (no focus steal)
-PASS [720] live: Xuất Word during data error -> the APPROVED blocked-action hint (CR-2 off)
-PASS [720] live: CR-2 on -> variant text (no banned word)
+PASS [720] live: AC-G Xuất Word during DATA error -> "Chưa lưu được nên chưa chạy. Sửa các ô được đánh dấu."
+PASS [720] live: AC-G hint <=2 lines and inside the viewport
+PASS [720] live: AC-G Soạn lại during DATA error -> same data sentence
 PASS [720] live: icon click on data error -> no PUT, label stays "Chưa lưu được" (never flashes "Đang lưu"), icon still there
 PASS [720] live: icon click moves focus to the first field with a reason line (Kiến thức)
 PASS [720] live: 3 invalid fields -> 3 lines at once, 3 aria-invalid, 0 PUT
@@ -135,6 +147,10 @@ PASS [720] live: NETWORK error -> "Chưa lưu được" + icon, NO reason line, 
 PASS [720] live: NETWORK retry shows "Đang lưu" (approved flow) and sends a PUT
 PASS [720] live: NETWORK retry fails again -> icon back
 PASS [720] live: NETWORK retry succeeds -> "Đã lưu", icon gone, focus back to the last edited field
+PASS [720] live: AC-A Xuất Word during NETWORK error -> "Chưa lưu được nên chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án."
+PASS [720] live: hint disappears after a successful save
+PASS [720] live: L1 minutes emptied stays EMPTY (not snapped to 1) and shows "Nhập số phút từ 1 đến 180."
+PASS [720] live: minutes 0 stays 0 with the line
 PASS [720] live: server rejects, field unknown -> "Chưa lưu được" + icon, NO line, NO aria-invalid, 1 PUT sent
 PASS [720] live: unknown-field rejection, icon click -> approved flow ("Đang lưu", PUT sent)
 PASS [720] live: still rejected -> icon back, still no line
@@ -165,16 +181,18 @@ PASS [390] H1 390/720: heading sits BELOW the 48px band and the chip row, inside
 PASS [390] H1 clicking the heading does not focus anything / no caret
 PASS [390] H1 typing after clicking the heading changes nothing
 PASS [390] M2 each of 10 rules: error line fully inside the viewport
-PASS [390] M2 each rule: line is 1-2 lines · r-kn-empty:2l r-kn-many:1l r-aids-many:1l r-content-empty:1l r-content-long:2l r-minutes:2l r-assign-empty:2l r-subname-empty:2l r-subname-long:2l r-school-long:1l
-PASS [390] M2 each rule: copy = "Thầy cô sửa mục <tên mục> rồi thử lại: <lý do>"
-PASS [390] M2 each rule: reason text has the real limit (ít nhất một / 12 / 20 / 4000 / 1 đến 180 / 200)
+PASS [390] M2 each rule: line is 1-2 lines · r-kn-empty:1l r-kn-many:1l r-aids-many:1l r-content-empty:1l r-content-long:1l r-minutes:1l r-assign-empty:1l r-subname-empty:1l r-subname-long:1l r-school-long:1l
+PASS [390] M2 each rule: SHORT copy (Huy 2026-10-01): capitalised, no opener, no field name, <=60 chars; the field keeps its own <label for> that is read before the line
+PASS [390] M2 each rule: reason text is EXACTLY the final short sentence (real limits 12 / 20 / 4000 / 1-180 / 200)
+PASS [390] M2 short lines: 1 line for the large majority (>=9 of 10), none over 2 (390) · one-line=10/10
 PASS [390] M2 each rule: no banned word (lỗi, sai, máy chủ, 400, validation, undefined...)
 PASS [390] M2 each rule: aria-invalid=true, aria-describedby -> line id, line aria-live=polite, directly under field, amber border #D97706
 PASS [390] M2 each rule: status label stays "Chưa lưu được" and the approved icon is present
 PASS [390] M2 status row geometry (height, title x, label x/right edge, icon 24x24) identical across all 10 rules · 24.14,17,17,238,51,24,24
 PASS [390] approved icon untouched: 24x24, #92400E, border #FDE68A, radius 8, 14px glyph, aria-label & tooltip "Thử lại" · {"w":24,"h":24,"color":"rgb(146, 64, 14)","border":"rgb(253, 230, 138)","radius":"8px","aria":"Thử lại","svg":14,"tip":"Thử lại"}
-PASS [390] approved blocked-action hint (static) is the exact approved text
-PASS [390] CR-2 hint variant has no banned word and starts with the approved first sentence
+PASS [390] AC-A static hint, network/unknown field: exact short sentence
+PASS [390] AC-G static hint, data error with marked fields: exact short sentence
+PASS [390] both hints: <=2 lines, inside viewport, no banned word
 PASS [390] M2 multi: 3 invalid fields -> 3 lines + 3 aria-invalid, each in viewport horizontally · {"n":3,"inv":3,"ids":3,"vis":true}
 PASS [390] M2 clearing storyboard: line+aria-invalid go away on edit, label becomes "Đã lưu" and icon goes away after save · [[true,true,"Chưa lưu được",true],[false,false,"Chưa lưu được",true],[false,false,"Đã lưu",false]]
 PASS [390] data error with UNKNOWN field: label "Chưa lưu được" + icon only; no line, no aria-invalid, normal border · {"lab":"Chưa lưu được","icon":true,"lines":0,"inv":0,"bc":"rgb(229, 231, 235)"}
@@ -186,28 +204,34 @@ PASS [390] live: no PUT while typing (valid content, debounce running)
 PASS [390] live: valid content -> 1 PUT, back to "Đã lưu"
 PASS [390] live: Kiến thức emptied -> label "Chưa lưu được" + icon, 1 line, ZERO new PUT
 PASS [390] live: focus NOT stolen (still in Kiến thức) when the reason line appears
-PASS [390] live: line text = approved pattern, Kiến thức · Thầy cô sửa mục Kiến thức rồi thử lại: cần có ít nhất một ý.
+PASS [390] live: line text = "Cần có ít nhất một ý." · Cần có ít nhất một ý.
+PASS [390] live: field has its own label read before the line (label[for] + aria-describedby, no aria-label override needed)
 PASS [390] live: aria-invalid + aria-describedby + polite on the live line
 PASS [390] live: status row geometry identical to "Đã lưu" state (no shift of the row) · 24.14,17,17,212,51
-PASS [390] live: the field itself and everything above it did not move; the heading below moved by the same amount as the other content (only the line) · [9729,9729]
-PASS [390] live: content below moved by exactly the line (height + 4px margin), nothing else · shift=37.5 line=33.59375
+PASS [390] live: the field itself and everything above it did not move; the heading below moved by the same amount as the other content (only the line) · [9492.6,9492.6]
+PASS [390] live: content below moved by exactly the line (height + 4px margin), nothing else · shift=20.8 line=16.796875
 PASS [390] live: typing in another field while Kiến thức is invalid -> still 0 new PUT, still "Chưa lưu được", line stays
 PASS [390] live: focus stays in the field being typed (no focus steal)
-PASS [390] live: Xuất Word during data error -> the APPROVED blocked-action hint (CR-2 off)
-PASS [390] live: CR-2 on -> variant text (no banned word)
+PASS [390] live: AC-G Xuất Word during DATA error -> "Chưa lưu được nên chưa chạy. Sửa các ô được đánh dấu."
+PASS [390] live: AC-G hint <=2 lines and inside the viewport
+PASS [390] live: AC-G Soạn lại during DATA error -> same data sentence
 PASS [390] live: icon click on data error -> no PUT, label stays "Chưa lưu được" (never flashes "Đang lưu"), icon still there
 PASS [390] live: icon click moves focus to the first field with a reason line (Kiến thức)
 PASS [390] live: 3 invalid fields -> 3 lines at once, 3 aria-invalid, 0 PUT
-PASS [390] live: all 3 lines inside viewport width and <=2 lines each · [[42,348,390,2],[57,333,390,2],[57,333,390,2]]
+PASS [390] live: all 3 lines inside viewport width and <=2 lines each · [[42,348,390,1],[57,333,390,1],[57,333,390,1]]
 PASS [390] live: fixing one field clears ITS line immediately (<=40ms, before any save); the other 2 stay
 PASS [390] live: still no PUT while 2 fields remain invalid
 PASS [390] live: all fixed -> all lines gone at once
 PASS [390] live: after the last fix: auto-save -> exactly 1 more PUT, "Đã lưu", icon gone
-PASS [390] live: positions return to the original after clearing (no residual space) · {"knowledge":9729,"school":9825.5,"minutes":9990,"content":10064.5,"subname":10192.5,"h":9935.5}
+PASS [390] live: positions return to the original after clearing (no residual space) · {"knowledge":9492.6,"school":9589.1,"minutes":9753.6,"content":9828.1,"subname":9956.1,"h":9699.1}
 PASS [390] live: NETWORK error -> "Chưa lưu được" + icon, NO reason line, no aria-invalid, 1 PUT sent
 PASS [390] live: NETWORK retry shows "Đang lưu" (approved flow) and sends a PUT
 PASS [390] live: NETWORK retry fails again -> icon back
 PASS [390] live: NETWORK retry succeeds -> "Đã lưu", icon gone, focus back to the last edited field
+PASS [390] live: AC-A Xuất Word during NETWORK error -> "Chưa lưu được nên chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án."
+PASS [390] live: hint disappears after a successful save
+PASS [390] live: L1 minutes emptied stays EMPTY (not snapped to 1) and shows "Nhập số phút từ 1 đến 180."
+PASS [390] live: minutes 0 stays 0 with the line
 PASS [390] live: server rejects, field unknown -> "Chưa lưu được" + icon, NO line, NO aria-invalid, 1 PUT sent
 PASS [390] live: unknown-field rejection, icon click -> approved flow ("Đang lưu", PUT sent)
 PASS [390] live: still rejected -> icon back, still no line
@@ -217,4 +241,4 @@ PASS [390] live: typing in the sub-activity name clears its line instantly
 PASS [390] live: then the (still failing) network is the only error: label "Chưa lưu được", no line
 PASS [390] live: no script errors
 
-218/218 passed
+242/242 passed

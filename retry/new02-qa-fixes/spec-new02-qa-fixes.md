@@ -2,7 +2,9 @@
 
 Trạng thái: **chờ Huy duyệt, Dev FE chưa làm.** Một PR, chỉ FE. Nguồn: `ga-postgen-check/qa-run-new02/results.md` (H1, M2, L1), code `origin/main` b735fd9.
 Mockup: `/retry/new02-qa-fixes/` · bấm thử: `?live=1` · kiểm tra tự động: `ac-test.js` (3 độ rộng; xem ac-test-output.txt).
-Giữ nguyên (đã duyệt): biểu tượng thử lại, tooltip "Thử lại", nhãn "Đã lưu / Đang lưu / Chưa lưu được", ô 24px luôn chiếm chỗ, dòng chặn dưới Xuất/Soạn lại/Tạo phiếu.
+Giữ nguyên (đã duyệt): biểu tượng thử lại, tooltip "Thử lại", nhãn "Đã lưu / Đang lưu / Chưa lưu được", ô 24px luôn chiếm chỗ.
+
+> **Huy 2026-10-01: rút gọn, bỏ lời mở và tên mục.** Thay copy BA đề xuất trước đó ở 3 chỗ (**BA cần xem lại**): (1) dòng lý do dưới ô M2 (bỏ "Thầy cô sửa mục … rồi thử lại:" và tên mục; viết hoa đầu câu); (2) dòng dưới Xuất/Soạn lại/Tạo phiếu khi lỗi mạng (thay `SAVE_ACTION_BLOCKED` đã duyệt/đã merge); (3) dòng đó khi lỗi dữ liệu (câu mới, thay CR-2). Chữ "Thầy cô" không còn trong các dòng này; giọng văn ngắn và không có từ lỗi/sai/máy chủ/400/validation. Hành vi, biểu tượng, viền hổ phách, focus, H1 không đổi.
 
 ## 1. Quy tắc và giới hạn trong code (nguồn của bảng copy)
 | Quy tắc | Giới hạn | File |
@@ -40,32 +42,41 @@ Lưu ý Dev: hiển thị `ACTIVITY_SLOT_NAMES[index]` (tên chuẩn), không hi
 
 ## 3. M2 · Dòng lý do (vị trí và hành vi)
 - **Vị trí:** ngay dưới ô có vấn đề, `<p class="field-fail" id="{ô}-why" aria-live="polite">` (kiểu `.rv-ackfail`: 12px / 500 / `#92400E` / line-height 1.4, rỗng thì ẩn trực quan). Không toast, không banner trên đầu.
-- **Ô có vấn đề (MỚI, cần duyệt):** `aria-invalid="true"`, `aria-describedby="{ô}-why"`, viền `#D97706` (`--amber`, 3,19:1 trên trắng, đủ cho thành phần UI 3:1). Code hiện chưa có kiểu ô không hợp lệ nào. Khi đang gõ/focus trong ô thì vẫn là viền xanh + vòng focus như mọi ô.
+- **Ô có vấn đề (MỚI, cần duyệt):** `aria-invalid="true"`, `aria-describedby="{ô}-why"` (nhãn `<label for>` của ô được đọc trước, rồi tới dòng, nên dòng không cần lặp tên mục), viền `#D97706` (`--amber`, 3,19:1 trên trắng, đủ cho thành phần UI 3:1). Code hiện chưa có kiểu ô không hợp lệ nào. Khi đang gõ/focus trong ô thì vẫn là viền xanh + vòng focus như mọi ô.
 - **Nhiều ô sai cùng lúc: hiện dòng ở TẤT CẢ các ô** (mỗi ô một dòng), không gộp "ô đầu + số lượng". Lý do: thầy cô thấy ngay mọi chỗ cần sửa khi cuộn; mỗi ô là 1 dòng ngắn nên tốn ít chỗ; "ô đầu + số" buộc phải đoán những ô còn lại.
 - **Nhãn đầu giáo án:** vẫn "Chưa lưu được" (đã duyệt), màu `#92400E`. Dòng lý do không nằm ở đầu giáo án (đầu giáo án có thể ngoài màn hình).
 - **Biểu tượng thử lại khi lỗi dữ liệu: KHUYẾN NGHỊ GIỮ NGUYÊN biểu tượng** (cùng kiểu, tooltip, kích thước, không vô hiệu hóa). Lý do: không đổi thứ đã duyệt, không tạo thêm trạng thái; bấm vào luôn có phản hồi. Khi bấm mà còn ô chưa hợp lệ: **không gửi gì, không hiện "Đang lưu" giả**, đưa focus đến ô đầu tiên có dòng lý do (cuộn vào giữa màn hình) và dòng được đọc lại. Khi các ô đã hợp lệ thì chạy đúng luồng đã duyệt. Phương án thay thế đã xét: ẩn hoặc làm mờ biểu tượng, bị loại vì thêm trạng thái mới và làm mất lối dẫn tới ô cần sửa.
 - **Tự lưu lại:** ngay khi ô cuối cùng hợp lệ, tự lưu sau 1 giây như mọi lần sửa (không cần bấm).
 - **Khi nào dòng mất:** (1) ngay khi giá trị ô đó hợp lệ lúc đang gõ, kiểm tra cục bộ từng ô, không cần mạng; (2) lưu thành công thì mọi dòng mất; không mất khi chỉ bấm vào ô hay gõ chữ mà vẫn chưa hợp lệ.
 - **Focus:** không bao giờ tự chuyển focus lúc đang gõ. Chỉ chuyển khi thầy cô chủ động bấm biểu tượng thử lại.
-- **Dòng chặn dưới Xuất/Soạn lại/Tạo phiếu:** giữ nguyên câu đã duyệt ("…Thầy cô bấm biểu tượng thử lại ở đầu giáo án giúp nhé."). Vẫn đúng với lỗi dữ liệu vì biểu tượng vẫn còn và dẫn tới ô cần sửa. Xem CR-2 nếu muốn rõ hơn.
+- **Dòng dưới Xuất/Soạn lại/Tạo phiếu (đã rút gọn, đổi copy):** lỗi mạng / 5xx / 409 / lỗi dữ liệu không biết ô nào: "Chưa lưu được nên chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án." Lỗi dữ liệu có ô được đánh dấu: "Chưa lưu được nên chưa chạy. Sửa các ô được đánh dấu." Vẫn đặt ở cùng chỗ, `aria-live="polite"`, `aria-describedby` từ nút đã bấm như đã duyệt. Mất khi lưu thành công.
 
-### Bảng copy theo quy tắc (mẫu: "Thầy cô sửa mục **{mục}** rồi thử lại: {lý do}")
-| Quy tắc | Câu hiển thị (tên mục = nhãn thật của ô) |
+### Bảng copy theo quy tắc (Huy 2026-10-01: chỉ nêu trọng tâm, không lời mở, không tên mục)
+Dòng đặt liền dưới đúng ô, gắn `aria-describedby`; ô có `<label for>` riêng (trình đọc đọc nhãn ô rồi tới dòng). Với ô trong danh sách lặp (4 bước tổ chức, hoạt động con) dòng vẫn nằm dưới đúng ô đó, không gộp.
+| Quy tắc | Dòng hiển thị |
 |---|---|
-| Kiến thức / Năng lực / Phẩm chất trống | Thầy cô sửa mục Kiến thức rồi thử lại: cần có ít nhất một ý. |
-| Kiến thức / Năng lực / Phẩm chất > 12 ý | Thầy cô sửa mục Kiến thức rồi thử lại: tối đa 12 ý. |
-| Một ý > 4000 ký tự | Thầy cô sửa mục Kiến thức rồi thử lại: mỗi ý tối đa 4000 ký tự. |
-| Học liệu trống | Thầy cô sửa mục Học liệu rồi thử lại: cần có ít nhất một dòng. |
-| Học liệu > 20 dòng | Thầy cô sửa mục Học liệu rồi thử lại: tối đa 20 dòng. |
-| Một dòng học liệu > 4000 | Thầy cô sửa mục Học liệu rồi thử lại: mỗi dòng tối đa 4000 ký tự. |
-| a) Mục tiêu / b) Nội dung / c) Sản phẩm / 4 bước tổ chức: trống hoặc chỉ dấu cách | Thầy cô sửa mục b) Nội dung rồi thử lại: cần có nội dung. (đổi tên mục theo nhãn: a) Mục tiêu, c) Sản phẩm, Giao nhiệm vụ, Thực hiện nhiệm vụ, Báo cáo thảo luận, Kết luận/nhận định) |
-| Các ô chữ trên, > 4000 | Thầy cô sửa mục b) Nội dung rồi thử lại: tối đa 4000 ký tự. |
-| Thời lượng ngoài 1 đến 180 | Thầy cô sửa mục Thời lượng (phút) rồi thử lại: nhập số phút từ 1 đến 180. |
-| Tên hoạt động con trống | Thầy cô sửa mục Tên hoạt động con rồi thử lại: cần có tên. |
-| Tên hoạt động con > 200 | Thầy cô sửa mục Tên hoạt động con rồi thử lại: tối đa 200 ký tự. |
-| Trường / Tổ chuyên môn / Giáo viên > 200 | Thầy cô sửa mục Trường rồi thử lại: tối đa 200 ký tự. |
-| Ghi chú điều chỉnh > 4000 | Thầy cô sửa mục Ghi chú điều chỉnh rồi thử lại: tối đa 4000 ký tự. |
-Ở 390px mọi câu trên vừa 1 đến 2 dòng (đo trong test). Không dùng "lỗi / sai / máy chủ / 400 / validation / undefined" và không lộ mã quy tắc. Với hoạt động con, nên thêm số thứ tự khi có nhiều ô trùng nhãn (ví dụ "Tên hoạt động con 2") vì dòng nằm ngay ô nên chưa bắt buộc.
+| Kiến thức / Năng lực / Phẩm chất trống | Cần có ít nhất một ý. |
+| Kiến thức / Năng lực / Phẩm chất > 12 ý | Tối đa 12 ý (ngăn bằng ; hoặc xuống dòng). |
+| Một ý > 4000 ký tự | Mỗi ý tối đa 4000 ký tự. |
+| Học liệu trống | Cần có ít nhất một dòng. |
+| Học liệu > 20 dòng | Tối đa 20 dòng. |
+| Một dòng học liệu > 4000 | Mỗi dòng tối đa 4000 ký tự. |
+| a) Mục tiêu / b) Nội dung / c) Sản phẩm / 4 bước tổ chức trống hoặc chỉ dấu cách | Cần có nội dung. |
+| Các ô chữ trên > 4000 | Tối đa 4000 ký tự. |
+| Thời lượng ngoài 1 đến 180 (kể cả rỗng, 0) | Nhập số phút từ 1 đến 180. |
+| Tên hoạt động con trống | Cần có tên. |
+| Tên hoạt động con > 200 | Tối đa 200 ký tự. |
+| Trường / Tổ chuyên môn / Giáo viên > 200 | Tối đa 200 ký tự. |
+| Ghi chú điều chỉnh > 4000 | Tối đa 4000 ký tự. |
+Mọi dòng vừa **1 dòng** ở 1280, 720 và 390 (đo trong test: 10/10 ca). Chữ cái đầu viết hoa. Không dùng "lỗi / sai / máy chủ / 400 / validation / undefined", không lộ mã quy tắc.
+
+**Hai dòng dưới Xuất / Soạn lại / Tạo phiếu**
+| Loại lỗi | Dòng |
+|---|---|
+| Mạng / 5xx / 409 / lỗi dữ liệu không biết ô | Chưa lưu được nên chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án. |
+| Dữ liệu, có ô được đánh dấu | Chưa lưu được nên chưa chạy. Sửa các ô được đánh dấu. |
+
+**Yêu cầu hành vi (Dev):** ô Thời lượng không tự đổi rỗng/0 thành 1 (bỏ `|| 1`): giữ giá trị người dùng nhập, hiện dòng "Nhập số phút từ 1 đến 180." (mockup đã làm vậy; sẽ khép L1).
 
 ### Các trạng thái (nhãn đầu giáo án + biểu tượng + dòng)
 | Trạng thái | Nhãn | Biểu tượng | Dòng dưới ô | Viền ô |
@@ -84,8 +95,8 @@ Lưu ý Dev: hiển thị `ACTIVITY_SLOT_NAMES[index]` (tên chuẩn), không hi
 | Nhãn | Chưa lưu được | Chưa lưu được |
 | Biểu tượng | có | có (y hệt) |
 | Bấm biểu tượng | Đang lưu ≥ 600ms, gửi lại; focus về ô vừa sửa nếu xong, về biểu tượng nếu lại lỗi | Không gửi, không "Đang lưu"; focus tới ô sai đầu tiên (CR-3) |
-| Dòng dưới ô | không | có, mỗi ô sai |
-| Hint dưới Xuất/Soạn lại/Tạo phiếu | câu đã duyệt | câu đã duyệt (hoặc CR-2) |
+| Dòng dưới ô | không | có, mỗi ô sai, câu ngắn (vd. "Cần có ít nhất một ý.") |
+| Dòng dưới Xuất/Soạn lại/Tạo phiếu | "Chưa lưu được nên chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án." | "Chưa lưu được nên chưa chạy. Sửa các ô được đánh dấu." |
 | Gửi PUT | có | không, đến khi mọi ô hợp lệ |
 | Lỗi dữ liệu nhưng không xác định được ô | (không áp dụng) | **Chỉ** nhãn + biểu tượng, không dòng, không viền cam, không `aria-invalid`; bấm biểu tượng chạy luồng đã duyệt (Đang lưu, gửi lại) |
 | Hết khi | lưu được | từng ô hợp lệ, rồi tự lưu |
@@ -100,13 +111,17 @@ Server trả 400/422 (nếu client lọt) nên dùng cùng giao diện: nếu bo
 - Chưa thử với trình đọc màn hình thật (chỉ kiểm tra thuộc tính và hành vi bằng Chrome headless).
 
 ## 5. Thay đổi cần duyệt / xung đột với phần đã duyệt
-- **Không xung đột** với biểu tượng, tooltip, nhãn, ô 24px, focus khi thử lại, hay dòng chặn dưới nút.
-- **CR-1 (mới):** kiểu viền ô không hợp lệ `#D97706` + `aria-invalid`. Code chưa có kiểu này.
-- **CR-2 (tùy chọn):** biến thể dòng dưới Xuất/Soạn lại/Tạo phiếu khi lỗi dữ liệu: "Chưa lưu được nên thao tác này chưa chạy. Thầy cô sửa mục được nhắc rồi bấm biểu tượng thử lại giúp nhé." Mặc định giữ câu đã duyệt, không cần đổi. (Mockup bản cũ còn câu "bấm Thử lại"; mockup này dùng câu thật `SAVE_ACTION_BLOCKED` trên main.)
-- **CR-3 (hành vi):** bấm biểu tượng khi còn ô sai thì không gửi và chuyển focus tới ô sai đầu tiên. Đây là hành vi mới của biểu tượng đã duyệt (kiểu dáng không đổi).
+- **Không xung đột** với biểu tượng, tooltip, nhãn, ô 24px, focus khi thử lại. Kiểu dáng/vị trí dòng chặn dưới nút không đổi.
+- **Đổi copy so với bản BA đã đề xuất/đã duyệt (BA xem lại):**
+  - Dòng lý do M2: bản cũ "Thầy cô sửa mục {mục} rồi thử lại: {lý do}" thành chỉ "{Lý do}". Yêu cầu "copy nguyên văn nhãn" không còn áp dụng; thay bằng dòng liền dưới đúng ô + `aria-describedby`.
+  - Dòng dưới nút khi lỗi mạng: bản cũ (và `SAVE_ACTION_BLOCKED` trên main) "Chưa lưu được nên thao tác này chưa chạy. Thầy cô bấm biểu tượng thử lại ở đầu giáo án giúp nhé." thành "Chưa lưu được nên chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án." Cần sửa `apps/web/src/lib/save-status.ts` và test đang so khớp câu cũ.
+  - Dòng dưới nút khi lỗi dữ liệu: câu mới "Chưa lưu được nên chưa chạy. Sửa các ô được đánh dấu." (thay CR-2).
+  - AC-A (dòng dưới nút khi lỗi mạng) và AC-G (khi lỗi dữ liệu) cập nhật theo hai câu trên; test của mockup so khớp đúng câu.
+- **CR-1:** viền ô không hợp lệ `#D97706` + `aria-invalid` (code chưa có kiểu này).
+- **CR-3:** bấm biểu tượng khi còn ô sai thì không gửi và chuyển focus tới ô sai đầu tiên (kiểu dáng biểu tượng không đổi).
 
 ## 6. Câu hỏi mở (BA / Dev FE)
 1. Nhận biết lỗi dữ liệu ở đâu: client Zod trước khi gửi (hiện tại, cho biết ô nào qua `issue.path`), hay server 400? Cần map `issue.path` sang ô thật (có cả hoạt động con theo chỉ số). Server 400 hiện chỉ trả `issues[0].message`, không có `path`: nếu cần dòng cho trường hợp lọt client, BE phải trả path (ngoài phạm vi PR FE này).
-2. L1: ô thời lượng rỗng hoặc 0 đang tự đổi thành 1 không báo. Giữ nguyên hay để rỗng rồi hiện dòng "nhập số phút từ 1 đến 180"? Mockup giả định ô được phép rỗng/không hợp lệ.
+2. L1: đã chốt (Huy): không tự đổi thành 1; ô giữ giá trị người nhập và hiện "Nhập số phút từ 1 đến 180.". Dev bỏ `|| 1` ở `activity-editor.tsx`; kiểm tra input number rỗng không làm `Number('')` thành 0 rồi lưu.
 3. Danh sách ô có dòng trong PR này: đủ bảng trên, hay chỉ Kiến thức/Học liệu/4000/thời lượng (các ca QA nêu)?
 4. Giáo án cũ có tên hoạt động lớn bị đổi trong bản nháp: có cần tự đưa về tên chuẩn khi tải? (đề xuất: có.)

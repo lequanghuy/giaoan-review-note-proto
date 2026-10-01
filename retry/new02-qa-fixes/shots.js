@@ -11,7 +11,7 @@ for(const [w,dpr,name] of [[1280,1,'desktop-1280'],[720,1,'tablet-720'],[390,2,'
 // 2x close-ups
 for(const w of [1280,390]){
  const c=await b.newContext({viewport:{width:w,height:900},deviceScaleFactor:2}); const p=await c.newPage(); await p.goto(URL);
- for(const [id,n] of [['h1-before','heading-before'],['h1-after','heading-after'],['h1-forming','heading-forming-sub-editable'],['r-kn-empty','error-line-kien-thuc'],['r-content-long','error-line-4000'],['r-minutes','error-line-minutes'],['multi','multi-field'],['net-pair','network-vs-data'],['net-c','data-error-field-unknown'],['icon-1','icon-on-data-error'],['hint-data-var','hint-cr2']]){
+ for(const [id,n] of [['h1-before','heading-before'],['h1-after','heading-after'],['h1-forming','heading-forming-sub-editable'],['r-kn-empty','error-line-kien-thuc'],['r-content-long','error-line-4000'],['r-minutes','error-line-minutes'],['multi','multi-field'],['net-pair','network-vs-data'],['net-c','data-error-field-unknown'],['icon-1','icon-on-data-error'],['hint-net','hint-network'],['hint-data','hint-data-error']]){
    const el=await p.$('#'+id); await el.scrollIntoViewIfNeeded(); await el.screenshot({path:`${OUT}closeup-${w}-${n}.png`}); }
  await c.close();
 }

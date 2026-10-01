@@ -135,17 +135,19 @@ var ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-widt
 var LOOK='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/><path d="M11 8v3.2"/><path d="M11 14h.01"/></svg>';
 var CHK='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 var TEXT={saved:'Đã lưu',saving:'Đang lưu',error:'Chưa lưu được'};
-var BLOCKED='Chưa lưu được nên thao tác này chưa chạy. Thầy cô bấm biểu tượng thử lại ở đầu giáo án giúp nhé.';          /* APPROVED, = SAVE_ACTION_BLOCKED on main */
-var BLOCKED_DATA='Chưa lưu được nên thao tác này chưa chạy. Thầy cô sửa mục được nhắc rồi bấm biểu tượng thử lại giúp nhé.'; /* CHANGE REQUEST CR-2 (optional) */
+/* Huy 2026-10-01: rút gọn. Thay SAVE_ACTION_BLOCKED (save-status.ts) bằng 2 câu theo loại lỗi */
+var BLOCKED='Chưa lưu được nên chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án.';   /* lỗi mạng / 5xx / 409 / không biết ô nào */
+var BLOCKED_DATA='Chưa lưu được nên chưa chạy. Sửa các ô được đánh dấu.';            /* lỗi dữ liệu có ô được đánh dấu */
 
 /* ============ M2 rules. Limits = packages/shared/src/save-plan.ts (TEXT_MAX 4000, SHORT_TEXT_MAX 200, LIST_MAX 12, AIDS_MAX 20, minutes 1..180) ============ */
 function parseList(raw,sep){ return raw.split(sep==='nl'?/\n/:/[;\n]/).map(function(x){return x.trim()}).filter(Boolean); }
 /* each field def: k key, label (as shown), type, check(value)->reason|'' (reason = text after the colon) */
-function chk_list(sep,max,unit){ return function(v){ var a=parseList(v,sep); if(!a.length) return 'cần có ít nhất một '+unit+'.'; if(a.some(function(x){return x.length>4000})) return 'mỗi '+unit+' tối đa 4000 ký tự.'; if(a.length>max) return 'tối đa '+max+' '+unit+'.'; return ''; }; }
-function chk_text(max,emptyMsg){ return function(v){ var t=v.trim(); if(!t) return emptyMsg||'cần có nội dung.'; if(t.length>max) return 'tối đa '+max+' ký tự.'; return ''; }; }
-function chk_opt(max){ return function(v){ return v.trim().length>max?'tối đa '+max+' ký tự.':''; }; }
-function chk_min(v){ var n=Number(v); return (v===''||!isFinite(n)||Math.floor(n)!==n||n<1||n>180)?'nhập số phút từ 1 đến 180.':''; }
-function msg(label,reason){ return 'Thầy cô sửa mục '+label+' rồi thử lại: '+reason; }
+function chk_list(sep,max,unit){ return function(v){ var a=parseList(v,sep); if(!a.length) return 'Cần có ít nhất một '+unit+'.'; if(a.some(function(x){return x.length>4000})) return 'Mỗi '+unit+' tối đa 4000 ký tự.'; if(a.length>max) return 'Tối đa '+max+' '+unit+(sep===';'?' (ngăn bằng ; hoặc xuống dòng).':'.'); return ''; }; }
+function chk_text(max,emptyMsg){ return function(v){ var t=v.trim(); if(!t) return emptyMsg||'Cần có nội dung.'; if(t.length>max) return 'Tối đa '+max+' ký tự.'; return ''; }; }
+function chk_opt(max){ return function(v){ return v.trim().length>max?'Tối đa '+max+' ký tự.':''; }; }
+function chk_min(v){ var n=Number(v); return (v===''||!isFinite(n)||Math.floor(n)!==n||n<1||n>180)?'Nhập số phút từ 1 đến 180.':''; }
+/* Huy 2026-10-01: dòng chỉ nêu trọng tâm, không lời mở, không tên mục (dòng nằm ngay dưới ô, ô có nhãn + aria-describedby) */
+function msg(label,reason){ return reason; }
 var DEFS={
  knowledge:{label:'Kiến thức',type:'textarea',check:chk_list(';',12,'ý')},
  aids:{label:'Học liệu (mỗi dòng một mục)',short:'Học liệu',type:'textarea',check:chk_list('nl',20,'dòng')},
@@ -153,7 +155,7 @@ var DEFS={
  minutes:{label:'Thời lượng (phút)',short:'Thời lượng (phút)',type:'number',check:chk_min},
  content:{label:'b) Nội dung',type:'textarea',check:chk_text(4000)},
  assign:{label:'Giao nhiệm vụ',type:'textarea',check:chk_text(4000)},
- subname:{label:'Tên hoạt động con',type:'input',check:chk_text(200,'cần có tên.')}
+ subname:{label:'Tên hoạt động con',type:'input',check:chk_text(200,'Cần có tên.')}
 };
 function why(def,v){ var r=def.check(v); return r?msg(def.short||def.label,r):''; }
 var LONG=(function(){var s='';while(s.length<4001)s+='Học sinh quan sát hình vẽ, ghi nhận xét vào vở. ';return s.slice(0,4001)})();
@@ -281,10 +283,10 @@ board.appendChild(section('Biểu tượng "Thử lại" khi lỗi dữ liệu',
   board.appendChild(block('icon-1','a · Có lỗi dữ liệu: nhãn + biểu tượng y như lỗi mạng, kèm dòng dưới ô (rê chuột/focus: tooltip "Thử lại")',c,{icon:'1'}));
   var c2=mini('error'); var w2=fieldNode('knowledge',''); c2.appendChild(w2); setBad(w2,why(DEFS.knowledge,''),true);
   board.appendChild(block('icon-2','b · Sau khi bấm biểu tượng: không "Đang lưu" giả, focus nằm ở ô cần sửa (con trỏ nhấp nháy), dòng lý do được đọc lại',c2,{icon:'2'}));
-  var c3=mini('error'); c3.insertAdjacentHTML('beforeend','<div class="acts"><button type="button" class="btn btn-secondary">Soạn lại giáo án</button><button type="button" class="btn btn-outline">Tạo phiếu bài tập</button><button type="button" class="btn btn-default">Xuất Word</button><p class="act-fail" id="hint-appr">'+BLOCKED+'</p></div>');
-  board.appendChild(block('hint-approved','c · Dòng bên dưới Xuất/Soạn lại/Tạo phiếu: GIỮ NGUYÊN câu đã duyệt (vẫn đúng khi lỗi dữ liệu)',c3,{hint:'approved'}));
-  var c4=mini('error'); c4.insertAdjacentHTML('beforeend','<div class="acts"><button type="button" class="btn btn-secondary">Soạn lại giáo án</button><button type="button" class="btn btn-outline">Tạo phiếu bài tập</button><button type="button" class="btn btn-default">Xuất Word</button><p class="act-fail" id="hint-data">'+BLOCKED_DATA+'</p></div>');
-  board.appendChild(block('hint-data-var','d · CR-2 (tùy chọn, CẦN DUYỆT): biến thể khi lỗi là dữ liệu. Chỉ thêm "sửa mục được nhắc"',c4,{hint:'data'}));
+  var c3=mini('error'); c3.insertAdjacentHTML('beforeend','<div class="acts"><button type="button" class="btn btn-secondary">Soạn lại giáo án</button><button type="button" class="btn btn-outline">Tạo phiếu bài tập</button><button type="button" class="btn btn-default">Xuất Word</button><p class="act-fail" id="hint-net-p">'+BLOCKED+'</p></div>');
+  board.appendChild(block('hint-net','c · Dòng dưới Xuất/Soạn lại/Tạo phiếu, LỖI MẠNG (và lỗi dữ liệu không biết ô nào): câu ngắn mới',c3,{hint:'net'}));
+  var c4=mini('error'); c4.insertAdjacentHTML('beforeend','<div class="acts"><button type="button" class="btn btn-secondary">Soạn lại giáo án</button><button type="button" class="btn btn-outline">Tạo phiếu bài tập</button><button type="button" class="btn btn-default">Xuất Word</button><p class="act-fail" id="hint-data-p">'+BLOCKED_DATA+'</p></div>');
+  board.appendChild(block('hint-data','d · Cùng dòng, LỖI DỮ LIỆU có ô được đánh dấu: câu ngắn mới',c4,{hint:'data'}));
 })();
 
 /* ============ network vs data ============ */
@@ -295,9 +297,9 @@ board.appendChild(section('Lỗi mạng và lỗi dữ liệu: khác nhau ở đ
   '<tr><th>Nhãn đầu giáo án</th><td>"Chưa lưu được"</td><td>"Chưa lưu được" (y hệt)</td></tr>'+
   '<tr><th>Biểu tượng</th><td>Có, kiểu đã duyệt</td><td>Có, y hệt (không đổi màu, không vô hiệu)</td></tr>'+
   '<tr><th>Bấm biểu tượng</th><td>"Đang lưu" ít nhất 600 ms, gửi lại; xong thì focus về ô đang sửa, lỗi lại thì focus về biểu tượng</td><td>Không gửi gì, không "Đang lưu"; focus chuyển đến ô đầu tiên có dòng lý do (CR-3)</td></tr>'+
-  '<tr><th>Dòng dưới ô</th><td>Không có</td><td>Có, ngay dưới từng ô cần sửa: "Thầy cô sửa mục … rồi thử lại: …"</td></tr>'+
+  '<tr><th>Dòng dưới ô</th><td>Không có</td><td>Có, ngay dưới từng ô cần sửa, chỉ nêu trọng tâm: "Cần có ít nhất một ý."</td></tr>'+
   '<tr><th>Viền ô</th><td>Không đổi</td><td>Viền cam #D97706 (mới); khi đang gõ vào ô thì viền xanh như mọi ô</td></tr>'+
-  '<tr><th>Dòng dưới Xuất / Soạn lại / Tạo phiếu</th><td>Câu đã duyệt, giữ nguyên</td><td>Giữ câu đã duyệt (vẫn đúng). Tùy chọn CR-2: "…sửa mục được nhắc rồi bấm biểu tượng thử lại giúp nhé."</td></tr>'+
+  '<tr><th>Dòng dưới Xuất / Soạn lại / Tạo phiếu</th><td>"Chưa lưu được nên chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án."</td><td>"Chưa lưu được nên chưa chạy. Sửa các ô được đánh dấu."</td></tr>'+
   '<tr><th>Tự thử lại</th><td>Có: mỗi lần sửa tiếp (sau 1 giây) hoặc bấm biểu tượng</td><td>Có: ngay khi ô cuối cùng hợp lệ, giáo án tự lưu sau 1 giây, không cần bấm</td></tr>'+
   '<tr><th>Khi nào hết</th><td>Lưu thành công thì "Đã lưu", biểu tượng mất</td><td>Dòng của ô nào mất ngay khi ô đó hợp lệ; nhãn về "Đã lưu" khi tự lưu xong</td></tr>'+
   '<tr><th>Lỗi dữ liệu nhưng không biết ô nào</th><td>(không áp dụng)</td><td>Chỉ nhãn "Chưa lưu được" + biểu tượng; không có dòng, không viền cam; bấm biểu tượng chạy luồng đã duyệt (Đang lưu, gửi lại)</td></tr>'+
@@ -318,7 +320,7 @@ if(/[?&]live=1/.test(location.search)){
   board.appendChild(section('Bấm thử (?live=1)','Mô phỏng: không có máy chủ thật. Tự lưu sau 800 ms (thật là 1 giây). PUT chỉ được đếm khi nội dung hợp lệ.','sec-live'));
   var d=document.createElement('div'); d.className='demo'; d.id='livebox';
   d.innerHTML='<p class="cap" data-mock><b>Demo bấm thử</b> (không thuộc giao diện)</p><div id="live"></div>'+
-   '<p data-mock><label><input type="checkbox" id="fail"> Mạng đang lỗi</label><label><input type="checkbox" id="rej"> Máy từ chối nội dung nhưng không chỉ ô nào</label><label><input type="checkbox" id="cr2"> Bật CR-2 (câu dưới nút khi lỗi dữ liệu)</label> <span id="cnt">PUT: 0</span></p>'+
+   '<p data-mock><label><input type="checkbox" id="fail"> Mạng đang lỗi</label><label><input type="checkbox" id="rej"> Máy từ chối nội dung nhưng không chỉ ô nào</label><span id="cnt">PUT: 0</span></p>'+
    '<p data-mock id="helpers"><button type="button" class="btn btn-outline" id="h-kn">Xóa hết Kiến thức</button> <button type="button" class="btn btn-outline" id="h-long">Dán 4001 ký tự vào b) Nội dung</button> <button type="button" class="btn btn-outline" id="h-min">Thời lượng = 500</button> <button type="button" class="btn btn-outline" id="h-sub">Xóa tên hoạt động con</button> <button type="button" class="btn btn-outline" id="h-fix">Sửa tất cả</button></p><pre id="out" data-mock style="font-size:12px;margin:0"></pre>';
   board.appendChild(d);
   var live=document.getElementById('live'), out=document.getElementById('out');
@@ -351,7 +353,7 @@ if(/[?&]live=1/.test(location.search)){
     if(onCtl){ if(st==='saving') lt.focus(); else if(st==='saved'&&F.lastEdited) F.lastEdited.control.focus(); }
     var btn=status(card,st); if(btn){ btn.onclick=onRetry; slot.onmouseenter=slot.onmouseleave=function(){esc2=false;tipShow()}; btn.onfocus=function(){esc2=false;tipShow()}; btn.onblur=tipShow; if(onCtl) btn.focus(); }
     tipShow();
-    hint.textContent=(blockedBy&&st==='error')?((kind==='data'&&document.getElementById('cr2').checked)?BLOCKED_DATA:BLOCKED):'';
+    hint.textContent=(blockedBy&&st==='error')?(kind==='data'?BLOCKED_DATA:BLOCKED):'';
     document.getElementById('cnt').textContent='PUT: '+puts;
   }
   document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&slot.classList.contains('tip-on')){ esc2=true; tipShow(); } });
