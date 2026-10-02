@@ -1,6 +1,6 @@
 # Đề xuất bố cục editor/xem giáo án (iPad trước)
 
-UI UX Designer · 03/10/2026 (bản 2, sau BA co-review) · **Chỉ đề xuất và mockup. Chưa giao Dev FE. Cần Huy/Captain duyệt trước.**
+UI UX Designer · 03/10/2026 (bản 3: Huy chọn phương án A; thêm Hướng dẫn về nhà và Loại bài; bản 2 là sau BA co-review) · **Chỉ đề xuất và mockup. Chưa giao Dev FE. Phạm vi: Toán lớp 6–9 (mockup không có Văn/Anh).**
 Số liệu và nguồn: `findings.md`. Mockup: `index.html` (tổng quan), `app.html` (editor chạy được, tham số trong `README.md`). Ảnh ở `shots/`.
 Dữ liệu demo trong mockup là bài **tự soạn, trung tính** (không số hình/số câu kiểu SGK, không tên sách); hình là SVG tự vẽ. Mẫu HK1/HK2 chỉ dùng để đo, không đưa lên Pages.
 Nhãn **Đề xuất** trên màn hình mockup = chưa được duyệt, không vẽ như đã duyệt.
@@ -8,7 +8,7 @@ Nhãn **Đề xuất** trên màn hình mockup = chưa được duyệt, không 
 ## 0. Kết quả BA co-review 03/10 (đã áp vào mockup)
 
 1. **Bảng GV–HS 2 cột cho cả 4 hoạt động, chỉ trình bày, không đổi schema.** Cột phải luôn là "Sản phẩm dự kiến" = c) của chính hoạt động đó (ở C/D là lời giải + đáp số). B bắt buộc dùng bảng. A: c) rỗng thì ô để trống, không tự điền. **Bản Xem và Word giống hệt** (cùng một hàm dựng bảng, xem mục 4b).
-2. **Loại bài** (Bài học mới [mặc định] / Luyện tập–Ôn tập): **hoãn**, không đưa vào đợt layout này (đổi hợp đồng và prompt Toán đang đóng băng). Mockup vẫn vẽ dòng "Loại bài" nhưng gắn nhãn **Đề xuất – chờ duyệt**; chọn lúc tạo bài, màn Soạn chỉ hiển thị. *Số 11/32 (HK2) và 2/12 (HK1) bài không phải bài học mới là số tự đo của UI UX, BA chưa kiểm lại.*
+2. **Loại bài**: đổi hợp đồng và prompt Toán đang đóng băng, **không** coi là đã duyệt về schema. Mockup vẽ ô chọn lúc tạo bài (4 loại, xem mục 10) và chip trung tính trong editor; mọi mô tả khác biệt theo loại bài gắn nhãn **Đề xuất – chờ duyệt**; màn Soạn chỉ hiển thị. *Số 11/32 (HK2) và 2/12 (HK1) bài không phải bài học mới là số tự đo của UI UX, BA chưa kiểm lại.*
 3. **Nhãn 4 bước khi xuất Word = nhãn editor** (Giao nhiệm vụ / Thực hiện nhiệm vụ / Báo cáo thảo luận / Kết luận/nhận định), **một nguồn duy nhất** `ORGANIZATION_STEP_FIELDS` cho editor, bản Xem và Word; Word có thể thêm tiền tố "Bước 1:". Mockup dùng đúng cách đó (`stepLabel(i)`). *BA chưa đối chiếu chữ chính xác của văn bản 5512, sẽ hỏi GV.*
 4. **Sản phẩm dự kiến theo từng hoạt động con:** schema đã có c) (`products`) cho từng hoạt động con. Bản Xem: mỗi hoạt động con là **một hàng bảng**, cột phải = c) của nó; c) của hoạt động cha (nếu có) là **một dòng ngắn phía trên bảng**. Ghi chú: c) hiện thường chỉ là câu mô tả; BA đề xuất **P0 đổi nghĩa c) thành phát biểu kiến thức + ví dụ mẫu** (chỉ đổi prompt, chờ Captain/Techlead chốt). UI **không hứa** "nội dung ghi bảng" trước khi prompt đổi; mockup không mô phỏng nội dung ghi bảng, nên không có nhãn Đề xuất cho mục này. Nhãn ô là "c) Sản phẩm dự kiến" (đổi từ "c) Sản phẩm"; chờ duyệt).
 5. **Năng lực số (mã `1.3.TC1a`): không vào MVP.** Mockup không có. Ghi chú: app không được sinh mã; GV tự gõ thì là văn bản tự do.
@@ -20,7 +20,7 @@ Nhãn **Đề xuất** trên màn hình mockup = chưa được duyệt, không 
 - Một bài dài **636–3.103 từ**, 5–12 trang in. Nửa độ dài là mục B Hình thành kiến thức (48–50% từ).
 - Nội dung nằm ở **bước 1** của d) (TB 1.061 ký tự, tối đa 2.071) và ở **ô "Sản phẩm dự kiến"** (TB 864 ký tự). Bước 2–4 TB 114–137 ký tự; a) b) c) TB 127 / 74 / 52 ký tự.
 - Bài có **bảng GV–HS 2 cột** (18 bảng HK1, 49 bảng HK2), **hình** (30 HK1, 140 HK2; 95/140 ở HK2 nằm trong cặp đề | lời giải) và **công thức** (HK1: ký hiệu ⋮ ∈ ≤ và chữ mũ; HK2: 708 phân số).
-- Editor hiện tại: một cột dài, 4 hoạt động mở hết, chỉ ô văn bản, mục lục tĩnh, không ảnh/bảng/công thức, Word xuất không bảng. Dựng lại với bài minh hoạ trung tính: **6.625 px, 51 ô nhập** ở 820 px.
+- Editor hiện tại: một cột dài, 4 hoạt động mở hết, chỉ ô văn bản, mục lục tĩnh, không ảnh/bảng/công thức, Word xuất không bảng. Dựng lại với bài minh hoạ trung tính: **6.647 px, 51 ô nhập** ở 820 px.
 
 ## 2. Phương án khuyên: A "Soạn theo khối + Xem như giáo án"
 
@@ -102,13 +102,13 @@ Không khuyên làm đợt đầu: ở 1180 px chỉ còn ~450 px mỗi khung sa
 | Câu "theo khung Phụ lục IV · GV tự thẩm định" | Có | Giữ trên mọi chế độ | Giữ |
 | a/b/c/d chip Figma (nhỏ) | Không có trong code | Không làm; Mục lục + khối gập thay thế | Bỏ |
 
-Đo mockup (cùng bài minh hoạ trung tính, đo lại 03/10 sau sửa; chưa phải app thật): chiều cao trang Soạn **3.153 px** (1 hoạt động mở, 820 px) / 1.919 px (đóng hết) so với **6.625 px** hiện tại dựng lại; 390 px: 3.517 / 2.037 so với 6.853. 1180 px: 3.096 / 1.862. Bản Xem: 3.621 px (820), 3.585 (1180), 5.244 (390). Các số cũ (2.914 / 6.426) đo với nội dung mẫu thật, không còn dùng.
+Đo mockup (cùng bài minh hoạ trung tính, đo lại 03/10 sau khi thêm Hướng dẫn về nhà; chưa phải app thật). Chiều cao trang Soạn ở 820 px: **3.251 px** (1 hoạt động mở) / 2.017 px (đóng hết) so với **6.647 px** hiện tại dựng lại. 390 px: 3.633 / 2.153 so với 6.893. 1180 px: 3.194 / 1.960. Bản Xem: 3.730 px (820), 3.694 (1180), 5.348 (390). Các số đã gồm khối Hướng dẫn về nhà thu gọn (mục 10). Số cũ (3.153 / 6.625) là trước khi thêm khối này.
 
 ## 7. Câu hỏi cho Huy (cập nhật sau BA co-review)
 
 Đã có khuyến nghị BA, chờ Huy/Captain duyệt:
-1. **Phương án A hay B?** Khuyên **A** (B để sau).
-2. **Loại bài (Bài học mới / Luyện tập–Ôn tập): hoãn.** Không làm trong đợt này (đổi hợp đồng + prompt Toán đang đóng băng). Mockup chỉ gắn nhãn Đề xuất. Cần Huy xác nhận hoãn.
+1. **Phương án A hay B?** **Huy đã chọn A** (một cột, 3 tab Soạn | Xem như giáo án | So sánh). B để sau.
+2. **Loại bài:** mockup có ô chọn 4 loại lúc tạo bài; **Đề xuất – chờ duyệt** vì đổi hợp đồng và prompt Toán đang đóng băng (mục 10).
 3. **Tab "Xem như giáo án" là màn duyệt trước khi xuất?** Khuyên **có**.
 4. **Mở một hoạt động một lúc?** Khuyên **có**; mở mặc định hoạt động có "Nên soát", nếu không thì hoạt động 2.
 5. **Thanh ký hiệu toán trên bàn phím?** Khuyên **có**.
@@ -123,7 +123,7 @@ Không khuyên làm đợt đầu: ở 1180 px chỉ còn ~450 px mỗi khung sa
 1. P0 đổi nghĩa c) thành phát biểu kiến thức + ví dụ mẫu (chỉ đổi prompt): chờ Captain/Techlead chốt. Trước đó UI không hứa "nội dung ghi bảng".
 2. Chữ chính xác của 4 nhãn bước theo văn bản 5512: BA sẽ hỏi GV; trước đó dùng nhãn editor.
 3. Câu lưu ý khi tải hình: Captain/Huy chốt. Chính sách bản quyền: Huy duyệt, cân nhắc pháp lý.
-4. Loại bài: hoãn; khi làm lại cần BA kiểm lại số 11/32 và 2/12 (UI UX tự đo).
+4. Loại bài: cần BA kiểm lại số 11/32 và 2/12 (UI UX tự đo) và chốt 4 giá trị (mục 10).
 5. Đề AI sinh phải tự dùng được bằng chữ, không tham chiếu "Hình n" (C15, BA đề xuất): cần đưa vào prompt.
 
 **Techlead**
@@ -140,4 +140,67 @@ Không khuyên làm đợt đầu: ở 1180 px chỉ còn ~450 px mỗi khung sa
 - Chưa thử trên iPad thật (Safari, MathML, bàn phím thật, Pencil, Photos/Files picker); kích thước bàn phím là ước lượng.
 - Chưa có mockup cho So sánh (diff) và khung chọn hình thật; chạm ảnh chỉ mở bảng minh hoạ.
 - Mockup dùng 2 bài minh hoạ trung tính tự soạn (Biểu đồ cột, Quan hệ chia hết), không phải bài mẫu thật; hình là SVG tự vẽ.
-- Chưa mô phỏng "nội dung ghi bảng" (chờ P0 đổi nghĩa c)), chưa có mockup chọn Loại bài lúc tạo bài, chưa có file .docx mẫu để so Xem với Word (mới có yêu cầu).
+- Chưa mô phỏng "nội dung ghi bảng" (chờ P0 đổi nghĩa c)), chưa có file .docx mẫu để so Xem với Word (mới có yêu cầu).
+
+## 10. Bổ sung sau khi Huy chọn phương án A: Hướng dẫn về nhà và Loại bài
+
+Chạy trong cùng `app.html`; các trạng thái cũ vẫn dùng được. Mockup chỉ Toán lớp 6–9, dữ liệu là bài minh hoạ tự soạn và hình SVG tự vẽ (không ảnh/nhãn SGK, không tên sách).
+
+### 10.1 Hướng dẫn về nhà (HVN)
+
+**Làm gì, vì sao.** Mẫu có phần hướng dẫn về nhà ở cuối bài (HK1 2,8% số từ, HK2 có ở một số bài). Thêm thành một phần tách riêng, **mặc định bật**, 2–3 ý ngắn, xoá được cả phần.
+
+**Trạng thái**
+
+| Trạng thái | Soạn | Xem | Word |
+|---|---|---|---|
+| Bật (mặc định) | Khối gập sau 4 hoạt động, trước IV: tiêu đề + số ý. Mở ra: mỗi ý một ô 16 px (cao ≥44 px) + nút xoá ý 44 px; nút "Thêm ý"; dòng "Hiện ở cuối bản Xem và bản Word."; nút nhỏ "Xoá phần này" (cao 44 px) | Mục "Hướng dẫn về nhà" cuối tài liệu, danh sách gạch đầu dòng ngắn, kiểu mục kết của Phụ lục IV | Cùng nội dung, cùng thứ tự (một hàm dựng `hvnPaper()` cho Xem và Xem trước Word) |
+| Đã xoá | Hộp nét đứt: "Chưa có phần này trong bản Xem và bản Word." + nút "Thêm hướng dẫn về nhà" | Không hiện | Không xuất; xem trước Word ghi "Không xuất (đã xoá phần này)" |
+| Thêm lại | Khôi phục các ý đã có (nếu chưa có thì một ô trống) | | |
+
+- Gợi ý, không chặn: quá 3 ý hiện dòng "Nên giữ 2–3 ý để gọn."; ô trống không xuất.
+- Mục lục (rail và chip) có "Hướng dẫn về nhà" khi đang bật.
+- **Xem trước Word:** nút "Xuất Word" (thanh trên và cuối trang) mở bảng "Xem trước Word": thứ tự phần trong file (Thông tin, I, II, III với bảng 2 cột A–D, HVN) và đoạn HVN đúng như sẽ xuất; nút "Tải file .docx" là mô phỏng.
+- Tham số: `?hvn=off` (đã xoá), `?hvn=edit` (mở sẵn khối), `?word=1` (xem trước Word), kết hợp `?hvn=off&word=1`.
+
+**Đo chiều cao thêm (mockup, 820 px / 390 px)**
+- Soạn, khối HVN thu gọn: **+74 / +74 px**; mở 3 ý: **+362 / +434 px**; trạng thái đã xoá (hộp nút thêm): 92 / 122 px.
+- Xem: HVN 3 ý cộng **105 px** ở 820 (3.625 → 3.730), **100 px** ở 390 (5.248 → 5.348).
+- Soạn toàn trang (1 hoạt động mở): 3.251 px (820), 3.633 px (390), đã gồm HVN thu gọn.
+
+**Câu hỏi mở (BA / Techlead):**
+1. Lưu ở đâu: trường mới trong hợp đồng (danh sách ý) hay nằm trong "Điều chỉnh"? Đổi schema và Word export.
+2. AI có sinh sẵn 2–3 ý, hay để GV tự nhập? Mockup chỉ minh hoạ nội dung do GV sửa; nếu AI sinh thì đổi prompt Toán (đang đóng băng).
+3. Vị trí: mockup đặt sau hoạt động D, trước "IV. Điều chỉnh sau bài dạy" ở Soạn; ở Xem/Word là mục cuối. IV có xuất ra Word không? Hiện bản Xem chưa có IV.
+4. Giới hạn: 3 ý chỉ là gợi ý; có cần giới hạn cứng số ý và số ký tự mỗi ý (4.000 ký tự/ô hiện tại)?
+5. Có cần HVN theo từng loại bài (ví dụ Ôn tập)?
+
+### 10.2 Loại bài khi tạo giáo án
+
+**Làm gì, vì sao.** Ô chọn Loại bài trong form "Tạo giáo án mới" (`?view=create`). 4 lựa chọn là thẻ radio lớn (cao 64 px, rộng 302–340 px), mặc định **Bài mới**. Lý do: mẫu có bài không phải bài học mới (số UI UX tự đo: HK2 11/32, HK1 2/12; BA chưa kiểm lại).
+
+| Loại bài | Dòng gợi ý dưới ô chọn (1 dòng) |
+|---|---|
+| Bài mới (mặc định) | Đủ 4 hoạt động, có kiến thức mới. |
+| Luyện tập chung | Nhiều bài tập củng cố, ít kiến thức mới. |
+| Ôn tập | Hệ thống kiến thức và bài tập tổng hợp. |
+| Thực hành trải nghiệm | Thực hành, đo đạc, làm sản phẩm. |
+
+- Form: Lớp (6–9, nút 44 px), Tên bài, Số tiết, Phút mỗi tiết, Loại bài, nút "Tạo giáo án". Chỉ Toán, không chọn môn.
+- Loại bài đã chọn hiện là chip trung tính ở đầu Soạn và Xem (cạnh "v1"). Trong Thông tin chung (bấm Sửa) có dòng "Loại bài" kèm nhãn **Đề xuất – chờ duyệt**; màn Soạn chỉ hiển thị, không đổi sau khi tạo.
+- Dưới form có hộp nét đứt **Đề xuất – chờ duyệt**: "Khác nhau theo loại bài trong editor" (B chia theo kiến thức mới / theo dạng bài; B hệ thống theo chủ đề; B là các bước thực hành, c) là sản phẩm). Ghi rõ: đổi hợp đồng và prompt Toán đang đóng băng, chưa duyệt schema; **tên 4 hoạt động giữ nguyên**. Mockup không đổi nội dung editor theo loại bài.
+- Tham số: `?view=create&type=bai-moi|luyen-tap-chung|on-tap|thuc-hanh` (form); `?type=…` (editor có chip).
+- Đo: form ở 820 px cao 1.180 px (vừa một màn, không cuộn), 1180 px: 989, 390 px: 1.381. Dòng gợi ý vừa một dòng ở 360 px cho cả 4 loại.
+
+**Câu hỏi mở (BA / Captain / Techlead):**
+1. Đổi hợp đồng: thêm trường `lessonType` (4 giá trị); BA trước đó nêu 2 giá trị (Bài học mới / Luyện tập–Ôn tập), nay 4 giá trị theo Huy. Chốt tên và mã.
+2. Prompt Toán đang đóng băng: mỗi loại cần prompt/khung riêng (số hoạt động con, nghĩa c)). Ai chốt và khi nào?
+3. Có sửa được loại bài sau khi tạo (Soạn lại)? Mockup: chỉ đọc.
+4. "Thực hành trải nghiệm" có cùng khung 4 hoạt động A–D không? Tên 4 hoạt động giữ nguyên.
+5. BA kiểm lại số 11/32 và 2/12 trước khi dùng làm lý do.
+
+### 10.3 Cái chưa làm / lưu ý
+
+- Chưa mô phỏng nội dung editor khác nhau theo loại bài (chỉ mô tả, Đề xuất – chờ duyệt).
+- "Tải file .docx" và xem trước Word chỉ là mô phỏng thứ tự và nội dung; chưa có file thật để so với bản Xem.
+- Chưa thử trên iPad thật; khối HVN và thẻ radio kiểm bằng Chrome headless ở 820×1180, 1180×820, 1280, 390.

@@ -117,6 +117,6 @@ Nội dung hình (xem tay một số tệp, chưa phân loại toàn bộ): bả
 
 ## Ghi chú sau BA co-review 03/10
 
-- Các số "11/32 bài (HK2) và 2/12 bài (HK1) không phải bài học mới" là số **UI UX tự đo**, BA chưa kiểm lại. Loại bài hoãn, chưa vào đợt layout.
+- Các số "11/32 bài (HK2) và 2/12 bài (HK1) không phải bài học mới" là số **UI UX tự đo**, BA chưa kiểm lại. Loại bài: mockup có ô chọn lúc tạo bài, gắn Đề xuất – chờ duyệt (đổi hợp đồng và prompt Toán đang đóng băng).
 - Nhãn 4 bước trong mẫu (HK1/HK2) khác nhau và khác editor; khi xuất Word dùng nhãn editor (một nguồn `ORGANIZATION_STEP_FIELDS`). BA chưa đối chiếu chữ chính xác của văn bản 5512, sẽ hỏi GV.
 - Mockup dùng bài minh hoạ trung tính, không dùng nội dung hay hình của mẫu; ảnh trích từ mẫu chỉ ở trên box để đo, không đưa lên Pages.

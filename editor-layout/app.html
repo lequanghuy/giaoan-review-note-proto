@@ -36,8 +36,8 @@ button{font:inherit;color:inherit;cursor:pointer}
 .layout{display:flex;align-items:flex-start;justify-content:center;gap:0}
 .rail{display:none;position:sticky;top:48px;flex:0 0 236px;align-self:flex-start;max-height:calc(100vh - 48px);overflow:auto;padding:16px 12px 24px;border-right:1px solid var(--g200);background:#fff;min-height:calc(100vh - 48px)}
 .rail h6{margin:0 0 8px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--g400)}
-.ri{display:flex;align-items:center;gap:8px;width:100%;min-height:40px;padding:0 10px;border:0;border-radius:8px;background:none;text-align:left;font-size:13px;color:var(--g600)}
-.ri.sub{padding-left:26px;min-height:36px;font-size:12px;color:var(--g500)}
+.ri{display:flex;align-items:center;gap:8px;width:100%;min-height:44px;padding:0 10px;border:0;border-radius:8px;background:none;text-align:left;font-size:13px;color:var(--g600)}
+.ri.sub{padding-left:26px;min-height:44px;font-size:12px;color:var(--g500)}
 .ri.on{background:var(--blue-s);color:var(--blue);font-weight:600}
 .ri .n{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#fffbeb;border:1px solid #fde68a;color:#92400e;font-size:11px;font-weight:700}
 .ri .m{margin-left:auto;font-size:11px;color:var(--g400)}
@@ -121,6 +121,41 @@ button{font:inherit;color:inherit;cursor:pointer}
 math{font-size:1.1em}
 .ndv{position:relative;display:inline-block;width:.5em;text-align:center}
 .ndv::after{content:"";position:absolute;left:-.1em;right:-.1em;top:.15em;bottom:.1em;background:linear-gradient(to top right,transparent calc(50% - .6px),currentColor calc(50% - .6px),currentColor calc(50% + .6px),transparent calc(50% + .6px))}
+.tchip{display:inline-flex;align-items:center;border-radius:4px;border:1px solid var(--g300);background:#fff;padding:1px 8px;font-size:12px;font-weight:600;color:var(--g700)}
+.hv-row{display:flex;align-items:flex-start;gap:8px;margin:0 0 8px}
+.hv-row .ta{min-height:44px;flex:1}
+.hv-x{flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid var(--g200);border-radius:8px;background:#fff;color:var(--g600)}
+.hv-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin:10px 0 0}
+.btn-q{min-height:44px;padding:0 12px;border:0;background:none;color:#991b1b;font-size:13px;font-weight:500}
+.hv-empty{margin:0 0 14px;padding:16px;border:1px dashed var(--g300);border-radius:12px;background:#fff;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
+.hv-empty p{margin:0;font-size:13px;color:var(--g500);flex:1;min-width:180px}
+.paper ul.hv{margin:2px 0}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 0}
+.tcard{position:relative;display:flex;align-items:center;gap:10px;min-height:64px;padding:10px 14px;border:1px solid var(--g200);border-radius:12px;background:#fff;text-align:left;font-size:15px;font-weight:600;color:var(--g800)}
+.tcard .rd{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid var(--g300);display:flex;align-items:center;justify-content:center;color:#fff}
+.tcard[aria-checked=true]{border-color:var(--blue);background:var(--blue-s);color:var(--blue)}
+.tcard[aria-checked=true] .rd{background:var(--blue);border-color:var(--blue)}
+.tcard .rd svg{display:none}.tcard[aria-checked=true] .rd svg{display:block}
+.thelp{margin:8px 0 0;font-size:13px;color:var(--g600);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gchips{display:flex;gap:8px;flex-wrap:wrap}
+.gch{min-width:56px;min-height:44px;padding:0 16px;border:1px solid var(--g200);border-radius:10px;background:#fff;font-size:15px;font-weight:600;color:var(--g700)}
+.gch[aria-pressed=true]{border-color:var(--blue);background:var(--blue-s);color:var(--blue)}
+.create .rail,.create .chips,.create .toc-btn,.create .btn-exp,.create .save-slot{display:none!important}
+.create .doc{max-width:720px}
+@media (max-width:720px){.cards{grid-template-columns:1fr}}
+.tprop{margin:14px 0 0}
+.tprop ul{margin:6px 0 0;padding-left:0;list-style:none}
+.tprop li{display:flex;gap:8px;padding:4px 0;font-size:13px;color:var(--g700)}
+.tprop li b{flex:none;min-width:150px;font-weight:600}
+.tprop li.on{color:var(--g900)}
+@media (max-width:720px){.tprop li{flex-direction:column;gap:0}.tprop li b{min-width:0}}
+.sheet.wide{max-width:720px}
+.wrow{display:flex;align-items:baseline;gap:10px;padding:8px 0;border-bottom:1px solid var(--g100);font-size:13px}
+.wrow b{flex:none;min-width:34px;color:var(--g500);font-weight:600}
+.wrow span{color:var(--g600)}
+.wpaper{margin:10px 0 0;padding:14px 16px;border:1px solid var(--g200);border-radius:4px;background:#fff;font-family:"Times New Roman","Noto Serif",Georgia,serif;font-size:15px;color:#111}
+.wpaper h2{margin:0 0 4px;font-size:15px;text-transform:uppercase}
+.wpaper ul{margin:2px 0;padding-left:20px}
 /* symbol bar above keyboard */
 .symbar{display:none;position:fixed;left:0;right:0;z-index:60;height:48px;gap:6px;align-items:center;overflow-x:auto;padding:0 8px;background:#e5e7eb;border-top:1px solid var(--g300);scrollbar-width:none}
 .symbar::-webkit-scrollbar{display:none}
@@ -201,7 +236,7 @@ body.kbd-on .doc{padding-bottom:calc(var(--kbd) + 80px)}
 .cur .step-sum{display:none}
 .cur .inp,.cur .ta{font-size:14px;min-height:0;padding:9px 12px}
 .cur .ta{min-height:4.5rem;overflow:auto}
-.cur .att,.cur .mprev{display:none}
+.cur .att,.cur .mprev,.cur .hv-empty,.cur .tchip{display:none}
 @media (max-width:720px){.cur .doc{padding:12px 12px 48px}}
 .demo{position:fixed;right:8px;bottom:8px;z-index:90;display:none}
 </style>
@@ -258,7 +293,8 @@ var LESSONS={
   c:'Lời giải: bảng thống kê số bài đạt của Tổ 1 đến Tổ 4 là 9, 14, 6, 11; biểu đồ cột tương ứng như hình.',
   cImgs:[['demo-loigiai.svg','Biểu đồ lời giải','Biểu đồ cột bốn tổ với số bài đạt 9, 14, 6 và 11.']],
   steps:['GV yêu cầu HS khảo sát, lập bảng thống kê và vẽ biểu đồ cột.','HS tiếp nhận nhiệm vụ, làm việc nhóm.','HS trình bày bài làm; HS khác nhận xét.','GV nhận xét, đánh giá và chốt kiến thức.']}],
- adj:''},
+ adj:'',
+ hvn:['Ôn lại cách đọc biểu đồ cột đã học.','Làm bài tập 1 và 2 trong phiếu bài tập về nhà.','Chuẩn bị thước kẻ và giấy kẻ ô cho tiết sau.']},
 'demo-div':{
  label:'Minh hoạ · Quan hệ chia hết',
  title:'Quan hệ chia hết và tính chất', sub:'Toán 6 · Số tự nhiên · bài minh hoạ (2 tiết)', grade:6, minutes:90,
@@ -285,15 +321,27 @@ var LESSONS={
   c:'Lời giải: số người trong một nhóm là 3, 5 hoặc 9 (xem bảng).',
   table:[['Số nhóm','4','5','6','8','10'],['Số người ở một nhóm','10','8','?','5','4']],
   steps:['GV yêu cầu HS hoàn thành bài chia nhóm.','HS làm bài, thảo luận.','HS trình bày lời giải.','GV nhận xét, đánh giá, chốt kiến thức.']}],
- adj:''}
+ adj:'',
+ hvn:['Ôn lại phép chia hết và phép chia có dư.','Tìm ba bội của 6 và ba ước của 18.','Chuẩn bị bảng nhóm cho tiết sau.']}
 };
 LESSONS['hk2-40']=LESSONS['demo-chart'];LESSONS['hk1-8']=LESSONS['demo-div'];
 /* MỘT nguồn nhãn 4 bước cho Soạn, Xem và Word (ORGANIZATION_STEP_FIELDS trong code thật) */
 var ORGANIZATION_STEP_FIELDS=['Giao nhiệm vụ','Thực hiện nhiệm vụ','Báo cáo thảo luận','Kết luận/nhận định'];
 function stepLabel(i){return 'Bước '+(i+1)+': '+ORGANIZATION_STEP_FIELDS[i]}
 var Q=new URLSearchParams(location.search);
-var S={lesson:Q.get('lesson')||'demo-chart',tab:Q.get('tab')||'soan',open:+(Q.get('open')||2),sub:+(Q.get('sub')||0),save:Q.get('save')||'saved',cur:Q.get('mode')==='current',kbd:Q.get('kbd')==='1',steps:{},tocOpen:false,info:Q.get('info')==='1',loai:Q.get('loai')==='lt'?'Luyện tập – Ôn tập':'Bài học mới'};
+var S={lesson:Q.get('lesson')||'demo-chart',tab:Q.get('tab')||'soan',open:+(Q.get('open')||2),sub:+(Q.get('sub')||0),save:Q.get('save')||'saved',cur:Q.get('mode')==='current',kbd:Q.get('kbd')==='1',steps:{},tocOpen:false,info:Q.get('info')==='1',type:'bai-moi',view:Q.get('view')==='create'?'create':'',hvn:Q.get('hvn')!=='off',hvnItems:[],hvnSaved:[],cgrade:+(Q.get('grade')||6),ctitle:'Biểu đồ cột'};
 var L=LESSONS[S.lesson]||LESSONS['demo-chart'];
+/* Loại bài (ĐỀ XUẤT – chờ duyệt: đổi hợp đồng + prompt Toán đang đóng băng) */
+var TYPES=[
+ {id:'bai-moi',name:'Bài mới',help:'Đủ 4 hoạt động, có kiến thức mới.',change:'B chia hoạt động con theo kiến thức mới.'},
+ {id:'luyen-tap-chung',name:'Luyện tập chung',help:'Nhiều bài tập củng cố, ít kiến thức mới.',change:'B gồm nhiều hoạt động con theo dạng bài; c) là lời giải và đáp số.'},
+ {id:'on-tap',name:'Ôn tập',help:'Hệ thống kiến thức và bài tập tổng hợp.',change:'B hệ thống kiến thức theo chủ đề; có thể không có kiến thức mới.'},
+ {id:'thuc-hanh',name:'Thực hành trải nghiệm',help:'Thực hành, đo đạc, làm sản phẩm.',change:'B là các bước thực hành; c) là sản phẩm thực hành, có hình hoặc bảng.'}];
+var tq=Q.get('type')||(Q.get('loai')==='lt'?'luyen-tap-chung':'');
+TYPES.forEach(function(t){if(t.id===tq)S.type=t.id});
+function typeOf(){return TYPES.filter(function(t){return t.id===S.type})[0]}
+S.hvnItems=(L.hvn||[]).slice();S.hvnSaved=S.hvnItems.slice();
+if(Q.get('hvn')==='edit'&&!Q.get('open')) S.open=4;
 /* ======================= helpers ======================= */
 var ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>';
 var LOOK='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/><path d="M11 8v3.2"/><path d="M11 14h.01"/></svg>';
@@ -301,6 +349,9 @@ var CHK='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="cur
 var CHEV='<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
 var IMGI='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m21 16-5-5-8 9"/></svg>';
 var TBLI='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16M15 4v16"/></svg>';
+var PLUS='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
+var HOME='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 3l9 8"/><path d="M5 10v10h14V10"/></svg>';
+var XI='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
 var MENU='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>';
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 /* inline math: $...$  (\\frac{a}{b}, ^{n}, \\ndiv, \\mid) -> MathML (Chrome/Safari support MathML Core) */
@@ -329,12 +380,13 @@ function saveHtml(){
   return '<div class="save-slot"><span class="save-label'+(err?' is-error':'')+'" aria-live="polite">'+t+'</span><span class="save-act">'+(err?'<button class="save-retry" type="button" aria-label="Thử lại lưu">'+ICON+'</button>':'')+'</span></div>';
 }
 function barHtml(){
-  return '<button class="toc-btn" id="tocbtn" type="button" aria-haspopup="dialog">'+MENU+'<span>Mục lục</span></button><span class="logo">GiaoAn AI</span><span class="crumb">Giáo án / <b>'+esc(L.title)+'</b></span><span style="flex:1" class="spc"></span>'+saveHtml()+'<button class="btn btn-p btn-s btn-exp" type="button">Xuất Word<span class="t"></span></button>';
+  return '<button class="toc-btn" id="tocbtn" type="button" aria-haspopup="dialog">'+MENU+'<span>Mục lục</span></button><span class="logo">GiaoAn AI</span><span class="crumb">Giáo án / <b>'+esc(S.view==='create'?'Tạo mới':L.title)+'</b></span><span style="flex:1" class="spc"></span>'+saveHtml()+'<button class="btn btn-p btn-s btn-exp" type="button" data-word>Xuất Word<span class="t"></span></button>';
 }
 function tocItems(){
   var it=[{id:'info',t:'Thông tin chung',k:0},{id:'obj',t:'I. Mục tiêu',k:0},{id:'aids',t:'II. Thiết bị và học liệu',k:0},{id:'proc',t:'III. Tiến trình dạy học',k:0}];
   L.acts.forEach(function(a,i){it.push({id:'act-'+i,t:(i+1)+'. '+a.name,k:1,m:a.min+'′',n:a.review,idx:i});
     (a.subs||[]).forEach(function(s,j){it.push({id:'act-'+i+'-sub-'+j,t:s.name.replace(/^Hoạt động \d: /,'HĐ'+(j+1)+' · '),k:2,idx:i,sub:j})})});
+  if(S.hvn) it.push({id:'act-4',t:'Hướng dẫn về nhà',k:0,m:S.hvnItems.length+' ý'});
   it.push({id:'adj',t:'IV. Điều chỉnh sau bài dạy',k:0});
   return it;
 }
@@ -347,6 +399,7 @@ function railHtml(){
 function chipsHtml(){
   var c=[['info','Thông tin'],['obj','I Mục tiêu'],['aids','II Thiết bị']];
   L.acts.forEach(function(a,i){c.push(['act-'+i,(i+1)+' '+a.name,a.review])});
+  if(S.hvn) c.push(['act-4','Hướng dẫn về nhà']);
   c.push(['adj','IV Điều chỉnh']);
   return c.map(function(x){return '<button class="chip" type="button" data-go="'+x[0]+'">'+esc(x[1])+(x[2]?'<span class="dot" title="Nên soát"></span>':'')+'</button>'}).join('');
 }
@@ -408,15 +461,30 @@ function actHtml(a,i){
   return '<section class="act" id="act-'+i+'" data-open="'+!!open+'"><button class="act-hd" type="button" data-act="'+i+'" aria-expanded="'+!!open+'" aria-controls="ab'+i+'"><span class="act-n">'+(i+1)+'</span><span class="act-t"><h4 class="act-name">'+esc(a.name)+'</h4><span class="act-sub">'+sub+'</span></span>'+CHEV+'</button><div class="act-body" id="ab'+i+'">'+body+'</div></section>';
 }
 function countImgs(){var n=0;L.acts.forEach(function(a){n+=(a.bImgs||[]).length+(a.cImgs||[]).length;(a.subs||[]).forEach(function(x){n+=(x.bImgs||[]).length+(x.cImgs||[]).length})});return n}
+function hvnBlock(){
+  if(!S.hvn) return '<div class="hv-empty" id="hvn-empty"><p>Chưa có phần này trong bản Xem và bản Word.</p><button class="btn" type="button" data-hv-on>'+HOME+'Thêm hướng dẫn về nhà</button></div>';
+  var open=S.open===4,n=S.hvnItems.length;
+  var b='';
+  S.hvnItems.forEach(function(t,i){b+='<div class="hv-row"><textarea class="ta" data-hvi="'+i+'" rows="1" aria-label="Ý '+(i+1)+'">'+esc(t)+'</textarea><button class="hv-x" type="button" data-hv-del="'+i+'" aria-label="Xoá ý '+(i+1)+'">'+XI+'</button></div>'});
+  b+='<button class="att-add" type="button" data-hv-add>'+PLUS+'Thêm ý</button>';
+  if(n>3) b+='<p class="hint-n">Nên giữ 2–3 ý để gọn.</p>';
+  b+='<div class="hv-foot"><span class="hint" style="margin:0">Hiện ở cuối bản Xem và bản Word.</span><button class="btn-q" type="button" data-hv-rm>Xoá phần này</button></div>';
+  return '<section class="act" id="act-4" data-open="'+open+'"><button class="act-hd" type="button" data-act="4" aria-expanded="'+open+'" aria-controls="ab4"><span class="act-n">'+HOME+'</span><span class="act-t"><h4 class="act-name">Hướng dẫn về nhà</h4><span class="act-sub"><span>'+n+' ý</span></span></span>'+CHEV+'</button><div class="act-body" id="ab4">'+b+'</div></section>';
+}
+function hvnPaper(){
+  var it=S.hvnItems.filter(function(x){return x.trim()});
+  if(!S.hvn||!it.length) return '';
+  return '<h2>Hướng dẫn về nhà</h2><ul class="hv">'+it.map(function(x){return '<li>'+rich(x)+'</li>'}).join('')+'</ul>';
+}
 function listVals(arr){return arr.join('\n')}
 function soanHtml(){
   var inv=S.save==='data';
   var h='';
-  h+='<div class="vmeta"><span class="v">v1</span><span>theo khung Phụ lục IV · GV tự thẩm định</span></div>';
+  h+='<div class="vmeta"><span class="v">v1</span><span class="tchip" title="Loại bài">'+esc(typeOf().name)+'</span><span>theo khung Phụ lục IV · GV tự thẩm định</span></div>';
   h+='<section class="card" id="info"><h3 class="sec-h">Thông tin chung</h3>';
   h+='<div class="sum-line"><span>'+esc(L.school)+' · '+esc(L.dept)+' · GV '+esc(L.teacher)+' · lớp '+L.grade+' · '+L.minutes+' phút</span>'+(S.cur?'':'<button class="btn btn-s" type="button" data-info>'+(S.info?'Thu gọn':'Sửa')+'</button>')+'</div>';
   if(S.cur||S.info) h+='<div class="two"><div><label class="lb" for="school">Trường</label><input class="inp" id="school" value="'+esc(L.school)+'"/></div><div><label class="lb" for="dept">Tổ chuyên môn</label><input class="inp" id="dept" value="'+esc(L.dept)+'"/></div></div><label class="lb" for="gv">Giáo viên</label><input class="inp" id="gv" value="'+esc(L.teacher)+'"/>';
-  h+='<div class="propbox"><b>Loại bài:</b> '+esc(S.loai)+'<span class="prop">Đề xuất – chờ duyệt</span><p>Chọn lúc tạo bài. Chưa nằm trong đợt layout này.</p></div>';
+  h+='<div class="propbox"><b>Loại bài:</b> '+esc(typeOf().name)+'<span class="prop">Đề xuất – chờ duyệt</span><p>Chọn lúc tạo bài. Đổi hợp đồng và prompt Toán, chưa duyệt.</p><p>Đề xuất: '+esc(typeOf().change)+'</p></div>';
   h+='</section>';
   h+='<section class="card" id="obj" style="scroll-margin-top:112px"><h3 class="sec-h">I. Mục tiêu</h3>';
   h+=field('Kiến thức',inv?'':listVals(L.kn),{att:false,invalid:inv?'Cần có ít nhất một ý.':null,rows:2});
@@ -427,8 +495,9 @@ function soanHtml(){
   h+='<section class="card" id="aids"><h3 class="sec-h">II. Thiết bị dạy học và học liệu</h3>'+field('Học liệu (mỗi dòng một mục)',listVals(L.aids),{att:false,rows:2})+'</section>';
   h+='<h3 class="sec-h" id="proc" style="margin:18px 2px 8px;scroll-margin-top:112px">III. Tiến trình dạy học<small>'+L.acts.reduce(function(s,a){return s+a.min},0)+' phút</small></h3>';
   L.acts.forEach(function(a,i){h+=actHtml(a,i)});
+  if(!S.cur) h+=hvnBlock();
   h+='<section class="card" id="adj" style="scroll-margin-top:112px"><h3 class="sec-h">IV. Điều chỉnh sau bài dạy</h3>'+field('Ghi chú điều chỉnh',L.adj,{att:false,rows:2})+'</section>';
-  h+='<section class="card"><label class="lb" for="rev">Yêu cầu soạn lại</label><textarea class="ta" id="rev" rows="2">Thêm 2 phút cho hoạt động mở đầu, giữ nguyên Mục II.</textarea>'+(countImgs()?"<p class=\"hint-n\" style=\"margin-top:8px\">Giáo án đã có "+countImgs()+" hình. Soạn lại có thể làm hình không còn khớp nội dung mới.<span class=\"prop\" style=\"margin-left:6px\">Đề xuất</span></p>":'')+'<div class="acts"><button class="btn" type="button">Soạn lại giáo án</button><button class="btn" type="button">Tạo phiếu bài tập</button><button class="btn" type="button">Xuất Word</button><p class="act-fail">'+(S.save==='net'?'Chưa lưu được nên thao tác này chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án.':S.save==='data'?'Chưa lưu được nên thao tác này chưa chạy. Sửa các ô có dòng nhắc bên dưới.':'')+'</p></div></section>';
+  h+='<section class="card"><label class="lb" for="rev">Yêu cầu soạn lại</label><textarea class="ta" id="rev" rows="2">Thêm 2 phút cho hoạt động mở đầu, giữ nguyên Mục II.</textarea>'+(countImgs()?"<p class=\"hint-n\" style=\"margin-top:8px\">Giáo án đã có "+countImgs()+" hình. Soạn lại có thể làm hình không còn khớp nội dung mới.<span class=\"prop\" style=\"margin-left:6px\">Đề xuất</span></p>":'')+'<div class="acts"><button class="btn" type="button">Soạn lại giáo án</button><button class="btn" type="button">Tạo phiếu bài tập</button><button class="btn" type="button" data-word>Xuất Word</button><p class="act-fail">'+(S.save==='net'?'Chưa lưu được nên thao tác này chưa chạy. Bấm biểu tượng thử lại ở đầu giáo án.':S.save==='data'?'Chưa lưu được nên thao tác này chưa chạy. Sửa các ô có dòng nhắc bên dưới.':'')+'</p></div></section>';
   return h;
 }
 /* ======================= view as document ======================= */
@@ -439,7 +508,7 @@ function rightCell(a){return (a.c?'<p class="st">'+rich(a.c)+'</p>':'')+(a.table
 var GVH='<thead><tr><th class="c1">Hoạt động của GV và HS</th><th>Sản phẩm dự kiến</th></tr></thead>';
 function rowHtml(a){return '<tr><td class="c1" data-h="Hoạt động của GV và HS">'+leftCell(a)+'</td><td data-h="Sản phẩm dự kiến">'+rightCell(a)+'</td></tr>'}
 function viewHtml(){
-  var h='<p class="paper-note">Bản xem và bản Word dùng cùng một bố cục. Chạm hình để phóng to.</p><article class="paper">';
+  var h='<p class="paper-note"><span class="tchip" title="Loại bài">'+esc(typeOf().name)+'</span> Bản xem và bản Word dùng cùng một bố cục. Chạm hình để phóng to.</p><article class="paper">';
   h+='<h1>'+esc(L.title)+'</h1><p class="sub">'+esc(L.sub)+' · '+L.minutes+' phút</p>';
   h+='<h2>I. Mục tiêu</h2><h3>1. Kiến thức</h3><ul>'+L.kn.map(function(x){return '<li>'+rich(x)+'</li>'}).join('')+'</ul><h3>2. Năng lực</h3><ul>'+L.nl.map(function(x){return '<li>'+rich(x)+'</li>'}).join('')+'</ul><h3>3. Phẩm chất</h3><ul>'+L.pc.map(function(x){return '<li>'+rich(x)+'</li>'}).join('')+'</ul>';
   h+='<h2>II. Thiết bị dạy học và học liệu</h2><ul>'+L.aids.map(function(x){return '<li>'+rich(x)+'</li>'}).join('')+'</ul><h2>III. Tiến trình dạy học</h2>';
@@ -454,17 +523,43 @@ function viewHtml(){
       h+='<p class="abc"><b>a) Mục tiêu:</b> '+rich(a.a)+'</p><p class="abc"><b>b) Nội dung:</b> '+rich(a.b)+'</p>'+figHtml(a.bImgs)+'<p class="abc"><b>d) Tổ chức thực hiện:</b></p><table class="gv">'+GVH+'<tbody>'+rowHtml(a)+'</tbody></table>';
     }
   });
+  h+=hvnPaper().replace('<h2>','<h2 id="xem-hvn">');
   return h+'</article>';
+}
+/* ======================= create form ======================= */
+function createHtml(){
+  var t=typeOf();
+  var h='<h1 style="margin:0 0 4px;font-size:22px;color:var(--g900)">Tạo giáo án mới</h1><p class="hint" style="margin:0 0 14px">Toán lớp 6–9 · theo khung Phụ lục IV · GV tự thẩm định</p>';
+  h+='<section class="card"><span class="lb" id="gl">Lớp</span><div class="gchips" role="group" aria-labelledby="gl">'+[6,7,8,9].map(function(g){return '<button type="button" class="gch" data-cgrade="'+g+'" aria-pressed="'+(S.cgrade===g)+'">'+g+'</button>'}).join('')+'</div>';
+  h+='<label class="lb" for="ct">Tên bài</label><input class="inp" id="ct" value="'+esc(S.ctitle)+'"/>';
+  h+='<div class="two"><div><label class="lb" for="cn">Số tiết</label><input class="inp" id="cn" type="number" inputmode="numeric" value="1"/></div><div><label class="lb" for="cm">Phút mỗi tiết</label><input class="inp" id="cm" type="number" inputmode="numeric" value="45"/></div></div>';
+  h+='<span class="lb" id="tl">Loại bài</span><div class="cards" role="radiogroup" aria-labelledby="tl">'+TYPES.map(function(x){var on=x.id===S.type;return '<button type="button" class="tcard" role="radio" aria-checked="'+on+'" data-ctype="'+x.id+'"><span class="rd">'+CHK+'</span>'+esc(x.name)+'</button>'}).join('')+'</div>';
+  h+='<p class="thelp" id="thelp">'+esc(t.help)+'</p>';
+  h+='<div class="acts"><button class="btn btn-p" type="button" data-create>Tạo giáo án</button></div></section>';
+  h+='<div class="propbox tprop"><b>Khác nhau theo loại bài trong editor</b><span class="prop">Đề xuất – chờ duyệt</span><p>Đổi hợp đồng và prompt Toán đang đóng băng, chưa duyệt schema. Tên 4 hoạt động giữ nguyên.</p><ul>'+TYPES.map(function(x){return '<li'+(x.id===S.type?' class="on"':'')+'><b>'+esc(x.name)+'</b><span>'+esc(x.change)+'</span></li>'}).join('')+'</ul></div>';
+  return h;
+}
+/* ======================= Word preview (cùng nội dung và thứ tự với bản Xem) ======================= */
+function openWord(){
+  var h='<div class="grab"></div><h3 class="sec-h">Xem trước Word<button class="btn btn-s" data-close type="button">Đóng</button></h3><p class="hint" style="margin:0 0 6px">Cùng nội dung và thứ tự với bản Xem.</p>';
+  var rows=[['','Thông tin chung','trường, tổ, giáo viên, lớp'],['I','Mục tiêu','kiến thức, năng lực, phẩm chất'],['II','Thiết bị và học liệu',''],['III','Tiến trình dạy học','4 hoạt động A–D, mỗi hoạt động có a), b), bảng 2 cột (Hoạt động của GV và HS | Sản phẩm dự kiến)']];
+  rows.forEach(function(r){h+='<div class="wrow"><b>'+r[0]+'</b><div>'+esc(r[1])+(r[2]?'<br><span>'+esc(r[2])+'</span>':'')+'</div></div>'});
+  var hp=hvnPaper();
+  h+='<div class="wrow"><b></b><div>Hướng dẫn về nhà<br><span>'+(hp?S.hvnItems.filter(function(x){return x.trim()}).length+' ý, cuối tài liệu':'Không xuất (đã xoá phần này)')+'</span></div></div>';
+  if(hp) h+='<div class="wpaper">'+hp+'</div>';
+  h+='<div class="sh-acts" style="grid-template-columns:1fr"><button class="btn btn-p" type="button" data-close>Tải file .docx</button></div>';
+  var sh=document.getElementById('sheet');sh.className='sheet wide';sh.innerHTML=h;document.getElementById('scrim').dataset.on='true';
 }
 /* ======================= render ======================= */
 function render(){
   fid=0;
   document.body.classList.toggle('cur',S.cur);
+  document.body.classList.toggle('create',S.view==='create');
   document.getElementById('bar').innerHTML=barHtml();
   document.getElementById('rail').innerHTML=railHtml();
   document.getElementById('chips').innerHTML=chipsHtml();
   var tabs='<div class="tabs" role="tablist"><button class="tab" role="tab" data-tab="soan" aria-selected="'+(S.tab==='soan')+'">Soạn</button><button class="tab" role="tab" data-tab="xem" aria-selected="'+(S.tab==='xem')+'">Xem như giáo án</button><button class="tab" role="tab" disabled>So sánh</button></div>';
-  document.getElementById('doc').innerHTML=(S.cur?'':tabs)+(S.tab==='xem'&&!S.cur?viewHtml():soanHtml());
+  document.getElementById('doc').innerHTML=S.view==='create'?createHtml():((S.cur?'':tabs)+(S.tab==='xem'&&!S.cur?viewHtml():soanHtml()));
   growAll();
   var sb=document.getElementById('symbar');
   var kh=innerWidth>=1100?398:innerWidth>=700?314:291;
@@ -476,7 +571,7 @@ function render(){
 }
 function growAll(){document.querySelectorAll('.ta').forEach(function(t){t.style.height='auto';t.style.height=Math.max(t.scrollHeight+2,S.cur?72:44)+'px'})}
 addEventListener('resize',growAll);
-document.addEventListener('input',function(e){if(e.target.classList.contains('ta')){e.target.style.height='auto';e.target.style.height=(e.target.scrollHeight+2)+'px'}});
+document.addEventListener('input',function(e){if(e.target.dataset&&e.target.dataset.hvi!==undefined)S.hvnItems[+e.target.dataset.hvi]=e.target.value;if(e.target.classList.contains('ta')){e.target.style.height='auto';e.target.style.height=(e.target.scrollHeight+2)+'px'}});
 /* ======================= interactions ======================= */
 function go(id){
   var m=/^act-(\d)/.exec(id);
@@ -485,7 +580,7 @@ function go(id){
   closeSheet();
 }
 document.addEventListener('click',function(e){
-  var t=e.target.closest('[data-go],[data-act],[data-sub],[data-step],[data-tab],[data-img],[data-addimg],[data-ins],#tocbtn,.save-retry,[data-close],[data-size],[data-z],[data-info]');
+  var t=e.target.closest('[data-go],[data-act],[data-sub],[data-step],[data-tab],[data-img],[data-addimg],[data-ins],[data-word],[data-hv-add],[data-hv-del],[data-hv-rm],[data-hv-on],[data-ctype],[data-cgrade],[data-create],#tocbtn,.save-retry,[data-close],[data-size],[data-z],[data-info]');
   if(!t) return;
   if(t.dataset.go) return go(t.dataset.go);
   if(t.dataset.act!==undefined){var i=+t.dataset.act;S.open=S.open===i?-1:i;var y=scrollY;render();return}
@@ -494,6 +589,14 @@ document.addEventListener('click',function(e){
   if(t.dataset.tab){S.tab=t.dataset.tab;render();scrollTo(0,0);return}
   if(t.dataset.img) return openImg(t.dataset.img);
   if(t.dataset.addimg!==undefined) return openImg(null);
+  if(t.dataset.word!==undefined) return openWord();
+  if(t.dataset.hvAdd!==undefined){S.hvnItems.push('');S.open=4;render();var ta=document.querySelectorAll('[data-hvi]');ta[ta.length-1].focus();return}
+  if(t.dataset.hvDel!==undefined){S.hvnItems.splice(+t.dataset.hvDel,1);S.open=4;render();return}
+  if(t.dataset.hvRm!==undefined){S.hvnSaved=S.hvnItems.slice();S.hvn=false;render();return}
+  if(t.dataset.hvOn!==undefined){S.hvn=true;S.hvnItems=S.hvnSaved.length?S.hvnSaved.slice():[''];S.open=4;render();return}
+  if(t.dataset.ctype){S.type=t.dataset.ctype;render();return}
+  if(t.dataset.cgrade){S.cgrade=+t.dataset.cgrade;render();return}
+  if(t.dataset.create!==undefined){S.view='';S.tab='soan';render();scrollTo(0,0);return}
   if(t.id==='tocbtn') return openToc();
   if(t.classList.contains('save-retry')){ var f=document.querySelector('[aria-invalid=true]'); if(f&&S.save==='data'){f.focus();} return}
   if(t.dataset.info!==undefined){S.info=!S.info;render();return}
@@ -504,7 +607,7 @@ document.addEventListener('click',function(e){
 });
 document.getElementById('scrim').addEventListener('click',function(e){if(e.target.id==='scrim')closeSheet()});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSheet()});
-function closeSheet(){document.getElementById('scrim').dataset.on='false'}
+function closeSheet(){document.getElementById('scrim').dataset.on='false';document.getElementById('sheet').className='sheet'}
 function openToc(){
   var h='<div class="grab"></div><h3 class="sec-h">Mục lục<button class="btn btn-s" data-close type="button">Đóng</button></h3>';
   tocItems().forEach(function(x){h+='<button class="ri'+(x.k?' sub':'')+'" style="min-height:48px" data-go="'+x.id+'" type="button">'+esc(x.t)+(x.n?'<span class="n">'+x.n+'</span>':'')+(x.m&&!x.n?'<span class="m">'+x.m+'</span>':'')+'</button>'});
@@ -538,6 +641,7 @@ if(Q.get('scroll')){var el=document.getElementById(Q.get('scroll'));if(el)el.scr
 if(Q.get('focus')){var f=document.querySelector(Q.get('focus'));if(f){f.focus();}}
 if(Q.get('img')){openImg(Q.get('img'))}
 if(Q.get('add')){openImg(null)}
+if(Q.get('word')){openWord()}
 if(Q.get('toc')){openToc()}
 </script>
 </body>

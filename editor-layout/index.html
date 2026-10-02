@@ -32,7 +32,7 @@ ul{margin:4px 0;padding-left:20px}
 </head>
 <body><div class="w">
 <h1>Bố cục editor/xem giáo án, iPad trước</h1>
-<p class="lead"><span class="tag">Đề xuất · bản 2 sau BA co-review 03/10 · chờ Huy/Captain duyệt · chưa giao Dev FE</span> &nbsp; Mẫu Toán 6 HK1 (12 bài) + HK2 (32 bài). Số liệu: <a href="findings.md">findings.md</a> · đề xuất: <a href="proposal.md">proposal.md</a> · editor chạy được: <a href="app.html">app.html</a></p>
+<p class="lead"><span class="tag">Phương án A (Huy chọn) · bản 3: Hướng dẫn về nhà + Loại bài · Toán 6–9 · chưa giao Dev FE</span> &nbsp; Mẫu Toán 6 HK1 (12 bài) + HK2 (32 bài). Số liệu: <a href="findings.md">findings.md</a> · đề xuất: <a href="proposal.md">proposal.md</a> · editor chạy được: <a href="app.html">app.html</a></p>
 
 <h2>1. Số đo từ mẫu</h2>
 <div class="kpi">
@@ -42,7 +42,7 @@ ul{margin:4px 0;padding-left:20px}
 <div class="k"><b>18 + 49 bảng</b><span>GV–HS 2 cột (HK1 + HK2); luôn 2 cột</span></div>
 <div class="k"><b>30 + 140 hình</b><span>HK2: 95 trong bảng đề | lời giải; 25/32 bài có hình</span></div>
 <div class="k"><b>708 phân số</b><span>HK2; HK1: 0 phân số, 88 ký hiệu ⋮, 34 ảnh ⋮̸</span></div>
-<div class="k"><b>6.625 → 3.153 px</b><span>cao trang ở 820 px: hiện tại (dựng lại) vs phương án A</span></div>
+<div class="k"><b>6.647 → 3.251 px</b><span>cao trang ở 820 px: hiện tại (dựng lại) vs phương án A (đã gồm khối Hướng dẫn về nhà thu gọn +74 px)</span></div>
 </div>
 
 <h2>2. Phương án A (khuyên) ở 4 cỡ</h2>
@@ -57,6 +57,15 @@ ul{margin:4px 0;padding-left:20px}
 <a href="app.html?save=data">Lưu lỗi dữ liệu</a>
 <a href="app.html?save=net">Lưu lỗi mạng</a>
 <a href="app.html?mode=current">Editor hiện tại (dựng lại)</a>
+<a href="app.html?hvn=edit&scroll=act-4">Hướng dẫn về nhà · mở</a>
+<a href="app.html?tab=xem&scroll=xem-hvn">Xem · Hướng dẫn về nhà</a>
+<a href="app.html?hvn=off&open=-1">HVN đã xoá</a>
+<a href="app.html?word=1">Xem trước Word</a>
+<a href="app.html?word=1&hvn=off">Word, HVN đã xoá</a>
+<a href="app.html?view=create&type=bai-moi">Tạo giáo án · Bài mới</a>
+<a href="app.html?view=create&type=luyen-tap-chung">Luyện tập chung</a>
+<a href="app.html?view=create&type=on-tap">Ôn tập</a>
+<a href="app.html?view=create&type=thuc-hanh">Thực hành trải nghiệm</a>
 </div>
 <div class="frames" id="frames"></div>
 
@@ -67,13 +76,13 @@ ul{margin:4px 0;padding-left:20px}
 <div class="tw"><table>
 <tr><th>Đổi</th><th>Thêm</th><th>Giữ</th></tr>
 <tr><td><ul><li>Cột phải tĩnh → Mục lục bấm được (rail ≥1100 px; chip + bảng ở portrait/mobile)</li><li>4 hoạt động mở hết → khối gập, mở một khối</li><li>4 ô bước bằng nhau → Bước 1 mở, 2–4 tóm tắt</li><li>Ô cuộn trong ô, 14 px → tự giãn, 16 px</li></ul></td>
-<td><ul><li>Tab "Xem như giáo án": bảng 2 cột cho cả A–D, giống hệt Word</li><li>Nhãn "c) Sản phẩm dự kiến"; nhãn 4 bước một nguồn</li><li>Hàng đính kèm hình/bảng trong ô</li><li>Thanh ký hiệu trên bàn phím + xem trước công thức</li><li>Xuất Word: cùng hàm dựng bảng, hình, OMML (BE)</li></ul></td>
+<td><ul><li>Tab "Xem như giáo án": bảng 2 cột cho cả A–D, giống hệt Word</li><li>Nhãn "c) Sản phẩm dự kiến"; nhãn 4 bước một nguồn</li><li>Khối "Hướng dẫn về nhà" (bật mặc định, xoá/thêm lại, 2–3 ý)</li><li>Ô chọn "Loại bài" khi tạo giáo án (<span class="prop">Đề xuất – chờ duyệt</span>)</li><li>Hàng đính kèm hình/bảng trong ô</li><li>Thanh ký hiệu trên bàn phím + xem trước công thức</li><li>Xuất Word: cùng hàm dựng bảng, hình, OMML (BE)</li></ul></td>
 <td><ul><li>Tên 4 hoạt động cố định</li><li>Icon Thử lại + dòng lý do + hai câu nhắc đã duyệt</li><li>Chip Nên soát / Đã soát</li><li>"theo khung Phụ lục IV · GV tự thẩm định"</li></ul></td></tr></table></div>
 
 <h2>5. Kết quả BA co-review 03/10 và còn mở</h2>
 <ul>
 <li><b>Đã chốt (BA):</b> bảng 2 cột cho cả 4 hoạt động (chỉ trình bày, không đổi schema; cột phải = c) của chính hoạt động, B dùng hàng con, A rỗng thì để trống) · nhãn 4 bước = nhãn editor, một nguồn · Năng lực số không vào MVP · hình do GV tự thêm, AI không sinh, không Pencil · copy theo bản A đã duyệt.</li>
-<li><b>Hoãn:</b> Loại bài (đổi hợp đồng + prompt đang đóng băng). Mockup vẽ, gắn nhãn <span class="prop">Đề xuất – chờ duyệt</span>. 11/32 và 2/12 là số UI UX tự đo, BA chưa kiểm.</li>
+<li><b>Chưa duyệt schema:</b> Loại bài 4 giá trị (đổi hợp đồng + prompt Toán đang đóng băng) và Hướng dẫn về nhà (trường mới?). Mockup gắn nhãn <span class="prop">Đề xuất – chờ duyệt</span>. 11/32 và 2/12 là số UI UX tự đo, BA chưa kiểm.</li>
 <li><b>Huy:</b> A hay B (khuyên A) · tab Xem là màn duyệt · mở một hoạt động một lúc · thanh ký hiệu · <b>chính sách bản quyền hình (chờ Huy duyệt, có thể cần pháp lý)</b>.</li>
 <li><b>Captain/Techlead:</b> P0 đổi nghĩa c) (chỉ đổi prompt) · câu lưu ý tải hình · lưu hình riêng tư theo tài khoản · công thức/OMML · ký hiệu không chia hết · Soạn lại khi đã có hình · 5512 (BA sẽ hỏi GV). Chi tiết trong <a href="proposal.md">proposal.md</a> mục 0, 7, 8.</li></ul>
 </div>
@@ -81,7 +90,7 @@ ul{margin:4px 0;padding-left:20px}
 var F=[['iPad portrait 820×1180',820,1180,0.52],['iPad landscape 1180×820',1180,820,0.52],['Mobile 390×844',390,844,0.62]];
 var h='';F.forEach(function(f){var s=f[3];h+='<div class="fr"><p>'+f[0]+'</p><div class="dev" style="width:'+(f[1]*s+20)+'px;height:'+(f[2]*s+20)+'px"><iframe src="app.html?open=1&sub=0&scroll=act-1" title="'+f[0]+'" width="'+f[1]+'" height="'+f[2]+'" style="transform:scale('+s+')"></iframe></div></div>'});
 document.getElementById('frames').innerHTML=h;
-var S=[['ipad-portrait-820x1180','01-soan-hinhthanh','820 · Soạn'],['ipad-portrait-820x1180','03-xem-full','820 · Xem'],['ipad-portrait-820x1180','05-img-sheet','820 · Hình (thiếu mô tả)'],['ipad-portrait-820x1180','12-img-add','820 · Thêm hình'],['ipad-portrait-820x1180','11-info-loaibai','820 · Loại bài (Đề xuất)'],['ipad-portrait-820x1180','09-demo-div-xem','820 · Xem, Quan hệ chia hết'],['ipad-portrait-820x1180','08-keyboard','820 · bàn phím'],['ipad-landscape-1180x820','01-soan-hinhthanh','1180 · Soạn'],['ipad-landscape-1180x820','03-xem-full','1180 · Xem'],['ipad-landscape-1180x820','08-keyboard','1180 · bàn phím'],['desktop-1280','01-soan-hinhthanh','1280 · Soạn'],['desktop-1280','03-xem-full','1280 · Xem'],['mobile-390','01-soan-hinhthanh','390 · Soạn'],['mobile-390','03-xem-full','390 · Xem'],['mobile-390','06-toc-sheet','390 · Mục lục'],['mobile-390','08-keyboard','390 · bàn phím'],['ipad-portrait-820x1180','10-baseline-current-full','820 · hiện tại (dựng lại)']];
+var S=[['ipad-portrait-820x1180','01-soan-hinhthanh','820 · Soạn'],['ipad-portrait-820x1180','03-xem-full','820 · Xem'],['ipad-portrait-820x1180','05-img-sheet','820 · Hình (thiếu mô tả)'],['ipad-portrait-820x1180','12-img-add','820 · Thêm hình'],['ipad-portrait-820x1180','11-info-loaibai','820 · Loại bài (Đề xuất)'],['ipad-portrait-820x1180','09-demo-div-xem','820 · Xem, Quan hệ chia hết'],['ipad-portrait-820x1180','15-create-bai-moi','820 · Tạo: Bài mới'],['ipad-portrait-820x1180','18-create-thuc-hanh','820 · Tạo: Thực hành'],['ipad-landscape-1180x820','17-create-on-tap','1180 · Tạo: Ôn tập'],['mobile-390','16-create-luyen-tap-chung','390 · Tạo: Luyện tập chung'],['ipad-portrait-820x1180','19-soan-hvn-open','820 · Soạn · HVN mở'],['ipad-portrait-820x1180','20-xem-hvn','820 · Xem · HVN'],['mobile-390','19-soan-hvn-open','390 · Soạn · HVN mở'],['ipad-portrait-820x1180','21-hvn-deleted-soan','820 · HVN đã xoá (Soạn)'],['ipad-portrait-820x1180','22-hvn-deleted-xem','820 · HVN đã xoá (Xem)'],['ipad-portrait-820x1180','23-word-preview','820 · Xem trước Word'],['mobile-390','24-word-preview-hvn-off','390 · Word, HVN đã xoá'],['ipad-portrait-820x1180','08-keyboard','820 · bàn phím'],['ipad-landscape-1180x820','01-soan-hinhthanh','1180 · Soạn'],['ipad-landscape-1180x820','03-xem-full','1180 · Xem'],['ipad-landscape-1180x820','08-keyboard','1180 · bàn phím'],['desktop-1280','01-soan-hinhthanh','1280 · Soạn'],['desktop-1280','03-xem-full','1280 · Xem'],['mobile-390','01-soan-hinhthanh','390 · Soạn'],['mobile-390','03-xem-full','390 · Xem'],['mobile-390','06-toc-sheet','390 · Mục lục'],['mobile-390','08-keyboard','390 · bàn phím'],['ipad-portrait-820x1180','10-baseline-current-full','820 · hiện tại (dựng lại)']];
 document.getElementById('shots').innerHTML=S.map(function(x){var u='shots/'+x[0]+'-'+x[1]+'.png';return '<figure><a href="'+u+'"><img loading="lazy" src="'+u+'" alt="'+x[2]+'"/></a><figcaption>'+x[2]+'</figcaption></figure>'}).join('');
 </script>
 </body></html>
