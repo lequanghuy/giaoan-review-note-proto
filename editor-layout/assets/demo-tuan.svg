@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 240" width="360" height="240" role="img">
+<rect width="360" height="240" fill="#fff"/>
+<text x="180.0" y="20" text-anchor="middle" font-size="14" font-weight="700" fill="#111" font-family="Inter,Arial,sans-serif">Số sách mượn trong tuần</text>
+<line x1="44" x2="344" y1="204.0" y2="204.0" stroke="#e5e7eb"/><text x="38" y="208.0" text-anchor="end" font-size="11" fill="#555" font-family="Inter,Arial,sans-serif">0</text>
+<line x1="44" x2="344" y1="171.2" y2="171.2" stroke="#e5e7eb"/><text x="38" y="175.2" text-anchor="end" font-size="11" fill="#555" font-family="Inter,Arial,sans-serif">5</text>
+<line x1="44" x2="344" y1="138.4" y2="138.4" stroke="#e5e7eb"/><text x="38" y="142.4" text-anchor="end" font-size="11" fill="#555" font-family="Inter,Arial,sans-serif">10</text>
+<line x1="44" x2="344" y1="105.6" y2="105.6" stroke="#e5e7eb"/><text x="38" y="109.6" text-anchor="end" font-size="11" fill="#555" font-family="Inter,Arial,sans-serif">15</text>
+<line x1="44" x2="344" y1="72.8" y2="72.8" stroke="#e5e7eb"/><text x="38" y="76.8" text-anchor="end" font-size="11" fill="#555" font-family="Inter,Arial,sans-serif">20</text>
+<line x1="44" x2="344" y1="40.0" y2="40.0" stroke="#e5e7eb"/><text x="38" y="44.0" text-anchor="end" font-size="11" fill="#555" font-family="Inter,Arial,sans-serif">25</text>
+<line x1="44" x2="44" y1="40" y2="204" stroke="#333"/><line x1="44" x2="344" y1="204.0" y2="204.0" stroke="#333"/>
+<rect x="59.0" y="125.3" width="30.0" height="78.7" fill="#60a5fa"/>
+<text x="74.0" y="121.3" text-anchor="middle" font-size="11" font-weight="600" fill="#111" font-family="Inter,Arial,sans-serif">12</text>
+<text x="74.0" y="220.0" text-anchor="middle" font-size="11" fill="#333" font-family="Inter,Arial,sans-serif">T2</text>
+<rect x="119.0" y="151.5" width="30.0" height="52.5" fill="#60a5fa"/>
+<text x="134.0" y="147.5" text-anchor="middle" font-size="11" font-weight="600" fill="#111" font-family="Inter,Arial,sans-serif">8</text>
+<text x="134.0" y="220.0" text-anchor="middle" font-size="11" fill="#333" font-family="Inter,Arial,sans-serif">T3</text>
+<rect x="179.0" y="105.6" width="30.0" height="98.4" fill="#60a5fa"/>
+<text x="194.0" y="101.6" text-anchor="middle" font-size="11" font-weight="600" fill="#111" font-family="Inter,Arial,sans-serif">15</text>
+<text x="194.0" y="220.0" text-anchor="middle" font-size="11" fill="#333" font-family="Inter,Arial,sans-serif">T4</text>
+<rect x="239.0" y="138.4" width="30.0" height="65.6" fill="#60a5fa"/>
+<text x="254.0" y="134.4" text-anchor="middle" font-size="11" font-weight="600" fill="#111" font-family="Inter,Arial,sans-serif">10</text>
+<text x="254.0" y="220.0" text-anchor="middle" font-size="11" fill="#333" font-family="Inter,Arial,sans-serif">T5</text>
+<rect x="299.0" y="72.8" width="30.0" height="131.2" fill="#60a5fa"/>
+<text x="314.0" y="68.8" text-anchor="middle" font-size="11" font-weight="600" fill="#111" font-family="Inter,Arial,sans-serif">20</text>
+<text x="314.0" y="220.0" text-anchor="middle" font-size="11" fill="#333" font-family="Inter,Arial,sans-serif">T6</text>
+</svg>

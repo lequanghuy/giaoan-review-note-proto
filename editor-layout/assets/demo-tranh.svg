@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 220" width="360" height="220" role="img">
+<rect width="360" height="220" fill="#fff"/>
+<text x="180" y="20" text-anchor="middle" font-size="14" font-weight="700" fill="#111" font-family="Inter,Arial">Môn thể thao yêu thích (biểu đồ tranh)</text>
+<text x="12" y="64" font-size="12" fill="#333" font-family="Inter,Arial">Bóng đá</text>
+<circle cx="100" cy="60" r="11" fill="#60a5fa"/>
+<circle cx="130" cy="60" r="11" fill="#60a5fa"/>
+<circle cx="160" cy="60" r="11" fill="#60a5fa"/>
+<circle cx="190" cy="60" r="11" fill="#60a5fa"/>
+<circle cx="220" cy="60" r="11" fill="#60a5fa"/>
+<circle cx="250" cy="60" r="11" fill="#60a5fa"/>
+<text x="12" y="112" font-size="12" fill="#333" font-family="Inter,Arial">Cầu lông</text>
+<circle cx="100" cy="108" r="11" fill="#60a5fa"/>
+<circle cx="130" cy="108" r="11" fill="#60a5fa"/>
+<circle cx="160" cy="108" r="11" fill="#60a5fa"/>
+<circle cx="190" cy="108" r="11" fill="#60a5fa"/>
+<text x="12" y="160" font-size="12" fill="#333" font-family="Inter,Arial">Bơi</text>
+<circle cx="100" cy="156" r="11" fill="#60a5fa"/>
+<circle cx="130" cy="156" r="11" fill="#60a5fa"/>
+<path d="M160 145 a11 11 0 0 0 0 22 z" fill="#60a5fa"/>
+<text x="12" y="204" font-size="12" fill="#333" font-family="Inter,Arial">● = 2 bạn</text>
+</svg>
