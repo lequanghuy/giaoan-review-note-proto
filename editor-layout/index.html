@@ -54,8 +54,8 @@ ul{margin:4px 0;padding-left:20px}
 <a href="app.html?add=1&open=1&sub=0">Thêm hình</a>
 <a href="app.html?open=-1&info=1">Loại bài (Đề xuất)</a>
 <a href="app.html?open=1&sub=0&kbd=1">Bàn phím + thanh ký hiệu</a>
-<a href="app.html?save=data">Lưu lỗi dữ liệu</a>
-<a href="app.html?save=net">Lưu lỗi mạng</a>
+<a href="app.html?save=data">Lưu không được (dữ liệu)</a>
+<a href="app.html?save=net">Lưu không được (mạng)</a>
 <a href="app.html?mode=current">Editor hiện tại (dựng lại)</a>
 <a href="app.html?hvn=edit&scroll=act-4">Hướng dẫn về nhà · mở</a>
 <a href="app.html?tab=xem&scroll=xem-hvn">Xem · Hướng dẫn về nhà</a>
@@ -68,6 +68,39 @@ ul{margin:4px 0;padding-left:20px}
 <a href="app.html?view=create&type=thuc-hanh">Thực hành trải nghiệm</a>
 </div>
 <div class="frames" id="frames"></div>
+
+<h2>2b. Trạng thái chờ / tải (proposal mục 11)</h2>
+<p class="lead">Mọi trạng thái tĩnh, không trễ nên ảnh chụp ổn định. Dùng <code>&amp;motion=reduce</code> để xem bản không chuyển động, <code>&amp;t=42</code> đặt số giây đã chạy. Mục LIVE giả lập độ trễ thật: skeleton chỉ hiện sau 300 ms, ở lại tối thiểu 500 ms. Nhãn <span class="prop">Đề xuất</span> = chưa duyệt (nút Dừng, bước soạn).</p>
+<div class="row">
+<a href="app.html?view=list&amp;state=loading">Danh sách · đang tải (skeleton)</a>
+<a href="app.html?view=list&amp;state=loading&amp;motion=reduce">Danh sách · giảm chuyển động</a>
+<a href="app.html?view=list&amp;state=loading-long">Danh sách · chờ lâu (sau 8 giây)</a>
+<a href="app.html?view=list&amp;state=error">Danh sách · không tải được</a>
+<a href="app.html?view=list&amp;state=empty">Danh sách · trống</a>
+<a href="app.html?view=list&amp;state=ready">Danh sách · đã có</a>
+<a href="app.html?view=list&amp;state=row-opening">Danh sách · đang mở một hàng</a>
+<a href="app.html?state=opening">Mở giáo án · skeleton editor</a>
+<a href="app.html?state=opening-error">Mở giáo án · không mở được</a>
+<a href="app.html?state=generating">Đang tạo giáo án</a>
+<a href="app.html?state=generating-long">Đang tạo · lâu hơn dự kiến</a>
+<a href="app.html?state=generating-error">Tạo không được</a>
+<a href="app.html?state=generating-timeout">Tạo quá lâu</a>
+<a href="app.html?state=revising&amp;open=-1&amp;scroll=rev">Đang soạn lại</a>
+<a href="app.html?state=revise-error&amp;open=-1&amp;scroll=rev">Soạn lại không được</a>
+<a href="app.html?state=exporting">Đang xuất Word</a>
+<a href="app.html?state=exported">Đã xuất Word</a>
+<a href="app.html?state=export-error">Xuất Word không được</a>
+<a href="app.html?view=create&amp;state=busy">Form tạo · đang tạo</a>
+<a href="app.html?view=create&amp;state=error">Form tạo · không tạo được</a>
+<a href="app.html?state=xem-loading">Xem · đang tải</a>
+<a href="app.html?state=compare-loading">So sánh · đang tải</a>
+<a href="app.html?add=1&amp;state=uploading">Tải hình · tiến độ</a>
+<a href="app.html?add=1&amp;state=upload-error">Tải hình · không tải được</a>
+<a href="app.html?save=saving">Lưu (đã duyệt, giữ nguyên)</a>
+<a href="app.html?live=1">LIVE: giả lập độ trễ thật</a>
+<a href="app.html?live=1&amp;fail=1">LIVE: luôn thất bại (thử Thử lại)</a>
+<a href="app.html?live=1&amp;delay=6000">LIVE: chậm 6 giây</a>
+</div>
 
 <h2>3. Ảnh chụp Chrome headless</h2>
 <div class="shots" id="shots"></div>
@@ -90,7 +123,7 @@ ul{margin:4px 0;padding-left:20px}
 var F=[['iPad portrait 820×1180',820,1180,0.52],['iPad landscape 1180×820',1180,820,0.52],['Mobile 390×844',390,844,0.62]];
 var h='';F.forEach(function(f){var s=f[3];h+='<div class="fr"><p>'+f[0]+'</p><div class="dev" style="width:'+(f[1]*s+20)+'px;height:'+(f[2]*s+20)+'px"><iframe src="app.html?open=1&sub=0&scroll=act-1" title="'+f[0]+'" width="'+f[1]+'" height="'+f[2]+'" style="transform:scale('+s+')"></iframe></div></div>'});
 document.getElementById('frames').innerHTML=h;
-var S=[['ipad-portrait-820x1180','01-soan-hinhthanh','820 · Soạn'],['ipad-portrait-820x1180','03-xem-full','820 · Xem'],['ipad-portrait-820x1180','05-img-sheet','820 · Hình (thiếu mô tả)'],['ipad-portrait-820x1180','12-img-add','820 · Thêm hình'],['ipad-portrait-820x1180','11-info-loaibai','820 · Loại bài (Đề xuất)'],['ipad-portrait-820x1180','09-demo-div-xem','820 · Xem, Quan hệ chia hết'],['ipad-portrait-820x1180','15-create-bai-moi','820 · Tạo: Bài mới'],['ipad-portrait-820x1180','18-create-thuc-hanh','820 · Tạo: Thực hành'],['ipad-landscape-1180x820','17-create-on-tap','1180 · Tạo: Ôn tập'],['mobile-390','16-create-luyen-tap-chung','390 · Tạo: Luyện tập chung'],['ipad-portrait-820x1180','19-soan-hvn-open','820 · Soạn · HVN mở'],['ipad-portrait-820x1180','20-xem-hvn','820 · Xem · HVN'],['mobile-390','19-soan-hvn-open','390 · Soạn · HVN mở'],['ipad-portrait-820x1180','21-hvn-deleted-soan','820 · HVN đã xoá (Soạn)'],['ipad-portrait-820x1180','22-hvn-deleted-xem','820 · HVN đã xoá (Xem)'],['ipad-portrait-820x1180','23-word-preview','820 · Xem trước Word'],['mobile-390','24-word-preview-hvn-off','390 · Word, HVN đã xoá'],['ipad-portrait-820x1180','08-keyboard','820 · bàn phím'],['ipad-landscape-1180x820','01-soan-hinhthanh','1180 · Soạn'],['ipad-landscape-1180x820','03-xem-full','1180 · Xem'],['ipad-landscape-1180x820','08-keyboard','1180 · bàn phím'],['desktop-1280','01-soan-hinhthanh','1280 · Soạn'],['desktop-1280','03-xem-full','1280 · Xem'],['mobile-390','01-soan-hinhthanh','390 · Soạn'],['mobile-390','03-xem-full','390 · Xem'],['mobile-390','06-toc-sheet','390 · Mục lục'],['mobile-390','08-keyboard','390 · bàn phím'],['ipad-portrait-820x1180','10-baseline-current-full','820 · hiện tại (dựng lại)']];
+var S=[['ipad-portrait-820x1180','30-list-loading','820 · Danh sách đang tải'],['ipad-landscape-1180x820','30-list-loading','1180 · Danh sách đang tải'],['desktop-1280','30-list-loading','1280 · Danh sách đang tải'],['ipad-portrait-820x1180','31-list-loading-reduced-motion','820 · Danh sách, giảm chuyển động'],['ipad-portrait-820x1180','33-list-error','820 · Danh sách không tải được'],['ipad-portrait-820x1180','36-list-row-opening','820 · Đang mở hàng'],['ipad-portrait-820x1180','37-editor-opening','820 · Mở giáo án'],['ipad-portrait-820x1180','38-editor-opening-error','820 · Không mở được'],['ipad-portrait-820x1180','39-generating','820 · Đang tạo'],['ipad-portrait-820x1180','40-generating-long','820 · Tạo lâu'],['ipad-portrait-820x1180','41-generating-error','820 · Tạo không được'],['ipad-portrait-820x1180','43-revising','820 · Đang soạn lại'],['ipad-portrait-820x1180','45-exporting','820 · Đang xuất Word'],['ipad-portrait-820x1180','47-export-error','820 · Xuất không được'],['ipad-portrait-820x1180','48-create-busy','820 · Form tạo, đang tạo'],['ipad-portrait-820x1180','50-xem-loading','820 · Xem đang tải'],['ipad-portrait-820x1180','51-compare-loading','820 · So sánh đang tải'],['ipad-portrait-820x1180','52-upload-progress','820 · Tải hình'],['mobile-390','30-list-loading','390 · Danh sách đang tải'],['mobile-390','39-generating','390 · Đang tạo'],['mobile-390','47-export-error','390 · Xuất không được'],['ipad-portrait-820x1180','01-soan-hinhthanh','820 · Soạn'],['ipad-portrait-820x1180','03-xem-full','820 · Xem'],['ipad-portrait-820x1180','05-img-sheet','820 · Hình (thiếu mô tả)'],['ipad-portrait-820x1180','12-img-add','820 · Thêm hình'],['ipad-portrait-820x1180','11-info-loaibai','820 · Loại bài (Đề xuất)'],['ipad-portrait-820x1180','09-demo-div-xem','820 · Xem, Quan hệ chia hết'],['ipad-portrait-820x1180','15-create-bai-moi','820 · Tạo: Bài mới'],['ipad-portrait-820x1180','18-create-thuc-hanh','820 · Tạo: Thực hành'],['ipad-landscape-1180x820','17-create-on-tap','1180 · Tạo: Ôn tập'],['mobile-390','16-create-luyen-tap-chung','390 · Tạo: Luyện tập chung'],['ipad-portrait-820x1180','19-soan-hvn-open','820 · Soạn · HVN mở'],['ipad-portrait-820x1180','20-xem-hvn','820 · Xem · HVN'],['mobile-390','19-soan-hvn-open','390 · Soạn · HVN mở'],['ipad-portrait-820x1180','21-hvn-deleted-soan','820 · HVN đã xoá (Soạn)'],['ipad-portrait-820x1180','22-hvn-deleted-xem','820 · HVN đã xoá (Xem)'],['ipad-portrait-820x1180','23-word-preview','820 · Xem trước Word'],['mobile-390','24-word-preview-hvn-off','390 · Word, HVN đã xoá'],['ipad-portrait-820x1180','08-keyboard','820 · bàn phím'],['ipad-landscape-1180x820','01-soan-hinhthanh','1180 · Soạn'],['ipad-landscape-1180x820','03-xem-full','1180 · Xem'],['ipad-landscape-1180x820','08-keyboard','1180 · bàn phím'],['desktop-1280','01-soan-hinhthanh','1280 · Soạn'],['desktop-1280','03-xem-full','1280 · Xem'],['mobile-390','01-soan-hinhthanh','390 · Soạn'],['mobile-390','03-xem-full','390 · Xem'],['mobile-390','06-toc-sheet','390 · Mục lục'],['mobile-390','08-keyboard','390 · bàn phím'],['ipad-portrait-820x1180','10-baseline-current-full','820 · hiện tại (dựng lại)']];
 document.getElementById('shots').innerHTML=S.map(function(x){var u='shots/'+x[0]+'-'+x[1]+'.png';return '<figure><a href="'+u+'"><img loading="lazy" src="'+u+'" alt="'+x[2]+'"/></a><figcaption>'+x[2]+'</figcaption></figure>'}).join('');
 </script>
 </body></html>

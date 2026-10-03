@@ -15,5 +15,6 @@ Tham số `app.html`:
 - `view=create` (form tạo giáo án) · `type=bai-moi|luyen-tap-chung|on-tap|thuc-hanh` · `grade=6..9`
 - `mode=current` (dựng lại cấu trúc editor hiện tại để so chiều cao)
 - `scroll=act-1` · `img=demo-cot-2.svg` (mở bảng hình, thiếu mô tả) · `add=1` (bảng Thêm hình) · `info=1` (mở Thông tin chung + Loại bài, Đề xuất) · `type=…` (Loại bài, Đề xuất) · `toc=1` (mở Mục lục)
+- Trạng thái chờ / tải (proposal mục 11): `view=list&state=loading|loading-long|error|empty|ready|row-opening` · `state=opening|opening-error|generating|generating-long|generating-error|generating-timeout|revising|revise-error|exporting|exported|export-error|xem-loading|compare-loading` · `view=create&state=busy|error` · `add=1&state=uploading|upload-error` · `motion=reduce` · `t=giây` · `live=1` (giả lập độ trễ thật; `&fail=1` luôn thất bại, `&delay=ms`)
 
-Chạy ảnh: `NODE_PATH=/usr/local/lib/node_modules node shots.js && node shots-kbd.js`
+Chạy ảnh: `NODE_PATH=/usr/local/lib/node_modules node shots.js && node shots-kbd.js && node shots-load.js`
