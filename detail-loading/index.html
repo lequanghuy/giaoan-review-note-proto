@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>Mở chi tiết giáo án · trạng thái tải · đề xuất · GiaoAn AI</title>
+<style>
+:root{--blue:#2563eb;--blue-h:#1d4ed8;--blue-s:#eff6ff;--blue-b:#bfdbfe;--g50:#f9fafb;--g100:#f3f4f6;--g200:#e5e7eb;--g300:#d1d5db;--g400:#9ca3af;--g500:#6b7280;--g600:#4b5563;--g700:#374151;--g800:#1f2937;--g900:#111827;--green:#059669;--amber:#d97706;--as:#fffbeb;--red:#dc2626;--focus-ring:0 0 0 3px rgba(37,99,235,.12)}
+*{box-sizing:border-box}
+html{font-size:14px;-webkit-text-size-adjust:100%}
+body{margin:0;font-family:Inter,system-ui,"Noto Sans",sans-serif;background:var(--g50);color:var(--g800);line-height:1.5}
+button,a{font:inherit;color:inherit}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+:focus-visible{outline:2px solid #2563eb;outline-offset:2px;border-radius:4px}
+
+/* demo chrome */
+.demo{position:sticky;top:0;z-index:80;background:#111827;color:#fff;padding:10px 12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.demo b{font-size:13px;margin-right:4px}
+.demo button,.demo a.chip{min-height:36px;padding:0 10px;border-radius:8px;border:1px solid #374151;background:#1f2937;color:#e5e7eb;cursor:pointer;font-size:12px;text-decoration:none;display:inline-flex;align-items:center}
+.demo button[aria-pressed=true],.demo a.chip.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.demo .hint{font-size:11px;color:#9ca3af;width:100%}
+.note{max-width:1100px;margin:0 auto;padding:12px 16px;font-size:13px;color:var(--g600)}
+.note code{font-size:12px;background:var(--g100);padding:1px 5px;border-radius:4px}
+
+/* app shell */
+.app{max-width:1100px;margin:0 auto;min-height:100vh;background:var(--g50);border-left:1px solid var(--g200);border-right:1px solid var(--g200)}
+.topnav{display:flex;align-items:center;gap:10px;padding:8px 16px;background:#fff;border-bottom:1px solid var(--g200);font-size:13px;color:var(--g600)}
+.topnav .logo{font-weight:700;color:var(--blue)}
+.bar{position:sticky;top:0;z-index:30;height:48px;display:flex;align-items:center;gap:10px;padding:0 16px;background:#fff;border-bottom:1px solid var(--g200)}
+.bar .crumb{min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;color:var(--g600)}
+.bar .crumb b{color:var(--g900)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;min-width:44px;padding:0 16px;border-radius:8px;border:1px solid var(--g200);background:#fff;color:var(--g700);font-size:14px;font-weight:500;cursor:pointer}
+.btn:disabled,.btn[aria-disabled=true]{opacity:.45;cursor:not-allowed}
+.btn-p{background:var(--blue);color:#fff;border:0}
+.spin{width:14px;height:14px;border:2px solid var(--blue-b);border-top-color:var(--blue);border-radius:50%;animation:sp .9s linear infinite;flex:none}
+@keyframes sp{to{transform:rotate(360deg)}}
+.prog{position:fixed;left:0;right:0;top:0;z-index:90;height:2px;background:transparent;pointer-events:none}
+.prog i{display:block;height:100%;width:35%;background:var(--blue);animation:ind 1.5s ease-in-out infinite}
+@keyframes ind{0%{transform:translateX(-120%)}100%{transform:translateX(320%)}}
+
+/* list */
+.list-wrap{padding:16px}
+.tbl{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--g200);border-radius:10px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.tbl th{background:var(--g50);text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--g500);padding:8px 12px;border-bottom:1px solid var(--g200)}
+.tbl td{padding:9px 12px;border-top:1px solid var(--g100);font-size:14px}
+.tbl tr{position:relative}
+.tbl tr:hover{background:var(--blue-s)}
+.tbl a{color:var(--g900);text-decoration:none;font-weight:500}
+.tbl tr.is-opening{background:var(--blue-s)}
+.tbl tr.is-opening td:last-child{color:var(--blue);font-weight:500;display:flex;align-items:center;gap:8px;min-height:44px}
+.badge{display:inline-flex;align-items:center;min-height:24px;padding:0 8px;border-radius:999px;background:var(--g100);font-size:12px;font-weight:600;color:var(--g700)}
+.badge.ok{background:#ecfdf5;color:#047857}
+
+/* editor layout */
+.frame{display:flex;min-height:calc(100vh - 96px)}
+.rail{display:none;position:sticky;top:48px;flex:0 0 236px;align-self:flex-start;max-height:calc(100vh - 48px);overflow:auto;padding:16px 12px 24px;border-right:1px solid var(--g200);background:#fff}
+@media(min-width:1100px){.rail{display:block}.chips{display:none!important}}
+.main{flex:1;min-width:0;max-width:860px;margin:0 auto;padding:8px 36px 64px}
+@media(max-width:720px){.main{padding:8px 12px 120px}}
+.chips{position:sticky;top:48px;z-index:20;display:flex;gap:8px;overflow-x:auto;padding:8px 0;background:rgba(249,250,251,.96);backdrop-filter:blur(6px);margin-bottom:8px}
+.chip{display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:999px;border:1px solid var(--g200);background:#fff;font-size:13px;color:var(--g700);white-space:nowrap;flex:none}
+.chip.sk{min-width:88px;background:var(--g100);border-color:var(--g100);color:transparent}
+.tabs{display:flex;gap:4px;margin:0 0 14px;padding:4px;border-radius:10px;background:var(--g100);width:max-content;max-width:100%}
+.tab{min-height:44px;padding:0 16px;border:0;border-radius:8px;background:none;color:var(--g600);font-size:14px;font-weight:500;white-space:nowrap}
+.tab[aria-selected=true]{background:#fff;color:var(--g900);font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.tab:disabled,.tab[aria-disabled=true]{opacity:.55;pointer-events:none}
+.phulu{font-size:12px;color:var(--g500);margin:0 0 12px}
+.rail h3,.rail .rh{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--g400);margin:0 0 10px}
+.rail button{display:flex;width:100%;min-height:44px;align-items:center;padding:0 10px;border:0;border-radius:8px;background:none;text-align:left;font-size:13px;color:var(--g600);cursor:pointer}
+.rail button.sk{color:transparent}
+.rail .skl-line{display:block;height:10px;border-radius:4px;background:var(--g100);width:70%}
+
+/* skeleton blocks */
+.skl{display:block;border-radius:8px;background:var(--g100);position:relative;overflow:hidden}
+.skl::after{content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);animation:shm 1.4s ease-in-out infinite}
+@keyframes shm{100%{transform:translateX(100%)}}
+html.rm .skl::after,html.rm .spin,html.rm .prog i{animation:none!important}
+html.rm .spin{border-color:var(--blue);opacity:.5}
+html.rm .prog i{width:40%;transform:none}
+.card{background:#fff;border:1px solid var(--g200);border-radius:12px;padding:14px;margin-bottom:12px}
+.card h4{margin:0 0 10px;font-size:14px;color:var(--g900)}
+.act{border:1px solid var(--g200);border-radius:12px;background:#fff;margin-bottom:10px;overflow:hidden}
+.act-h{display:flex;align-items:center;gap:10px;min-height:52px;padding:10px 14px;font-weight:600;font-size:15px;color:var(--g800)}
+.act-b{padding:0 14px 14px}
+.act-b .skl{margin-top:8px}
+
+/* slow / error */
+.msg{border:1px solid #fde68a;background:var(--as);border-radius:12px;padding:14px 16px;margin:12px 0}
+.msg b{display:block;font-size:15px;color:var(--g900);margin-bottom:4px}
+.msg p{margin:0 0 12px;font-size:14px;color:var(--g700)}
+.msg .row{display:flex;flex-wrap:wrap;gap:8px}
+.slowline{font-size:13px;color:var(--g600);margin:8px 0 0;display:flex;align-items:center;gap:8px}
+
+/* loaded content sample */
+.loaded .field{margin-bottom:10px}
+.loaded label{display:block;font-size:12px;font-weight:600;color:var(--g500);margin-bottom:4px}
+.loaded .val{border:1px solid var(--g200);border-radius:8px;padding:9px 12px;font-size:16px;background:#fff;min-height:44px}
+
+/* generating distinct */
+.wait{padding:24px 16px;text-align:left}
+.wait h2{margin:0 0 8px;font-size:18px}
+.pbar{height:6px;border-radius:3px;background:var(--g100);overflow:hidden;margin:12px 0}
+.pbar i{display:block;height:100%;width:38%;background:var(--blue);animation:ind 1.5s ease-in-out infinite;border-radius:3px}
+
+.panel{display:none}
+.panel.on{display:block}
+.beforeafter{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 16px 24px;max-width:1100px;margin:0 auto}
+@media(max-width:700px){.beforeafter{grid-template-columns:1fr}}
+.ba-card{border:1px solid var(--g200);border-radius:12px;overflow:hidden;background:#fff}
+.ba-card header{padding:8px 12px;background:var(--g100);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--g600)}
+.ba-card .ba-body{padding:12px;min-height:220px;font-size:13px;color:var(--g600)}
+.ba-card .ba-body .dead{background:var(--g50);border:1px dashed var(--g300);border-radius:8px;padding:40px 12px;text-align:center;color:var(--g400)}
+</style>
+</head>
+<body>
+<div class="demo" role="region" aria-label="Bảng điều khiển mockup">
+  <b>Demo mở chi tiết</b>
+  <button type="button" data-state="list" aria-pressed="true">1. Danh sách</button>
+  <button type="button" data-state="pressed">2. Hàng đang mở</button>
+  <button type="button" data-state="shell">3. Shell skeleton</button>
+  <button type="button" data-state="slow">4. Chờ lâu (~8s)</button>
+  <button type="button" data-state="error">5. Lỗi mở</button>
+  <button type="button" data-state="ready">6. Đã mở</button>
+  <button type="button" data-state="generating">Khác: Đang soạn</button>
+  <button type="button" data-live aria-pressed="false">▶ Timeline live</button>
+  <button type="button" data-motion aria-pressed="false">Giảm chuyển động</button>
+  <a class="chip" href="./spec.md">spec.md</a>
+  <a class="chip" href="../editor-layout/proposal.md">proposal §11</a>
+  <div class="hint">Đề xuất duyệt · giữ token màu/font hiện tại · không dark mode · Toán lớp 6 · tái dùng PlanOpenSkeleton / §11. Không redesign danh sách lần đầu.</div>
+</div>
+<p class="sr-only" id="live" role="status" aria-live="polite"></p>
+<div class="prog" id="topProg" hidden><i></i></div>
+
+<div class="note">
+  <strong>Vấn đề sống (prod fe8b2e5):</strong> bấm hàng → ~0,5–1,5s vẫn ở danh sách không phản hồi → editor hiện 3 khối xám <em>không có tab</em> → khoảng trống khi job <code>done</code> nhưng chưa có plan → tab + nội dung nhảy cùng lúc.
+  <strong>Đề xuất:</strong> phản hồi hàng 0ms + shell trang (bar + 3 tab tắt + mục lục skeleton + khối I–IV tên cố định) ổn định CLS; màn Đang soạn giữ riêng.
+</div>
+
+<!-- BEFORE / AFTER strip -->
+<div class="beforeafter" id="ba">
+  <div class="ba-card">
+    <header>Trước · live hiện tại</header>
+    <div class="ba-body">
+      <div class="dead">Không tab · không khung mục lục<br/>3 khối xám thấp hoặc khoảng trống<br/>Hàng danh sách không đổi khi bấm</div>
+    </div>
+  </div>
+  <div class="ba-card">
+    <header>Sau · đề xuất</header>
+    <div class="ba-body">
+      <div class="tabs" style="opacity:.7"><span class="tab" style="background:#fff;font-weight:600">Soạn</span><span class="tab">Xem như giáo án</span><span class="tab">So sánh</span></div>
+      <div class="skl" style="height:16px;width:55%;margin:8px 0"></div>
+      <div class="act"><div class="act-h">1. Mở đầu</div><div class="act-b"><span class="skl" style="height:48px;width:100%"></span></div></div>
+      <div style="margin-top:8px;font-size:12px;color:var(--g500)">Tab + tên HĐ cố định ngay · nội dung = khung xám</div>
+    </div>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <!-- LIST -->
+  <section class="panel on" id="panel-list" data-panel="list">
+    <div class="topnav"><span class="logo">G</span> GiaoAn AI · Giáo án của tôi</div>
+    <div class="list-wrap">
+      <h1 style="font-size:20px;margin:0 0 12px">Giáo án của tôi</h1>
+      <table class="tbl" aria-label="Danh sách tiết">
+        <thead><tr><th>Tên tiết</th><th class="hide-s">Môn</th><th>Trạng thái</th><th class="hide-s">Cập nhật</th></tr></thead>
+        <tbody>
+          <tr id="row1"><td><a href="#shell">Biểu đồ cột</a></td><td class="hide-s">Toán</td><td><span class="badge ok">Đã soạn</span></td><td class="hide-s" id="row1upd">1 phút trước</td></tr>
+          <tr><td><a href="#">Quan hệ chia hết</a></td><td class="hide-s">Toán</td><td><span class="badge ok">Đã soạn</span></td><td class="hide-s">26 phút trước</td></tr>
+          <tr><td><a href="#">Phân số và số thập phân</a></td><td class="hide-s">Toán</td><td><span class="badge">Đang soạn</span></td><td class="hide-s">3 phút trước</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:12px;color:var(--g500);margin-top:10px">Bấm “Hàng đang mở” hoặc Timeline: phản hồi 0ms trên hàng (nền xanh nhạt + Đang mở… + spinner). Danh sách skeleton lần đầu: giữ như #60/#61 — không redesign ở đây.</p>
+    </div>
+  </section>
+
+  <!-- EDITOR SHELL (pressed navigates here; shared chrome) -->
+  <section class="panel" id="panel-editor" data-panel="editor">
+    <div class="bar">
+      <button type="button" class="btn" style="min-width:auto;padding:0 10px;border:0;background:none" data-state="list" aria-label="Về danh sách">←</button>
+      <div class="crumb">Giáo án / <b id="crumbTitle">Biểu đồ cột</b></div>
+      <span style="font-size:11px;color:var(--g500)" id="saveSlot"></span>
+      <button type="button" class="btn btn-p" id="btnExport" disabled>Xuất Word</button>
+    </div>
+    <div class="frame">
+      <aside class="rail" aria-label="Mục lục" id="rail">
+        <div class="rh">Mục lục</div>
+        <div id="railBody"></div>
+        <div class="rh" style="margin-top:16px">Trạng thái</div>
+        <p style="font-size:12px;color:var(--g500);padding:0 8px" id="railStatus">Đang mở giáo án.</p>
+      </aside>
+      <div class="main">
+        <div class="chips" id="chips" aria-label="Mục lục"></div>
+        <div class="tabs" role="tablist" aria-label="Chế độ">
+          <button class="tab" role="tab" id="tSoan" aria-selected="true">Soạn</button>
+          <button class="tab" role="tab" id="tXem" aria-selected="false">Xem như giáo án</button>
+          <button class="tab" role="tab" id="tCmp" aria-selected="false">So sánh</button>
+        </div>
+        <p class="phulu">Đã soạn theo khung Phụ lục IV. GV tự thẩm định trước khi nộp.</p>
+        <div id="editorBody"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const TOC=["Thông tin bài dạy","I. Mục tiêu","II. Thiết bị dạy học và học liệu","III. Tiến trình dạy học","1. Mở đầu","2. Hình thành kiến thức mới","3. Luyện tập","4. Vận dụng","Hướng dẫn về nhà"];
+const ACTS=["1. Mở đầu","2. Hình thành kiến thức mới","3. Luyện tập","4. Vận dụng"];
+const live=document.getElementById('live');
+const prog=document.getElementById('topProg');
+let motionReduce=false;
+let state='list';
+
+function setLive(t){live.textContent=t||''}
+function showPanel(which){
+  document.getElementById('panel-list').classList.toggle('on', which==='list');
+  document.getElementById('panel-editor').classList.toggle('on', which!=='list');
+}
+function setTabs(disabled, selected){
+  ['tSoan','tXem','tCmp'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    el.disabled=!!disabled;
+    el.setAttribute('aria-disabled', disabled?'true':'false');
+    el.setAttribute('aria-selected', selected===i?'true':'false');
+  });
+}
+function skelLine(w){return '<span class="skl" style="height:10px;width:'+w+';display:block;margin:6px 0"></span>'}
+function renderToc(skel){
+  const rail=document.getElementById('railBody');
+  const chips=document.getElementById('chips');
+  if(skel){
+    rail.innerHTML=TOC.map(()=>'<button type="button" class="sk" tabindex="-1" aria-hidden="true"><span class="skl-line skl" style="width:'+(50+Math.random()*40)+'%"></span></button>').join('');
+    chips.innerHTML=TOC.slice(0,6).map(()=>'<span class="chip sk" aria-hidden="true">····</span>').join('');
+  }else{
+    rail.innerHTML=TOC.map((t,i)=>'<button type="button"'+(i===0?' aria-current="location" style="background:var(--g100);font-weight:600;color:var(--g900)"':'')+'>'+t+'</button>').join('');
+    chips.innerHTML=TOC.map((t,i)=>'<button type="button" class="chip"'+(i===0?' style="border-color:var(--g900);font-weight:600"':'')+'>'+t+'</button>').join('');
+  }
+}
+function shellBody(opts){
+  const slow=opts&&opts.slow, err=opts&&opts.error;
+  let h='';
+  if(err){
+    h+='<div class="msg" role="alert" tabindex="-1" id="errTitle"><b>Chưa mở được giáo án này</b><p>Chưa có nội dung nào hiện ra. Bấm Thử lại hoặc về danh sách.</p><div class="row"><button type="button" class="btn btn-p" data-state="shell">Thử lại</button><button type="button" class="btn" data-state="list">Về danh sách</button></div></div>';
+    return h;
+  }
+  h+='<div aria-busy="true">';
+  if(slow) h+='<p class="slowline"><span class="spin" aria-hidden="true"></span> Đang mở lâu hơn bình thường.</p><div class="row" style="display:flex;gap:8px;margin:8px 0 12px"><button type="button" class="btn" data-state="shell">Thử lại</button><button type="button" class="btn" data-state="list">Về danh sách</button></div>';
+  h+='<div class="card"><h4>Thông tin bài dạy</h4>'+skelLine('40%')+skelLine('70%')+skelLine('55%')+'</div>';
+  h+='<div class="card"><h4>I. Mục tiêu</h4>'+skelLine('80%')+skelLine('65%')+'</div>';
+  h+='<div class="card"><h4>II. Thiết bị dạy học và học liệu</h4>'+skelLine('60%')+'</div>';
+  ACTS.forEach(n=>{
+    h+='<div class="act"><div class="act-h">'+n+'</div><div class="act-b"><span class="skl" style="height:56px;width:100%"></span><span class="skl" style="height:40px;width:88%;margin-top:8px"></span></div></div>';
+  });
+  h+='<div class="act"><div class="act-h">Hướng dẫn về nhà</div><div class="act-b"><span class="skl" style="height:48px;width:100%"></span></div></div>';
+  h+='</div>';
+  return h;
+}
+function readyBody(){
+  let h='<div class="loaded" aria-busy="false">';
+  h+='<div class="card"><h4>Thông tin bài dạy</h4><div class="field"><label>Tên bài</label><div class="val">Biểu đồ cột</div></div><div class="field"><label>Thời lượng</label><div class="val">45 phút</div></div></div>';
+  h+='<div class="card"><h4>I. Mục tiêu</h4><div class="val">Nhận biết biểu đồ cột; đọc số liệu trên biểu đồ.</div></div>';
+  ACTS.forEach((n,i)=>{
+    h+='<div class="act"><div class="act-h">'+n+'</div>'+(i===0?'<div class="act-b"><div class="field"><label>a) Mục tiêu</label><div class="val">Khởi động: nêu ví dụ biểu đồ đã gặp.</div></div></div>':'')+'</div>';
+  });
+  h+='</div>';
+  return h;
+}
+function generatingBody(){
+  return '<div class="wait" aria-busy="true"><h2>Đang soạn giáo án</h2><p style="color:var(--g600);margin:0">theo khung Phụ lục IV · thường mất 1–2 phút</p><div class="pbar"><i></i></div><p style="font-size:13px;color:var(--g500)">00:41 · Giữ màn này riêng — không dùng shell mở chi tiết.</p><button type="button" class="btn" data-state="list">Về danh sách</button></div>';
+}
+
+function apply(s){
+  state=s;
+  document.querySelectorAll('.demo [data-state]').forEach(b=>b.setAttribute('aria-pressed', b.getAttribute('data-state')===s?'true':'false'));
+  const row=document.getElementById('row1');
+  const upd=document.getElementById('row1upd');
+  row.classList.remove('is-opening');
+  prog.hidden=true;
+  document.getElementById('crumbTitle').textContent='Biểu đồ cột';
+  document.getElementById('saveSlot').textContent='';
+  document.getElementById('btnExport').disabled=true;
+  document.getElementById('railStatus').textContent='Đang mở giáo án.';
+
+  if(s==='list'){
+    showPanel('list'); setLive(''); upd.textContent='1 phút trước'; return;
+  }
+  if(s==='pressed'){
+    showPanel('list');
+    row.classList.add('is-opening');
+    upd.innerHTML='<span class="spin" aria-hidden="true"></span> Đang mở…';
+    prog.hidden=false;
+    setLive('Đang mở giáo án.');
+    return;
+  }
+  showPanel('editor');
+  if(s==='shell'||s==='slow'){
+    setTabs(true,0);
+    renderToc(true);
+    document.getElementById('editorBody').innerHTML=shellBody({slow:s==='slow'});
+    setLive(s==='slow'?'Đang mở giáo án. Đang mở lâu hơn bình thường.':'Đang mở giáo án.');
+    if(s==='shell') prog.hidden=false;
+    return;
+  }
+  if(s==='error'){
+    setTabs(true,0);
+    renderToc(true);
+    document.getElementById('editorBody').innerHTML=shellBody({error:true});
+    document.getElementById('railStatus').textContent='Chưa mở được giáo án này.';
+    setLive('');
+    const t=document.getElementById('errTitle'); if(t) t.focus();
+    return;
+  }
+  if(s==='ready'){
+    setTabs(false,0);
+    renderToc(false);
+    document.getElementById('btnExport').disabled=false;
+    document.getElementById('saveSlot').textContent='Đã lưu';
+    document.getElementById('railStatus').textContent='Đã soạn xong.';
+    document.getElementById('editorBody').innerHTML=readyBody();
+    setLive('');
+    return;
+  }
+  if(s==='generating'){
+    setTabs(true,0);
+    renderToc(true);
+    document.getElementById('crumbTitle').textContent='Giáo án';
+    document.getElementById('railStatus').textContent='Đang soạn…';
+    document.getElementById('editorBody').innerHTML=generatingBody();
+    setLive('Đang soạn giáo án.');
+  }
+}
+
+document.querySelector('.demo').addEventListener('click',e=>{
+  const st=e.target.closest('[data-state]');
+  if(st&&st.hasAttribute('data-state')){apply(st.getAttribute('data-state'));return}
+  if(e.target.closest('[data-motion]')){
+    motionReduce=!motionReduce;
+    document.documentElement.classList.toggle('rm',motionReduce);
+    e.target.closest('[data-motion]').setAttribute('aria-pressed',motionReduce?'true':'false');
+    return;
+  }
+  if(e.target.closest('[data-live]')){
+    const btn=e.target.closest('[data-live]');
+    btn.setAttribute('aria-pressed','true');
+    runLive().finally(()=>btn.setAttribute('aria-pressed','false'));
+  }
+});
+document.getElementById('app').addEventListener('click',e=>{
+  const st=e.target.closest('[data-state]');
+  if(st) apply(st.getAttribute('data-state'));
+});
+document.getElementById('row1').querySelector('a').addEventListener('click',e=>{
+  e.preventDefault(); apply('pressed'); setTimeout(()=>apply('shell'),400); setTimeout(()=>apply('ready'),1800);
+});
+
+async function runLive(){
+  apply('list'); await wait(400);
+  apply('pressed'); await wait(500);
+  apply('shell'); await wait(1200);
+  apply('ready');
+}
+function wait(ms){return new Promise(r=>setTimeout(r,ms))}
+
+// URL params
+const q=new URLSearchParams(location.search);
+if(q.get('motion')==='reduce'){motionReduce=true;document.documentElement.classList.add('rm')}
+if(q.get('state')) apply(q.get('state'));
+else apply('shell');
+if(q.get('live')==='1') runLive();
+</script>
+<style>@media(max-width:720px){.hide-s{display:none}}</style>
+</body>
+</html>
