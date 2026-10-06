@@ -1,6 +1,6 @@
 # Spec · Trạng thái tải khi mở chi tiết giáo án
 
-**Trạng thái:** đề xuất chờ Huy duyệt · **05/10/2026** · UI UX Designer  
+**Trạng thái:** đề xuất chờ Huy duyệt · **05/10/2026**, bản 2 **06/10/2026** sau BA co-review (`ux-review/detail-loading-ba-review.md`) · UI UX Designer  
 **Phạm vi:** mở một giáo án đã có (từ danh sách hoặc URL trực tiếp / back). **Không** redesign skeleton danh sách lần đầu (#60/#61 đang ổn — on hold). **Không** thay màn Đang soạn (generating).  
 **Mockup:** `./index.html` · Pages: `/detail-loading/`  
 **Token:** giữ `--blue / --g* / Inter` hiện tại (không teal/orange/Plus Jakarta). Không dark mode.
@@ -32,21 +32,21 @@
 | State | Khi nào | UI |
 |---|---|---|
 | **A. Row opening** | Pointer-down / click hàng “Đã soạn” | Nền `--blue-s`; cột Cập nhật: spinner 14px + **Đang mở…**; optional top progress 2px; hàng khác vẫn bấm được |
-| **B. Detail shell** | Route `/editor/[jobId]` + đang fetch job/plan (finished plan) | Bar 48px (Xuất Word **disabled**); **3 tab Soạn \| Xem như giáo án \| So sánh** hiện ngay, `aria-disabled` / selected Soạn; chip/rail mục lục = skeleton; dòng Phụ lục IV **chữ thật**; khối Thông tin / I / II + **4 HĐ + HVN tên cố định**, thân = khung xám; `aria-busy` trên vùng nội dung; live-region “Đang mở giáo án.” |
-| **C. Slow** | Shell đã hiện ≥ **8s** | Thêm dòng “Đang mở lâu hơn bình thường.” + **Thử lại** + **Về danh sách** (không đợi 15s mới có Thử lại nếu FE gộp — AC: đủ cả hai nút ở mốc 8–10s) |
-| **D. Error** | Fetch fail / timeout ~30s | Card vàng (§11.5): **Chưa mở được giáo án này** / Chưa có nội dung nào hiện ra… · Thử lại · Về danh sách · focus tiêu đề |
+| **B. Detail shell** | Route `/editor/[jobId]` + đang fetch job/plan (finished plan) | Bar 48px (Xuất Word **disabled**); **3 tab Soạn \| Xem như giáo án \| So sánh** hiện ngay, `aria-disabled` / selected Soạn; chip/rail mục lục = skeleton; dòng Phụ lục IV **chữ thật**; khối Thông tin / I / II + **4 HĐ + Hướng dẫn về nhà tên cố định**, thân = khung xám; `aria-busy` trên vùng nội dung; live-region “Đang mở giáo án.” |
+| **C. Slow** | Shell đã hiện ≥ **8s** | Thêm dòng “Đang mở lâu hơn bình thường.” + **Thử lại** + **Về danh sách** (không đợi 15s mới có Thử lại — AC10: đủ cả hai nút ở mốc 8–10s) |
+| **D. Error** | Fetch fail / timeout ~30s (chỉ áp cho giáo án đã soạn xong) | Card vàng (§11.5), **không** có khung xám/shell chồng hoặc xếp dưới: **Chưa mở được giáo án này** / câu phụ “Giáo án vẫn được lưu. Bấm Thử lại hoặc quay về danh sách.” · **Thử lại** · **Về danh sách** (cả hai trong thẻ) · focus tiêu đề. Thử lại chỉ tải lại giáo án đã có (xem AC12) |
 | **E. Ready** | Có `plan` | Tab bật; TOC thật; nội dung thay khung (cùng geometry) |
 | **F. Generating** | Job `running`/`pending` | **Giữ `PlanWaitScreen`** — không dùng shell B |
 
-**Direct URL / back:** không có A → vào B (sau delay 300ms nếu muốn chống flash) → E/D/F.
+**Direct URL / back:** không có A → vào B (sau 300ms; dữ liệu về trước 300ms thì bỏ qua B) → E/D/F.
 
 ## 3. Timing
 
 | Mốc | Giá trị | Ghi chú |
 |---|---|---|
 | Phản hồi hàng / top progress | **0 ms** | Loading Indicators: phản hồi tức thì |
-| Hiện shell B | **0 ms** nếu đã navigate; hoặc delay **300 ms** chỉ khi chống flash trên tải &lt;300ms *sau khi* JS route đã mount | Ưu tiên shell sớm hơn flash trống |
-| Min visible shell | **500 ms** | Tránh nháy |
+| Hiện shell B | sau **300 ms** kể từ khi route `/editor/[id]` mount; dữ liệu về trước mốc này thì **không** hiện shell | Một phương án duy nhất để QA đo (AC7) |
+| Min visible shell | **500 ms** | Đã hiện thì giữ ≥500ms rồi mới sang E; sang D/F thì bỏ shell ngay |
 | Chờ lâu | **8–10 s** | Copy + Thử lại + Về danh sách |
 | Error | **~30 s** hoặc fail sớm | §11.5 |
 | Reduced motion | shimmer/spinner off | khung xám tĩnh |
@@ -65,15 +65,21 @@ Tái dùng: `OPENING_PLAN_STATUS`, `PlanLoadFailure`, `SKELETON_PULSE` + `motion
 
 ## 5. Acceptance criteria
 
-1. Bấm hàng finished → ≤100ms thấy pressed + “Đang mở…” (hoặc tương đương).  
-2. Trên `/editor/[id]` trước khi có plan: **nhìn thấy 3 tab** (disabled) + tên 4 HĐ cố định + skeleton thân; không khoảng trống không tab.  
-3. Khi plan vào: không nhảy layout đáng kể (tab/TOC/HĐ cùng chỗ) — checklist CLS.  
+**Điều kiện đo chung (AC1, AC3, AC7, AC10):** WebKit 820×1180 (iPad UA), API giả lập chậm **2 s** cho job/plan như phần chẩn đoán §1, trừ khi AC ghi điều kiện khác.
+
+1. Bấm hàng finished → **≤100 ms** thấy nền pressed + chữ “Đang mở…” trên chính hàng đó.  
+2. Trên `/editor/[id]` trước khi có plan: **nhìn thấy 3 tab** (disabled) + tên 4 HĐ + “Hướng dẫn về nhà” cố định + skeleton thân; không khoảng trống không tab.  
+3. **CLS ≤ 0,1** từ lúc hiện khung (B) tới lúc nội dung vào (E), đo cùng điều kiện; tab/mục lục/tên HĐ giữ chỗ.  
 4. `prefers-reduced-motion: reduce`: không shimmer/spin quay.  
-5. `aria-busy` + live-region “Đang mở giáo án.”; error `role=alert` + focus.  
+5. `aria-busy` + live-region (`role=status`, `aria-live=polite`) “Đang mở giáo án.”; error `role=alert` + focus.  
 6. Job generating vẫn màn Đang soạn — không nhầm shell mở.  
-7. Fast load &lt;300ms: không flash skeleton rồi mất (min 500ms hoặc bỏ qua shell nếu dữ liệu đã sẵn sau paint đầu).  
+7. Dữ liệu về **< 300 ms** thì **không** hiện khung xám; đã hiện khung thì giữ **ít nhất 500 ms**.  
 8. Touch ≥44px; contrast chữ/ghi chú đạt token hiện tại (≥4.5:1 text).  
 9. Copy ngắn tiếng Việt, không “lỗi/máy chủ”.  
+10. **Trạng thái C:** ở mốc **8–10 giây** (tính từ lúc shell hiện) có dòng “Đang mở lâu hơn bình thường.” cùng **cả** Thử lại và Về danh sách.  
+11. **Trạng thái D:** lỗi hoặc quá **~30 giây** thì hiện thẻ “Chưa mở được giáo án này” với câu phụ “Giáo án vẫn được lưu. Bấm Thử lại hoặc quay về danh sách.”, **Thử lại** và **Về danh sách** trong thẻ; tiêu đề được focus; không có khung xám/shell chồng hoặc xếp dưới thẻ.  
+12. **Nghiệp vụ:** Thử lại chỉ tải lại giáo án đã có: **không soạn lại, không gọi AI, không trừ lượt miễn phí** (QA: chỉ có request đọc job/plan, không có request tạo/soạn).  
+13. Đang mở hàng A mà bấm hàng B thì mở B; không mở 2 trang, không kẹt “Đang mở…” ở A.  
 
 ## 6. Ngoài phạm vi
 
@@ -81,10 +87,21 @@ Tái dùng: `OPENING_PLAN_STATUS`, `PlanLoadFailure`, `SKELETON_PULSE` + `motion
 - Formula preview / phím a/b (A2).  
 - Dark mode.
 
-## 7. Câu hỏi mở cho Huy
+## 7. Câu hỏi mở (Q1, Q2)
+
+BA (06/10): cả hai là quyết định kỹ thuật/hiển thị — **không đưa Huy**; UI UX + Techlead chốt theo khuyến nghị dưới. Huy chỉ duyệt hướng chung.
 
 **Q1.** Top progress 2px trên cùng khi route chậm — giữ hay chỉ dựa hàng “Đang mở…”?  
-**Khuyến nghị:** giữ cả hai (hàng = phản hồi cục bộ; progress = tín hiệu toàn trang khi chunk chậm &gt;300ms); tắt progress khi shell B đã hiện đủ.
+**Khuyến nghị:** giữ cả hai (hàng = phản hồi cục bộ; progress = tín hiệu toàn trang khi chunk chậm >300ms); tắt progress khi shell B đã hiện đủ.
 
 **Q2.** Có bắt buộc `loading.tsx` (Next) hay chỉ mở rộng `PlanOpenSkeleton` trong client?  
 **Khuyến nghị:** cả hai nếu chunk JS editor nặng; tối thiểu client shell + sửa `editorSurface` để hết gap `plan && !plan`.
+
+## 8. Thay đổi bản 2 (06/10/2026, sau BA co-review)
+
+- AC1, AC3, AC7 đo được (điều kiện WebKit 820 + API chậm 2s; CLS ≤ 0,1; chọn một phương án 300ms/500ms). Bảng Timing sửa theo AC7.
+- Thêm AC10 (trạng thái C), AC11 (trạng thái D), AC12 (Thử lại không soạn lại / không gọi AI / không trừ lượt), AC13 (bấm hàng B khi đang mở A).
+- Câu phụ thẻ lỗi: “Giáo án vẫn được lưu. Bấm Thử lại hoặc quay về danh sách.” (mockup `index.html?state=error` vẫn hiện câu cũ; spec là chuẩn).
+- Viết đầy đủ “Hướng dẫn về nhà” (bỏ chữ viết tắt).
+- Q1/Q2 để UI UX + Techlead chốt, không đưa Huy.
+
