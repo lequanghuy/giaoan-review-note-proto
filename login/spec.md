@@ -59,7 +59,7 @@
 
 `?motion=reduce` hoặc checkbox: tắt quay spinner.  
 `?mvp=1` hoặc checkbox “MVP sạch”: màn MVP thật (ẩn “Quên mật khẩu?” và ô ghi chú MVP/Sau). Ảnh chụp trạng thái dùng chế độ này.  
-`?bg=b|b2|b-old|a|none`: nền họa tiết (mục 7, mặc định B). Kết hợp được với `?state=`.
+`?bg=b|b2|b-old|a|none`: nền họa tiết (mục 7, mặc định B; b2 / b-old / a giữ để tham khảo, không chọn). Kết hợp được với `?state=`.
 
 ## 3. Bảng copy
 
@@ -143,15 +143,15 @@ Khuyến nghị: **có** (màn hỏi + xác nhận). Đổi MK trong app = Sau.
 
 | Biến thể | Nét | Ô lặp | SVG |
 |---|---|---|---|
-| `?bg=b` (**mặc định**, đã duyệt) | blue `#2563eb` · 17% (≈ `#d5e0f8` trên g50) · 2.4px · nét mới | 140px (120px khi ≤480px) | 1176 B (1300 B dạng URI) |
-| `?bg=b2` | như B, **thưa hơn** | 200px (172px khi ≤480px) | 964 B (1052 B dạng URI) |
-| `?bg=b-old` | B cũ, nét mảnh 2.2px (để so sánh) | 140px (120px) | 822 B (918 B dạng URI) |
-| `?bg=a` | xám g400 · 40% · thưa (để so sánh) | 240px (180px) | 733 B (817 B dạng URI) |
+| `?bg=b` (**mặc định**, Huy chốt) | blue `#2563eb` · 17% (≈ `#d5e0f8` trên g50) · 2.4px · nét mới | 140px (120px khi ≤480px) | 1176 B (1300 B dạng URI) |
+| `?bg=b2` (**không chọn**, giữ để tham khảo) | như B, thưa hơn | 200px (172px khi ≤480px) | 964 B (1052 B dạng URI) |
+| `?bg=b-old` (**không chọn**, giữ để tham khảo) | B cũ, nét mảnh 2.2px | 140px (120px) | 822 B (918 B dạng URI) |
+| `?bg=a` (**không chọn**, giữ để tham khảo) | xám g400 · 40% · thưa | 240px (180px) | 733 B (817 B dạng URI) |
 | `?bg=none` | nền g50 trơn | — | — |
 
 **Tương phản (WCAG):** họa tiết chỉ để trang trí, nằm ngoài thẻ: B/b2 1.27:1 so với g50 (cố ý mờ, không đổi so với B cũ). Chữ trên thẻ trắng không đổi: g900 17.7 · g800 14.7 · g700 10.3 · g600 7.6 · g500 4.83 (phụ đề, “hoặc”) · link blue 5.17 · chữ trắng trên nút 5.17 · lý do ô a800 7.09 · banner 9.94 · tag “Ẩn ở MVP” 6.87.
 
-**Đề xuất: b2 (ô 200px).** Nét mới dày hơn nên ô 140px trông dày đặc sau thẻ; b2 thoáng hơn, thẻ và nút xanh vẫn nổi bật nhất. Mặc định vẫn là B theo Huy duyệt; nếu chọn b2 chỉ cần đổi `BG_DEFAULT`.
+**Huy chốt B mới (nét dày, ô 140px), không dùng B2 · 09/10.** B là mặc định (`BG_DEFAULT='b'`). Chưa giao Dev FE; sẽ làm trong **FE-2**.
 
 **Acceptance (nền):**
 1. `.bgpat` có `aria-hidden="true"`, `pointer-events:none`, không có animation.
