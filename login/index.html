@@ -112,7 +112,11 @@ html:not([data-bg=none]) .card{box-shadow:0 1px 2px rgba(0,0,0,.05),0 12px 32px 
 /* ?mvp=1: màn MVP thật — ẩn Quên mật khẩu + ghi chú MVP/Sau */
 html.mvp .links,html.mvp .mvp{display:none}
 .proto .sep{color:#6b7280;margin:0 2px}
-#bgBtns,#fontBtns{display:inline-flex;gap:4px;vertical-align:middle}
+#bgBtns,#fontBtns,#logoBtns{display:inline-flex;gap:4px;vertical-align:middle}
+/* Logo cú (chờ Huy duyệt): ?logo=g (mặc định)|icon|mascot. Ảnh trang trí cạnh h1 → alt="" + aria-hidden. Không chuyển động. */
+.logo-owl{display:block;width:56px;height:56px;margin-bottom:12px}
+.logo-mascot{display:block;width:auto;height:112px;margin-bottom:10px}
+@media(max-width:480px){.logo-mascot{height:84px;margin-bottom:8px}}
 /* So sánh font: chỉ đổi họ chữ, giữ nguyên màu / cỡ / token */
 html[data-font=bvp],html[data-font=bvp] body{font-family:"Be Vietnam Pro",system-ui,"Noto Sans",sans-serif}
 /* Mẫu dấu (?state=sample) */
@@ -133,7 +137,8 @@ html[data-font=bvp],html[data-font=bvp] body{font-family:"Be Vietnam Pro",system
     <label style="margin-left:8px"><input type="checkbox" id="rm"/> Giảm chuyển động</label> ·
     <label><input type="checkbox" id="mvpT"/> MVP sạch</label> ·
     Nền: <span id="bgBtns"></span> ·
-    Font: <span id="fontBtns"></span>
+    Font: <span id="fontBtns"></span> ·
+    Logo: <span id="logoBtns"></span>
     · Figma <code>01 Login</code> chỉ có Google — mockup này thêm email/mật khẩu theo Huy 07/10.
   </div>
 </header>
@@ -162,6 +167,8 @@ const BG_DEFAULT='b';
 let bg=Q.get('bg'); if(!(bg in BGS)) bg=BG_DEFAULT;
 const FONTS={inter:'Inter (hiện tại)',bvp:'Be Vietnam Pro'};
 let font=document.documentElement.dataset.font;
+const LOGOS={g:'G (hiện tại)',icon:'Icon cú',mascot:'Cú lớn'};
+let logo=Q.get('logo'); if(!(logo in LOGOS)) logo='g';
 document.documentElement.dataset.bg=bg;
 if(Q.get('mvp')==='1') document.documentElement.classList.add('mvp');
 function setParam(k,v){const u=new URL(location.href); if(v==null) u.searchParams.delete(k); else u.searchParams.set(k,v); history.replaceState(null,'',u);}
@@ -174,9 +181,15 @@ function eye(open){
     : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/></svg>`;
 }
 
+function logoMark(){
+  if(logo==='icon') return `<img class="logo-owl" src="assets/owl-app-icon-112.svg" width="56" height="56" alt="" aria-hidden="true" decoding="async"/>`;
+  if(logo==='mascot') return `<img class="logo-mascot" src="assets/owl-mascot-224.svg" width="86" height="112" alt="" aria-hidden="true" decoding="async"/>`;
+  return `<div class="logo-mark" aria-hidden="true">G</div>`;
+}
+
 function brand(sub){
   return `<div class="brand">
-    <div class="logo-mark" aria-hidden="true">G</div>
+    ${logoMark()}
     <h1>GiaoAn AI</h1>
     <p class="sub">${sub||'Soạn kế hoạch bài dạy theo khung Phụ lục IV'}</p>
   </div>`;
@@ -234,9 +247,9 @@ function renderMain(opts={}){
     ${alert}
     <form id="loginForm" novalidate>
       ${field({id:'email',label:'Email',type:'email',autocomplete:'username email',value:invalid?'gv@':(missing?'':'gv@truongthcs.edu.vn'),invalid:emailInv,reason:emailWhy})}
-      ${field({id:'password',label:'Mật khẩu',pw:true,autocomplete:'current-password',value:missing?'':'••••••••',invalid:pwInv,reason:pwWhy})}
+      ${field({id:'password',label:'Mật khẩu',pw:true,autocomplete:'current-password',value:missing?'':'\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022',invalid:pwInv,reason:pwWhy})}
       <button type="submit" class="btn btn-p" ${loading?'disabled aria-busy="true"':''} id="submitBtn">
-        ${loading?`<span class="spin" aria-hidden="true"></span><span>Đang đăng nhập…</span>`:'Đăng nhập'}
+        ${loading?`<span class="spin" aria-hidden="true"></span><span>Đang đăng nhập\u2026</span>`:'Đăng nhập'}
       </button>
     </form>
     <div class="div" role="separator" aria-label="hoặc">hoặc</div>
@@ -250,7 +263,7 @@ function renderMain(opts={}){
 }
 
 function renderForgot(){
-  return `<button type="button" class="back" data-go="main">← Về đăng nhập</button>
+  return `<button type="button" class="back" data-go="main">\u2190 Về đăng nhập</button>
     ${brand('Gửi link đặt lại mật khẩu tới email của bạn.')}
     <form id="forgotForm" novalidate>
       ${field({id:'email',label:'Email',type:'email',autocomplete:'email',value:'gv@truongthcs.edu.vn'})}
@@ -260,7 +273,7 @@ function renderForgot(){
 }
 
 function renderForgotSent(){
-  return `<button type="button" class="back" data-go="main">← Về đăng nhập</button>
+  return `<button type="button" class="back" data-go="main">\u2190 Về đăng nhập</button>
     ${brand()}
     <div class="ok" role="status">
       <h2>Đã gửi link</h2>
@@ -271,7 +284,7 @@ function renderForgotSent(){
 }
 
 function renderRegister(){
-  return `<button type="button" class="back" data-go="main">← Về đăng nhập</button>
+  return `<button type="button" class="back" data-go="main">\u2190 Về đăng nhập</button>
     ${brand('Tạo tài khoản miễn phí · Toán THCS.')}
     <form id="regForm" novalidate>
       ${field({id:'email',label:'Email',type:'email',autocomplete:'email',value:''})}
@@ -298,7 +311,7 @@ function renderSample(){
     row(`s${sz}-p`,sz,w,'Giáo viên nhập mục tiêu bài học, chọn hoạt động và nhận kế hoạch bài dạy theo khung Phụ lục IV. Có thể sửa từng mục trước khi xuất file Word.'),
     row(`s${sz}-em`,sz,w,'gv@truongthcs.edu.vn'),
     row(`s${sz}-dg`,sz,w,'0123456789 · Il1 O0')].join('');
-  return `<button type="button" class="back" data-go="main">← Về đăng nhập</button>
+  return `<button type="button" class="back" data-go="main">\u2190 Về đăng nhập</button>
     <p class="smp-head">Mẫu dấu tiếng Việt · font: <b>${fam}</b> · line-height 1.5 như màn thật</p>
     <div class="smp-sec"><span class="smp-l">Tiêu đề 24 · 700</span>${row('t24',24,700,'GiaoAn AI — Soạn giáo án','t')}
       <span class="smp-l">Tiêu đề 22 · 700 (h1 thật)</span>${row('t22',22,700,'GiaoAn AI — Soạn giáo án','t')}
@@ -369,7 +382,7 @@ function bind(){
     /* Mock only — không gọi Google thật */
     b.setAttribute('aria-busy','true');
     b.disabled=true;
-    b.querySelector('span').textContent='Đang mở Google…';
+    b.querySelector('span').textContent='Đang mở Google\u2026';
   }));
 }
 
@@ -401,6 +414,15 @@ Object.entries(FONTS).forEach(([k,l])=>{
     fontBox.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));
     if(state==='sample') setState('sample');});
   fontBox.appendChild(b);
+});
+const logoBox=document.getElementById('logoBtns');
+Object.entries(LOGOS).forEach(([k,l])=>{
+  const b=document.createElement('button');
+  b.type='button'; b.textContent=l; b.setAttribute('aria-pressed',k===logo?'true':'false');
+  b.addEventListener('click',()=>{logo=k;setParam('logo',k==='g'?null:k);
+    logoBox.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));
+    setState(state);});
+  logoBox.appendChild(b);
 });
 const mvpT=document.getElementById('mvpT');
 mvpT.checked=document.documentElement.classList.contains('mvp');
