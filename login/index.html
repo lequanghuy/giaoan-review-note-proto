@@ -167,8 +167,8 @@ function googleBtn(disabled){
 }
 
 function mvpNote(){
-  return `<div class="mvp"><b>MVP</b> (đề xuất) · email + mật khẩu · Google · quên mật khẩu gửi link · tạo tài khoản tối thiểu.
-  <ul><li><b>Sau:</b> tên đăng nhập thay email · OTP · SSO trường · 2FA · magic link · đặt lại MK trong app</li></ul></div>`;
+  return `<div class="mvp"><b>MVP</b> (đề xuất) · email + mật khẩu · Google · tạo tài khoản tối thiểu.
+  <ul><li><b>Sau:</b> quên mật khẩu gửi link (khi có dịch vụ mail) · tên đăng nhập thay email · OTP · SSO trường · 2FA · magic link · đặt lại MK trong app</li></ul></div>`;
 }
 
 function renderMain(opts={}){
@@ -213,7 +213,7 @@ function renderForgot(){
       ${field({id:'email',label:'Email',type:'email',autocomplete:'email',value:'gv@truongthcs.edu.vn'})}
       <button type="submit" class="btn btn-p">Gửi link</button>
     </form>
-    <p class="hint">MVP: chỉ gửi link email. Đặt lại mật khẩu trên trang link (ngoài app) — chưa có màn đổi MK trong app.</p>`;
+    <p class="hint">Sau, khi có dịch vụ mail: chỉ gửi link email. Đặt lại mật khẩu trên trang link (ngoài app) — chưa có màn đổi MK trong app.</p>`;
 }
 
 function renderForgotSent(){
