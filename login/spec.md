@@ -1,9 +1,16 @@
 # Spec · Đăng nhập GiaoAn AI (hi-fi mockup)
 
-**Trạng thái:** đề xuất chờ Huy duyệt · **07/10/2026** · UI UX Designer  
+**Trạng thái:** Huy đã duyệt (07/10), xem ghi chú bên dưới · UI UX Designer  
 **Mockup:** `./index.html` · Pages: https://lequanghuy.github.io/giaoan-review-note-proto/login/  
 **Token:** giữ `--blue / --g* / Inter` hiện tại (Huy khóa). Không dark mode. Không teal/orange/Plus Jakarta.  
 **Tham chiếu:** Figma `01 Login` (file `0W3eEEZTrgNJuR9Tm0iOO0`) chỉ có **Đăng nhập bằng Google** — đã lỗi thời so với yêu cầu Huy 07/10 (thêm email + mật khẩu). Mockup này làm mới, khớp chrome live (`PRODUCT_NAME = "GiaoAn AI"`).
+
+## Ghi chú duyệt (Huy, 07/10)
+
+- **Chỉ email.** Không có tên đăng nhập.
+- **Tạo tài khoản tối thiểu:** email + mật khẩu + nhập lại, hoặc Google.
+- **Gộp tài khoản theo email:** mỗi email chỉ có **một tài khoản**. Đăng nhập bằng Google mà email đó đã có tài khoản email/mật khẩu → **liên kết vào tài khoản đó**, không tạo tài khoản mới. Chỉ liên kết khi Google trả `email_verified = true`.
+- **Ẩn “Quên mật khẩu?” ở MVP:** chưa có dịch vụ mail nên chưa gửi được link. Màn `forgot` / `forgot-sent` vẫn giữ trong mockup, đánh dấu **Sau, khi có dịch vụ mail**.
 
 ## Guidelines (ui-ux-pro-max `--domain ux`)
 
@@ -18,14 +25,14 @@
 
 ## 1. MVP vs sau
 
-### MVP (đề xuất — mockup có)
+### MVP (đã duyệt 07/10)
 
-1. Màn đăng nhập: logo **GiaoAn AI**, email, mật khẩu + Hiện/Ẩn, **Đăng nhập**, divider **hoặc**, **Đăng nhập bằng Google** (icon G chuẩn 4 màu + chữ, không tô lại G), **Quên mật khẩu?**, **Tạo tài khoản**.
+1. Màn đăng nhập: logo **GiaoAn AI**, email, mật khẩu + Hiện/Ẩn, **Đăng nhập**, divider **hoặc**, **Đăng nhập bằng Google** (icon G chuẩn 4 màu + chữ, không tô lại G), **Tạo tài khoản**. Link **Quên mật khẩu?** **ẩn** ở MVP (mockup gắn tag “Ẩn ở MVP”).
 2. Kiểm tra thiếu ô / email sai dạng: dòng ngắn dưới ô (pattern NEW-02) + tóm tắt trên đầu khi bấm Đăng nhập.
 3. Thất bại xác thực (sai mật khẩu / không có tài khoản): **một** câu không tiết lộ ô nào sai; `role=alert` + focus; giữ nội dung ô.
 4. Đang đăng nhập: spinner trên nút, không bấm trùng.
-5. Quên mật khẩu (nhẹ): hỏi email → màn “Đã gửi link” (câu trung tính, không lộ email có/không). **Chưa** có màn đổi MK trong app.
-6. Tạo tài khoản (tối thiểu): email + mật khẩu + nhập lại, hoặc Google.
+5. Tạo tài khoản (tối thiểu): email + mật khẩu + nhập lại, hoặc Google.
+6. Một tài khoản / một email: Google cùng email với tài khoản email/mật khẩu sẵn có → liên kết vào tài khoản đó (cần `email_verified`).
 
 ### Sau (không vẽ đầy đủ)
 
@@ -33,6 +40,7 @@
 - OTP điện thoại, magic link, passkey  
 - SSO trường / Microsoft  
 - 2FA  
+- **Quên mật khẩu** (màn hỏi email + “Đã gửi link”): **Sau, khi có dịch vụ mail**. Mockup giữ sẵn `?state=forgot` / `forgot-sent`  
 - Đặt lại mật khẩu **trong app** (sau khi bấm link)  
 - Bắt buộc xác nhận email trước khi soạn  
 
@@ -45,8 +53,8 @@
 | `invalid` | Email sai dạng |
 | `wrong` | Banner “Chưa đăng nhập được” |
 | `loading` | Nút `aria-busy` “Đang đăng nhập…” |
-| `forgot` | Hỏi email, gửi link |
-| `forgot-sent` | Xác nhận đã gửi (trung tính) |
+| `forgot` | Hỏi email, gửi link (**Sau, khi có dịch vụ mail**) |
+| `forgot-sent` | Xác nhận đã gửi, câu trung tính (**Sau, khi có dịch vụ mail**) |
 | `register` | Tạo tài khoản |
 
 `?motion=reduce` hoặc checkbox: tắt quay spinner.
@@ -61,7 +69,7 @@
 | Nút chính | Đăng nhập |
 | Google | Đăng nhập bằng Google |
 | Divider | hoặc |
-| Link | Quên mật khẩu? · Tạo tài khoản |
+| Link | Tạo tài khoản · (Quên mật khẩu? ẩn ở MVP) |
 | Thiếu email | Cần có email. |
 | Thiếu mật khẩu | Cần có mật khẩu. |
 | Email sai dạng | Nhập email đúng dạng, ví dụ ten@truong.edu.vn. |
@@ -69,9 +77,9 @@
 | Auth fail (tiêu đề) | Chưa đăng nhập được |
 | Auth fail (dòng) | Email hoặc mật khẩu chưa khớp. Kiểm tra lại hoặc dùng Google. |
 | Loading | Đang đăng nhập… |
-| Quên — nút | Gửi link |
-| Quên — OK tiêu đề | Đã gửi link |
-| Quên — OK dòng | Nếu email có trong hệ thống, bạn sẽ nhận link trong vài phút. Kiểm tra cả hộp thư rác. |
+| Quên — nút (Sau) | Gửi link |
+| Quên — OK tiêu đề (Sau) | Đã gửi link |
+| Quên — OK dòng (Sau) | Nếu email có trong hệ thống, bạn sẽ nhận link trong vài phút. Kiểm tra cả hộp thư rác. |
 | Hiện/Ẩn | aria-label: Hiện mật khẩu / Ẩn mật khẩu |
 
 Không dùng: lỗi / sai / máy chủ / 400 / Thầy cô … giúp nhé.
@@ -91,26 +99,30 @@ Không dùng: lỗi / sai / máy chủ / 400 / Thầy cô … giúp nhé.
 
 **Điều kiện:** WebKit 820×1180 (iPad UA) + spot 375 / 1180×820.
 
-1. Màn chính có đủ: logo GiaoAn AI, email, mật khẩu + Hiện/Ẩn, Đăng nhập, hoặc + Google, Quên mật khẩu?, Tạo tài khoản.  
+1. Màn chính có đủ: logo GiaoAn AI, email, mật khẩu + Hiện/Ẩn, Đăng nhập, hoặc + Google, Tạo tài khoản. Link “Quên mật khẩu?” **không hiện** ở MVP.  
 2. Input `font-size` ≥ 16px; nút / Hiện/Ẩn / Google / Đăng nhập min-height ≥ 44px.  
 3. Bấm Đăng nhập khi trống → ≤100ms thấy tóm tắt `role=alert` được focus + dòng dưới từng ô thiếu.  
 4. Email `gv@` → dòng “Nhập email đúng dạng…”.  
 5. Auth fail: đúng 1 banner không nói ô nào sai; ô vẫn giữ giá trị; focus vào banner.  
 6. Loading: nút disabled + `aria-busy` + “Đang đăng nhập…”; không submit lần 2.  
 7. Hiện mật khẩu đổi `type` text/password và `aria-label`.  
-8. Quên MK: gửi → màn xác nhận trung tính (không “email không tồn tại”).  
+8. Gộp theo email: đăng nhập Google bằng email đã có tài khoản email/mật khẩu → vào **đúng tài khoản đó** (cùng danh sách giáo án), không có tài khoản thứ hai. Mỗi email = 1 bản ghi tài khoản.  
+8b. (Sau, khi có dịch vụ mail) Quên MK: gửi → màn xác nhận trung tính (không “email không tồn tại”).  
 9. `prefers-reduced-motion` / `?motion=reduce`: spinner không quay.  
 10. Không có từ bị cấm trong copy visible.
 
-## 6. Câu hỏi mở cho Huy
+## 6. Câu hỏi đã chốt (Huy, 07/10)
 
 **Q1. Email thuần hay email / tên đăng nhập?**  
 Mockup: **chỉ email** (khớp Google, dễ nhớ, autocomplete chuẩn).  
-Khuyến nghị: MVP email; tên đăng nhập = Sau nếu giáo viên quen tài khoản trường không phải email.
+Khuyến nghị: MVP email; tên đăng nhập = Sau nếu giáo viên quen tài khoản trường không phải email.  
+**Chốt:** chỉ email.
 
 **Q2. Tạo tài khoản trong MVP hay chỉ Google + mời?**  
 Mockup: **có tạo tài khoản tối thiểu** (email + MK + nhập lại) + Google.  
-Khuyến nghị: giữ trong MVP để giáo viên không Gmail vẫn vào được; có thể ẩn sau feature flag nếu backend chưa sẵn.
+Khuyến nghị: giữ trong MVP để giáo viên không Gmail vẫn vào được; có thể ẩn sau feature flag nếu backend chưa sẵn.  
+**Chốt:** có tạo tài khoản tối thiểu + gộp tài khoản Google cùng email.
 
 **Q3. Quên mật khẩu: link email đủ cho MVP?**  
-Khuyến nghị: **có** (màn hỏi + xác nhận). Đổi MK trong app = Sau.
+Khuyến nghị: **có** (màn hỏi + xác nhận). Đổi MK trong app = Sau.  
+**Chốt:** chưa có dịch vụ mail → **ẩn link ở MVP**; màn quên MK = Sau, khi có dịch vụ mail.
