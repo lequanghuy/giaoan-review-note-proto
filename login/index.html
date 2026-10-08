@@ -7,6 +7,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script>/* So sánh font (chưa đổi token): ?font=inter (mặc định) | bvp — chỉ tải Be Vietnam Pro khi cần */
+function loadBVP(){if(document.getElementById('bvpCss'))return;var l=document.createElement('link');l.id='bvpCss';l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&subset=vietnamese,latin&display=swap';document.head.appendChild(l);}
+if(new URLSearchParams(location.search).get('font')==='bvp'){document.documentElement.dataset.font='bvp';loadBVP();}else{document.documentElement.dataset.font='inter';}
+</script>
 <style>
 /* Tokens = apps/web globals.css / app.html :root (Huy locked). Không teal/orange/Plus Jakarta. */
 :root{
@@ -108,7 +112,16 @@ html:not([data-bg=none]) .card{box-shadow:0 1px 2px rgba(0,0,0,.05),0 12px 32px 
 /* ?mvp=1: màn MVP thật — ẩn Quên mật khẩu + ghi chú MVP/Sau */
 html.mvp .links,html.mvp .mvp{display:none}
 .proto .sep{color:#6b7280;margin:0 2px}
-#bgBtns{display:inline-flex;gap:4px;vertical-align:middle}
+#bgBtns,#fontBtns{display:inline-flex;gap:4px;vertical-align:middle}
+/* So sánh font: chỉ đổi họ chữ, giữ nguyên màu / cỡ / token */
+html[data-font=bvp],html[data-font=bvp] body{font-family:"Be Vietnam Pro",system-ui,"Noto Sans",sans-serif}
+/* Mẫu dấu (?state=sample) */
+.smp-head{margin:0 0 14px;font-size:13px;color:var(--g600)}
+.smp-sec{margin:0 0 14px;padding:0 0 12px;border-bottom:1px solid var(--g100)}
+.smp-sec:last-child{border-bottom:0;margin:0;padding:0}
+.smp-l{display:block;margin:0 0 4px;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--g500)}
+.smp-r{margin:0;color:var(--g800)}
+.smp-r.t{color:var(--g900)}
 </style>
 </head>
 <body>
@@ -119,7 +132,8 @@ html.mvp .links,html.mvp .mvp{display:none}
     <a href="./spec.md">spec.md</a> ·
     <label style="margin-left:8px"><input type="checkbox" id="rm"/> Giảm chuyển động</label> ·
     <label><input type="checkbox" id="mvpT"/> MVP sạch</label> ·
-    Nền: <span id="bgBtns"></span>
+    Nền: <span id="bgBtns"></span> ·
+    Font: <span id="fontBtns"></span>
     · Figma <code>01 Login</code> chỉ có Google — mockup này thêm email/mật khẩu theo Huy 07/10.
   </div>
 </header>
@@ -138,6 +152,7 @@ const STATES=[
   {id:'forgot',label:'6. Quên MK'},
   {id:'forgot-sent',label:'7. Đã gửi link'},
   {id:'register',label:'8. Tạo tài khoản'},
+  {id:'sample',label:'9. Mẫu dấu (so sánh font)'},
 ];
 const Q=new URLSearchParams(location.search);
 let state=Q.get('state')||'main';
@@ -145,6 +160,8 @@ if(Q.get('motion')==='reduce') document.documentElement.classList.add('rm');
 const BGS={b:'B',b2:'B2 thưa','b-old':'B cũ',a:'A xám',none:'Không'};
 const BG_DEFAULT='b';
 let bg=Q.get('bg'); if(!(bg in BGS)) bg=BG_DEFAULT;
+const FONTS={inter:'Inter (hiện tại)',bvp:'Be Vietnam Pro'};
+let font=document.documentElement.dataset.font;
 document.documentElement.dataset.bg=bg;
 if(Q.get('mvp')==='1') document.documentElement.classList.add('mvp');
 function setParam(k,v){const u=new URL(location.href); if(v==null) u.searchParams.delete(k); else u.searchParams.set(k,v); history.replaceState(null,'',u);}
@@ -269,6 +286,32 @@ function renderRegister(){
     <ul><li><b>Sau:</b> số điện thoại / OTP · SSO trường · bắt buộc xác nhận email trước khi soạn</li></ul></div>`;
 }
 
+function renderSample(){
+  const fam=font==='bvp'?'Be Vietnam Pro':'Inter';
+  const row=(id,size,w,txt,cls)=>`<p class="smp-r ${cls||''}" data-row="${id}" style="font-size:${size}px;font-weight:${w}">${txt}</p>`;
+  const set=(sz,w)=>[
+    row(`s${sz}-sub`,sz,w,'Soạn kế hoạch bài dạy theo khung Phụ lục IV'),
+    row(`s${sz}-hdvn`,sz,w,'Hướng dẫn về nhà'),
+    row(`s${sz}-hd`,sz,w,'Hoạt động khởi động · Luyện tập · Vận dụng'),
+    row(`s${sz}-up`,sz,w,'Ỹ Ự Ữ Ỗ Ễ Ặ Ẩ Ứ Ợ Ệ'),
+    row(`s${sz}-lo`,sz,w,'mỹ ự ữ ỗ ễ ặ ẩ ứ ợ ệ qủy'),
+    row(`s${sz}-p`,sz,w,'Giáo viên nhập mục tiêu bài học, chọn hoạt động và nhận kế hoạch bài dạy theo khung Phụ lục IV. Có thể sửa từng mục trước khi xuất file Word.'),
+    row(`s${sz}-em`,sz,w,'gv@truongthcs.edu.vn'),
+    row(`s${sz}-dg`,sz,w,'0123456789 · Il1 O0')].join('');
+  return `<button type="button" class="back" data-go="main">← Về đăng nhập</button>
+    <p class="smp-head">Mẫu dấu tiếng Việt · font: <b>${fam}</b> · line-height 1.5 như màn thật</p>
+    <div class="smp-sec"><span class="smp-l">Tiêu đề 24 · 700</span>${row('t24',24,700,'GiaoAn AI — Soạn giáo án','t')}
+      <span class="smp-l">Tiêu đề 22 · 700 (h1 thật)</span>${row('t22',22,700,'GiaoAn AI — Soạn giáo án','t')}
+      <span class="smp-l">Tiêu đề 20 · 600</span>${row('t20',20,600,'GiaoAn AI — Soạn giáo án','t')}</div>
+    <div class="smp-sec"><span class="smp-l">16 · thân / ô nhập · 400</span>${set(16,400)}
+      <label class="lb" for="smpInp" style="margin-top:8px">Ô nhập 16px (kiểm tra cắt dấu)</label>
+      <input class="inp" id="smpInp" data-row="inp16" value="Ỹ Ự Ữ Ỗ Ễ Ặ Ẩ Ứ Ợ Ệ · qủy" spellcheck="false"/></div>
+    <div class="smp-sec"><span class="smp-l">15 · nút · 600</span>${row('b15',15,600,'Đăng nhập bằng Google · Tạo tài khoản')}</div>
+    <div class="smp-sec"><span class="smp-l">14 · phụ đề / link · 400</span>${set(14,400)}</div>
+    <div class="smp-sec"><span class="smp-l">13 · nhãn ô · 500</span>${set(13,500)}</div>
+    <div class="smp-sec"><span class="smp-l">12 · dòng nhắc · 500</span>${row('s12-lo',12,500,'mỹ ự ữ ỗ ễ ặ ẩ ứ ợ ệ qủy')}${row('s12-up',12,500,'Ỹ Ự Ữ Ỗ Ễ Ặ Ẩ Ứ Ợ Ệ')}</div>`;
+}
+
 function htmlFor(s){
   if(s==='missing') return renderMain({missing:true});
   if(s==='invalid') return renderMain({invalid:true});
@@ -277,6 +320,7 @@ function htmlFor(s){
   if(s==='forgot') return renderForgot();
   if(s==='forgot-sent') return renderForgotSent();
   if(s==='register') return renderRegister();
+  if(s==='sample') return renderSample();
   return renderMain({});
 }
 
@@ -348,6 +392,15 @@ Object.entries(BGS).forEach(([k,l])=>{
   b.addEventListener('click',()=>{bg=k;document.documentElement.dataset.bg=k;setParam('bg',k);
     bgBox.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));});
   bgBox.appendChild(b);
+});
+const fontBox=document.getElementById('fontBtns');
+Object.entries(FONTS).forEach(([k,l])=>{
+  const b=document.createElement('button');
+  b.type='button'; b.textContent=l; b.setAttribute('aria-pressed',k===font?'true':'false');
+  b.addEventListener('click',()=>{font=k;if(k==='bvp')loadBVP();document.documentElement.dataset.font=k;setParam('font',k==='inter'?null:k);
+    fontBox.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));
+    if(state==='sample') setState('sample');});
+  fontBox.appendChild(b);
 });
 const mvpT=document.getElementById('mvpT');
 mvpT.checked=document.documentElement.classList.contains('mvp');

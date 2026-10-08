@@ -56,10 +56,12 @@
 | `forgot` | Hỏi email, gửi link (**Sau, khi có dịch vụ mail**) |
 | `forgot-sent` | Xác nhận đã gửi, câu trung tính (**Sau, khi có dịch vụ mail**) |
 | `register` | Tạo tài khoản |
+| `sample` | Mẫu dấu tiếng Việt để so sánh font (không phải màn thật) |
 
 `?motion=reduce` hoặc checkbox: tắt quay spinner.  
 `?mvp=1` hoặc checkbox “MVP sạch”: màn MVP thật (ẩn “Quên mật khẩu?” và ô ghi chú MVP/Sau). Ảnh chụp trạng thái dùng chế độ này.  
-`?bg=b|b2|b-old|a|none`: nền họa tiết (mục 7, mặc định B; b2 / b-old / a giữ để tham khảo, không chọn). Kết hợp được với `?state=`.
+`?bg=b|b2|b-old|a|none`: nền họa tiết (mục 7, mặc định B; b2 / b-old / a giữ để tham khảo, không chọn). Kết hợp được với `?state=`.  
+`?font=inter|bvp`: so sánh font (mục 8). Mặc định `inter`; chỉ tải Be Vietnam Pro khi chọn `bvp`.
 
 ## 3. Bảng copy
 
@@ -159,3 +161,24 @@ Khuyến nghị: **có** (màn hỏi + xác nhận). Đổi MK trong app = Sau.
 3. Thẻ form nền `#fff` đặc; mọi chữ trên thẻ ≥ 4.5:1.
 4. 820×1180, 375: không thấy đường nối; họa tiết không lọt vào thẻ.
 5. Không có `?bg=` → B; `?bg=none` trả về nền trơn.
+
+## 8. So sánh font (chưa đổi token) · Huy 09/10
+
+Chỉ để so sánh: **không đổi token, không đổi mặc định (Inter), không giao Dev FE.** `?font=bvp` tải Be Vietnam Pro 400/500/600/700 từ Google Fonts (`display=swap`). Inter vẫn tải như cũ. Mẫu dấu: `?state=sample`.
+
+Đo trên WebKit, UA iPad, cache trống, qua 3 màn đăng nhập + tạo tài khoản + mẫu:
+
+| | Inter (hiện tại) | Be Vietnam Pro |
+|---|---|---|
+| woff2 tải thật | **143 984 B** · 3 file (variable): latin 48 432 · vietnamese 10 280 · latin-ext 85 272 | **94 300 B** · 11 file (tĩnh): latin 53 008 (4 weight) · vietnamese 20 076 (4) · latin-ext 21 216 (3) |
+| Chỉ vietnamese + latin | 58 712 B | 73 084 B |
+| Dấu chồng HOA (Ặ Ễ Ỗ Ẩ) so với mép trên dòng, line-height 1.5 | còn dư 0.25–0.5px | vượt 0.25–0.75px (16/14/13/12px) |
+| Ô nhập 16px | dư 11.75px trên, không cắt | dư 11.5px, không cắt |
+| Bề rộng chữ | — | rộng hơn 3–7% |
+
+- css2 bỏ qua `subset=`; trình duyệt tự chọn file theo `unicode-range`. Chữ ă/đ/ơ/ư/ỹ nằm trong cả vietnamese lẫn latin-ext nên file latin-ext luôn được tải.
+- Dấu: không có dấu nào chạm dòng trên/dưới hay bị cắt ở cả hai font. Phần vượt mép của BVP không bị cắt vì không có `overflow:hidden`. Hỏi/ngã phân biệt được ở 13–16px với cả hai; dấu hỏi của BVP cao và rõ hơn một chút.
+- Bố cục 375 & 820: không nút/nhãn nào xuống dòng thêm hay tràn; chiều cao mọi phần tử giống hệt. Phụ đề xuống 2 dòng ở 375 với cả hai font (như cũ).
+- Tương phản: cùng màu nên các tỉ lệ không đổi. BVP trông đậm và rộng hơn một chút ở cùng weight.
+
+**Đề xuất: giữ Inter.** Ở line-height 1.5, Inter hiển thị mọi dấu chồng gọn trong dòng và hỏi/ngã vẫn rõ ở 13–16px. BVP không sửa vấn đề nào đo được, mà đổi font sẽ phải đổi token khóa cho cả app.
