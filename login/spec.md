@@ -59,7 +59,7 @@
 
 `?motion=reduce` hoặc checkbox: tắt quay spinner.  
 `?mvp=1` hoặc checkbox “MVP sạch”: màn MVP thật (ẩn “Quên mật khẩu?” và ô ghi chú MVP/Sau). Ảnh chụp trạng thái dùng chế độ này.  
-`?bg=a|b|none`: nền họa tiết (mục 7). Kết hợp được với `?state=`.
+`?bg=b|b2|b-old|a|none`: nền họa tiết (mục 7, mặc định B). Kết hợp được với `?state=`.
 
 ## 3. Bảng copy
 
@@ -129,27 +129,33 @@ Khuyến nghị: giữ trong MVP để giáo viên không Gmail vẫn vào đư�
 Khuyến nghị: **có** (màn hỏi + xác nhận). Đổi MK trong app = Sau.  
 **Chốt:** chưa có dịch vụ mail → **ẩn link ở MVP**; màn quên MK = Sau, khi có dịch vụ mail.
 
-## 7. Nền họa tiết (chờ Huy duyệt · 08/10)
+## 7. Nền họa tiết (đã duyệt B (Huy, 09/10))
 
-**Yêu cầu Huy 08/10:** màn Đăng nhập / Tạo tài khoản trông trơn quá → thêm nền họa tiết giáo dục.
+**Yêu cầu Huy 08/10:** màn Đăng nhập / Tạo tài khoản trông trơn quá → thêm nền họa tiết giáo dục. **Huy chọn B (09/10 00:19)** → B là **mặc định** khi không có `?bg=`. Chưa giao Dev FE; vào **PR FE-2** khi bắt đầu làm auth.
 
-- **Họa tiết:** bút chì · thước · sách mở. Chỉ nét (`fill:none`), `stroke-linecap/linejoin: round`, nghiêng −35°, xếp nối tiếp theo **đường chéo** và lặp ô.
-- **Cách làm:** 1 `<div class="bgpat" aria-hidden="true">` cố định sau thẻ; `background-image` = SVG data-URI (không ảnh raster). Thẻ form vẫn nền **trắng đặc** (`#fff`), che họa tiết bên dưới. Không chuyển động. `pointer-events:none`.
-- **Không nối mép:** họa tiết chạm mép ô được vẽ lặp ở ±ô (`<use>`), nên lặp không thấy đường nối (đã soi ở 820, 1180, 375).
+**Nét mới (Huy 09/10 00:24)** theo `ref/pencil-ref.jpg`: nét viền dày đều 2.4px, đầu/góc/khớp **tròn**, hình đơn giản kiểu hoạt hình.
+- **Bút chì:** đầu tẩy bo tròn · đai kim loại = 2 vạch song song · 2 sọc dọc thân · mép gỗ gọt lượn sóng · ngòi chì nhỏ **tô đặc** (phần tô duy nhất).
+- **Thước:** chữ nhật bo góc, vạch chia 2 độ dài. **Sách:** mở, gáy cong, mỗi trang 2 dòng.
+- Nghiêng −40°, xếp nối tiếp theo **đường chéo**, lặp ô.
+
+- **Cách làm:** 1 `<div class="bgpat" aria-hidden="true">` cố định sau thẻ; `background-image` = SVG data-URI (không ảnh raster). Độ mờ đặt ở `opacity` của cả nhóm (nét chồng không đậm thêm). Thẻ form vẫn nền **trắng đặc** (`#fff`). Không chuyển động. `pointer-events:none`.
+- **Không nối mép:** họa tiết chạm mép ô được vẽ lặp ở ±ô (`<use>`); đã soi ở 820 và 375, không thấy đường nối.
 
 | Biến thể | Nét | Ô lặp | SVG |
 |---|---|---|---|
-| `?bg=a` (mặc định) | g400 `#9ca3af` · 40% (≈ `#d4d7dd` trên g50) · 2px · thưa | 240px (180px khi ≤480px) | 733 B (817 B dạng URI) |
-| `?bg=b` | blue `#2563eb` · 17% (≈ `#d5e0f8` trên g50) · 2.2px · dày | 140px (120px khi ≤480px) | 822 B (918 B dạng URI) |
-| `?bg=none` | nền g50 trơn như cũ | — | — |
+| `?bg=b` (**mặc định**, đã duyệt) | blue `#2563eb` · 17% (≈ `#d5e0f8` trên g50) · 2.4px · nét mới | 140px (120px khi ≤480px) | 1176 B (1300 B dạng URI) |
+| `?bg=b2` | như B, **thưa hơn** | 200px (172px khi ≤480px) | 964 B (1052 B dạng URI) |
+| `?bg=b-old` | B cũ, nét mảnh 2.2px (để so sánh) | 140px (120px) | 822 B (918 B dạng URI) |
+| `?bg=a` | xám g400 · 40% · thưa (để so sánh) | 240px (180px) | 733 B (817 B dạng URI) |
+| `?bg=none` | nền g50 trơn | — | — |
 
-**Tương phản (WCAG):** họa tiết chỉ để trang trí, nằm ngoài thẻ. A 1.38:1, B 1.27:1 so với g50 (cố ý mờ). Chữ trên thẻ trắng: g900 17.7 · g800 14.7 · g700 10.3 · g600 7.6 · g500 4.83 · link blue 5.17 · chữ trắng trên nút 5.17 · lý do ô a800 7.09 · banner 9.94 · tag “Ẩn ở MVP” 6.87. Đã đổi chữ “hoặc” từ g400 (2.54:1) sang **g500 (4.83:1)** để đạt ≥4.5:1.
+**Tương phản (WCAG):** họa tiết chỉ để trang trí, nằm ngoài thẻ: B/b2 1.27:1 so với g50 (cố ý mờ, không đổi so với B cũ). Chữ trên thẻ trắng không đổi: g900 17.7 · g800 14.7 · g700 10.3 · g600 7.6 · g500 4.83 (phụ đề, “hoặc”) · link blue 5.17 · chữ trắng trên nút 5.17 · lý do ô a800 7.09 · banner 9.94 · tag “Ẩn ở MVP” 6.87.
 
-**Đề xuất: A.** Nét xám giữ thẻ trắng và nút xanh là điểm nhấn màu duy nhất. Nét xanh của B dễ tranh với nút Đăng nhập và link.
+**Đề xuất: b2 (ô 200px).** Nét mới dày hơn nên ô 140px trông dày đặc sau thẻ; b2 thoáng hơn, thẻ và nút xanh vẫn nổi bật nhất. Mặc định vẫn là B theo Huy duyệt; nếu chọn b2 chỉ cần đổi `BG_DEFAULT`.
 
 **Acceptance (nền):**
 1. `.bgpat` có `aria-hidden="true"`, `pointer-events:none`, không có animation.
-2. Không ảnh raster; mỗi SVG < 1 KB.
+2. Không ảnh raster; mỗi SVG < 2 KB.
 3. Thẻ form nền `#fff` đặc; mọi chữ trên thẻ ≥ 4.5:1.
-4. 820×1180, 1180×820, 375: không thấy đường nối; họa tiết không lọt vào thẻ.
-5. `?bg=none` trả về nền trơn cũ.
+4. 820×1180, 375: không thấy đường nối; họa tiết không lọt vào thẻ.
+5. Không có `?bg=` → B; `?bg=none` trả về nền trơn.
