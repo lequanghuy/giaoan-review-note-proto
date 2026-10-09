@@ -50,8 +50,8 @@ a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
 .lb{display:block;margin:0 0 6px;font-size:13px;font-weight:500;color:var(--g700)}
 .inp{width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--g200);border-radius:8px;background:#fff;font-size:16px;line-height:1.5;color:var(--g800);outline:none}
 .inp:focus{border-color:var(--blue);box-shadow:var(--focus-ring)}
-.inp.field-invalid:not(:focus){border-color:var(--amber)}
-.field-fail{margin:4px 0 0;font-size:12px;font-weight:500;line-height:1.4;color:var(--a800)}
+.inp.field-invalid:not(:focus){border-color:var(--red)}
+.field-fail{margin:4px 0 0;font-size:13px;font-weight:500;line-height:1.4;color:var(--red)}
 .field-fail:empty{display:none}
 .pw-wrap{position:relative}
 .pw-wrap .inp{padding-right:52px}
@@ -76,9 +76,14 @@ a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
 .foot{margin:18px 0 0;text-align:center;font-size:14px;color:var(--g600)}
 .foot a{font-weight:500}
 
-.alert{margin:0 0 16px;padding:12px 14px;border:1px solid #fde68a;border-radius:10px;background:var(--as);color:var(--g800)}
+.alert{margin:0 0 16px;padding:12px 14px;border:1px solid rgba(220,38,38,.35);border-left:4px solid var(--red);border-radius:10px;background:rgba(220,38,38,.05);color:var(--g800)}
+.alert p.one{font-size:14px;font-weight:500;color:var(--g900)}
 .alert h2{margin:0 0 4px;font-size:15px;font-weight:700;color:var(--g900)}
 .alert p{margin:0;font-size:13px;color:var(--g700)}
+.gsoon{margin:8px 0 0;font-size:13px;color:var(--g600);text-align:center}
+.status{display:flex;align-items:center;justify-content:center;gap:10px;min-height:44px;font-size:15px;font-weight:500;color:var(--g700)}
+.status .spin{border-color:var(--blue-b);border-top-color:var(--blue)}
+#errBtns{display:inline-flex;flex-wrap:wrap;gap:4px;vertical-align:middle}
 .alert a{font-size:13px;font-weight:500}
 .alert ul{margin:6px 0 0;padding:0 0 0 18px;font-size:13px}
 .alert li{margin:2px 0}
@@ -113,7 +118,7 @@ html:not([data-bg=none]) .card{box-shadow:0 1px 2px rgba(0,0,0,.05),0 12px 32px 
 html.mvp .links,html.mvp .mvp{display:none}
 .proto .sep{color:#6b7280;margin:0 2px}
 #bgBtns,#fontBtns,#logoBtns{display:inline-flex;gap:4px;vertical-align:middle}
-/* Logo cú (chờ Huy duyệt): ?logo=g (mặc định)|icon|mascot. Ảnh trang trí cạnh h1 → alt="" + aria-hidden. Không chuyển động. */
+/* Logo cú (Huy duyệt cách 2 · 09/10): ?logo=mascot (mặc định)|icon|g. Ảnh trang trí cạnh h1 → alt="" + aria-hidden. Không chuyển động. */
 .logo-owl{display:block;width:56px;height:56px;margin-bottom:12px}
 .logo-mascot{display:block;width:auto;height:112px;margin-bottom:10px}
 @media(max-width:480px){.logo-mascot{height:84px;margin-bottom:8px}}
@@ -138,7 +143,8 @@ html[data-font=bvp],html[data-font=bvp] body{font-family:"Be Vietnam Pro",system
     <label><input type="checkbox" id="mvpT"/> MVP sạch</label> ·
     Nền: <span id="bgBtns"></span> ·
     Font: <span id="fontBtns"></span> ·
-    Logo: <span id="logoBtns"></span>
+    Logo: <span id="logoBtns"></span> ·
+    Câu báo (PR #70): <span id="errBtns"></span>
     · Figma <code>01 Login</code> chỉ có Google — mockup này thêm email/mật khẩu theo Huy 07/10.
   </div>
 </header>
@@ -157,6 +163,8 @@ const STATES=[
   {id:'forgot',label:'6. Quên MK'},
   {id:'forgot-sent',label:'7. Đã gửi link'},
   {id:'register',label:'8. Tạo tài khoản'},
+  {id:'reg-loading',label:'8b. Đang tạo TK'},
+  {id:'logout',label:'10. Đang đăng xuất'},
   {id:'sample',label:'9. Mẫu dấu (so sánh font)'},
 ];
 const Q=new URLSearchParams(location.search);
@@ -168,7 +176,13 @@ let bg=Q.get('bg'); if(!(bg in BGS)) bg=BG_DEFAULT;
 const FONTS={inter:'Inter (hiện tại)',bvp:'Be Vietnam Pro'};
 let font=document.documentElement.dataset.font;
 const LOGOS={g:'G (hiện tại)',icon:'Icon cú',mascot:'Cú lớn'};
-let logo=Q.get('logo'); if(!(logo in LOGOS)) logo='g';
+let logo=Q.get('logo'); if(!(logo in LOGOS)) logo='mascot'; /* Huy duyệt cách 2 · 09/10 */
+/* Câu chữ chốt 10/10 (PR #70): ?err= cho mock lỗi / trạng thái */
+const ERRS={'':'Không',name:'Thiếu họ tên',exists:'Email đã có TK',invite:'Chưa được mời',pwlen:'MK 8–128',pw2empty:'Thiếu nhập lại',pw2mismatch:'Nhập lại chưa khớp',rate:'Quá nhiều lần',origin:'Địa chỉ trang',network:'Mất kết nối',google:'Google sắp có'};
+const MSG={name:'Chưa nhập họ và tên.',exists:'Email này đã có tài khoản.',invite:'GiaoAn AI đang thử nghiệm, email này chưa được mời.',pwlen:'Mật khẩu cần từ 8 đến 128 ký tự.',pw2empty:'Chưa nhập lại mật khẩu.',pw2mismatch:'Mật khẩu nhập lại chưa khớp.',rate:'Thử quá nhiều lần. Thử lại sau vài giây.',origin:'Địa chỉ trang không hợp lệ. Mở lại trang đăng nhập.',network:'Chưa kết nối được. Thử lại.',create:'Chưa tạo được tài khoản. Kiểm tra các ô báo đỏ.',google:'Đăng nhập bằng Google sắp có. Dùng email để đăng nhập.',creating:'Đang tạo tài khoản\u2026',loggingOut:'Đang đăng xuất\u2026'};
+const FIELD_ERRS=['name','exists','invite','pwlen','pw2empty','pw2mismatch'];
+const TOP_ERRS=['rate','origin','network'];
+let err=Q.get('err')||''; if(!(err in ERRS)) err='';
 document.documentElement.dataset.bg=bg;
 if(Q.get('mvp')==='1') document.documentElement.classList.add('mvp');
 function setParam(k,v){const u=new URL(location.href); if(v==null) u.searchParams.delete(k); else u.searchParams.set(k,v); history.replaceState(null,'',u);}
@@ -217,9 +231,14 @@ function field(opts){
 }
 
 function googleBtn(disabled){
-  return `<button type="button" class="btn btn-g" ${disabled?'disabled':''} data-google>
+  const soon=err==='google';
+  return `<button type="button" class="btn btn-g" ${disabled?'disabled':''} data-google ${soon?'aria-describedby="gSoon"':''}>
     ${GSVG}<span>Đăng nhập bằng Google</span>
-  </button>`;
+  </button>
+  <p class="gsoon${soon?'':' hidden'}" id="gSoon" role="status">${soon?MSG.google:''}</p>`;
+}
+function topAlert(key){
+  return `<div class="alert" role="alert" tabindex="-1" id="errSum"><p class="one">${MSG[key]}</p></div>`;
 }
 
 function mvpNote(){
@@ -243,8 +262,9 @@ function renderMain(opts={}){
         ${missing?`<li><a href="#password">Mật khẩu</a></li>`:''}
       </ul>
     </div>`:'');
+  const top=TOP_ERRS.includes(err)?topAlert(err):alert;
   return `${brand()}
-    ${alert}
+    ${top}
     <form id="loginForm" novalidate>
       ${field({id:'email',label:'Email',type:'email',autocomplete:'username email',value:invalid?'gv@':(missing?'':'gv@truongthcs.edu.vn'),invalid:emailInv,reason:emailWhy})}
       ${field({id:'password',label:'Mật khẩu',pw:true,autocomplete:'current-password',value:missing?'':'\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022',invalid:pwInv,reason:pwWhy})}
@@ -283,20 +303,35 @@ function renderForgotSent(){
     <p class="hint">Câu xác nhận không nói email có tồn tại hay không (tránh lộ tài khoản).</p>`;
 }
 
-function renderRegister(){
+function renderRegister(opts={}){
+  const {loading}=opts;
+  const e=err;
+  const filled=e&&e!=='name';
+  const fe=k=>FIELD_ERRS.includes(e)&&e===k;
+  const top=TOP_ERRS.includes(e)?topAlert(e):(FIELD_ERRS.includes(e)?topAlert('create'):'');
+  const emailErr=(e==='exists'||e==='invite')?MSG[e]:'';
   return `<button type="button" class="back" data-go="main">\u2190 Về đăng nhập</button>
     ${brand('Tạo tài khoản miễn phí · Toán THCS.')}
+    ${top}
     <form id="regForm" novalidate>
-      ${field({id:'email',label:'Email',type:'email',autocomplete:'email',value:''})}
-      ${field({id:'password',label:'Mật khẩu',pw:true,autocomplete:'new-password',value:''})}
-      ${field({id:'password2',label:'Nhập lại mật khẩu',pw:true,autocomplete:'new-password',value:''})}
-      <button type="submit" class="btn btn-p">Tạo tài khoản</button>
+      ${field({id:'fullname',label:'Họ và tên',type:'text',autocomplete:'name',placeholder:'Ví dụ: Nguyễn Thị Lan',value:(filled||loading)?'Nguyễn Thị Lan':'',invalid:fe('name'),reason:MSG.name})}
+      ${field({id:'email',label:'Email',type:'email',autocomplete:'email',value:(filled||loading)?'gv@truongthcs.edu.vn':'',invalid:!!emailErr,reason:emailErr})}
+      ${field({id:'password',label:'Mật khẩu',pw:true,autocomplete:'new-password',value:(filled||loading)?(e==='pwlen'?'\u2022\u2022\u2022\u2022\u2022':'\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022'):'',invalid:fe('pwlen'),reason:MSG.pwlen})}
+      ${field({id:'password2',label:'Nhập lại mật khẩu',pw:true,autocomplete:'new-password',value:((filled||loading)&&e!=='pw2empty')?(e==='pw2mismatch'?'\u2022\u2022\u2022\u2022\u2022\u2022\u2022':'\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022'):'',invalid:fe('pw2empty')||fe('pw2mismatch'),reason:MSG[e]})}
+      <button type="submit" class="btn btn-p" id="submitBtn" ${loading?'disabled aria-busy="true"':''}>
+        ${loading?`<span class="spin" aria-hidden="true"></span><span>${MSG.creating}</span>`:'Tạo tài khoản'}
+      </button>
     </form>
     <div class="div" role="separator" aria-label="hoặc">hoặc</div>
-    ${googleBtn(false)}
+    ${googleBtn(loading)}
     <p class="foot">Đã có tài khoản? <a href="?state=main" data-go="main">Đăng nhập</a></p>
-    <div class="mvp"><b>MVP</b>: email + mật khẩu (+ nhập lại) hoặc Google.
+    <div class="mvp"><b>MVP</b>: họ và tên + email + mật khẩu (+ nhập lại) hoặc Google.
     <ul><li><b>Sau:</b> số điện thoại / OTP · SSO trường · bắt buộc xác nhận email trước khi soạn</li></ul></div>`;
+}
+
+function renderLogout(){
+  return `${brand()}
+    <div class="status" role="status" aria-live="polite"><span class="spin" aria-hidden="true"></span><span>${MSG.loggingOut}</span></div>`;
 }
 
 function renderSample(){
@@ -333,6 +368,8 @@ function htmlFor(s){
   if(s==='forgot') return renderForgot();
   if(s==='forgot-sent') return renderForgotSent();
   if(s==='register') return renderRegister();
+  if(s==='reg-loading') return renderRegister({loading:true});
+  if(s==='logout') return renderLogout();
   if(s==='sample') return renderSample();
   return renderMain({});
 }
@@ -377,12 +414,12 @@ function bind(){
   const ff=document.getElementById('forgotForm');
   if(ff) ff.addEventListener('submit',e=>{e.preventDefault();setState('forgot-sent')});
   const rf=document.getElementById('regForm');
-  if(rf) rf.addEventListener('submit',e=>{e.preventDefault();setState('main')});
+  if(rf) rf.addEventListener('submit',ev=>{ev.preventDefault();
+    if(!document.getElementById('fullname').value.trim()){setErr('name');return;}
+    setErr('');setState('reg-loading');setTimeout(()=>setState('main'),1600);});
   document.querySelectorAll('[data-google]').forEach(b=>b.addEventListener('click',()=>{
-    /* Mock only — không gọi Google thật */
-    b.setAttribute('aria-busy','true');
-    b.disabled=true;
-    b.querySelector('span').textContent='Đang mở Google\u2026';
+    /* Mock only — Google chưa mở (PR #70): hiện câu báo, không gọi Google thật */
+    setErr('google');
   }));
 }
 
@@ -419,10 +456,21 @@ const logoBox=document.getElementById('logoBtns');
 Object.entries(LOGOS).forEach(([k,l])=>{
   const b=document.createElement('button');
   b.type='button'; b.textContent=l; b.setAttribute('aria-pressed',k===logo?'true':'false');
-  b.addEventListener('click',()=>{logo=k;setParam('logo',k==='g'?null:k);
+  b.addEventListener('click',()=>{logo=k;setParam('logo',k==='mascot'?null:k);
     logoBox.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));
     setState(state);});
   logoBox.appendChild(b);
+});
+const errBox=document.getElementById('errBtns');
+function setErr(k){err=k;setParam('err',k||null);
+  errBox.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.err===k?'true':'false'));
+  if(k&&FIELD_ERRS.includes(k)&&state!=='register'){setState('register');return;}
+  setState(state);}
+Object.entries(ERRS).forEach(([k,l])=>{
+  const b=document.createElement('button');
+  b.type='button'; b.textContent=l; b.dataset.err=k; b.setAttribute('aria-pressed',k===err?'true':'false');
+  b.addEventListener('click',()=>setErr(k));
+  errBox.appendChild(b);
 });
 const mvpT=document.getElementById('mvpT');
 mvpT.checked=document.documentElement.classList.contains('mvp');
