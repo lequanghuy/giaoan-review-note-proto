@@ -18,7 +18,7 @@
 |---|---|
 | Password Visibility | Nút Hiện/Ẩn ≥44px, `aria-label` đổi theo trạng thái |
 | Focusable Error Summary | Banner `role=alert` `tabindex=-1` trên đầu form + link tới ô; giữ dòng dưới ô (NEW-02) |
-| Error Messages / Placement | `aria-invalid` + `aria-describedby` + dòng `#92400E` dưới ô; viền `--amber` `#D97706` khi không focus |
+| Error Messages / Placement | `aria-invalid` + `aria-describedby` + dòng đỏ `--red` `#dc2626` dưới ô; viền `--red` khi không focus (đổi từ amber · 10/10, mục 10) |
 | Accessible Authentication | `autocomplete`, cho phép paste; không chặn password manager; có Google (OAuth) |
 | Touch ≥44 / input ≥16px | Nút, ô, Hiện/Ẩn; `font-size:16px` trên input (tránh zoom iOS) |
 | Loading buttons | `aria-busy`, disable, chữ “Đang đăng nhập…” |
@@ -31,7 +31,7 @@
 2. Kiểm tra thiếu ô / email sai dạng: dòng ngắn dưới ô (pattern NEW-02) + tóm tắt trên đầu khi bấm Đăng nhập.
 3. Thất bại xác thực (sai mật khẩu / không có tài khoản): **một** câu không tiết lộ ô nào sai; `role=alert` + focus; giữ nội dung ô.
 4. Đang đăng nhập: spinner trên nút, không bấm trùng.
-5. Tạo tài khoản (tối thiểu): email + mật khẩu + nhập lại, hoặc Google.
+5. Tạo tài khoản (tối thiểu): **họ và tên** + email + mật khẩu + nhập lại, hoặc Google (họ và tên thêm 10/10).
 6. Một tài khoản / một email: Google cùng email với tài khoản email/mật khẩu sẵn có → liên kết vào tài khoản đó (cần `email_verified`).
 
 ### Sau (không vẽ đầy đủ)
@@ -55,14 +55,17 @@
 | `loading` | Nút `aria-busy` “Đang đăng nhập…” |
 | `forgot` | Hỏi email, gửi link (**Sau, khi có dịch vụ mail**) |
 | `forgot-sent` | Xác nhận đã gửi, câu trung tính (**Sau, khi có dịch vụ mail**) |
-| `register` | Tạo tài khoản |
+| `register` | Tạo tài khoản (ô đầu: Họ và tên) |
+| `reg-loading` | Nút `aria-busy` “Đang tạo tài khoản…” |
+| `logout` | “Đang đăng xuất…” (`role=status`) |
 | `sample` | Mẫu dấu tiếng Việt để so sánh font (không phải màn thật) |
 
 `?motion=reduce` hoặc checkbox: tắt quay spinner.  
 `?mvp=1` hoặc checkbox “MVP sạch”: màn MVP thật (ẩn “Quên mật khẩu?” và ô ghi chú MVP/Sau). Ảnh chụp trạng thái dùng chế độ này.  
 `?bg=b|b2|b-old|a|none`: nền họa tiết (mục 7, mặc định B; b2 / b-old / a giữ để tham khảo, không chọn). Kết hợp được với `?state=`.  
 `?font=inter|bvp`: so sánh font (mục 8). Mặc định `inter`; chỉ tải Be Vietnam Pro khi chọn `bvp`.  
-`?logo=g|icon|mascot`: logo cú (mục 9). Mặc định `g`.
+`?logo=mascot|icon|g`: logo cú (mục 9). **Mặc định `mascot`** (Huy duyệt cách 2 · 09/10); `icon` / `g` vẫn mở được bằng tham số.  
+`?err=name|exists|invite|pwlen|pw2empty|pw2mismatch|rate|origin|network|google`: câu báo (mục 10). Có nút “Câu báo (PR #70)” trên thanh demo.
 
 ## 3. Bảng copy
 
@@ -70,9 +73,9 @@
 |---|---|
 | Tiêu đề thương hiệu | GiaoAn AI |
 | Phụ đề | Soạn kế hoạch bài dạy theo khung Phụ lục IV |
-| Nhãn | Email · Mật khẩu · Nhập lại mật khẩu |
+| Nhãn | Họ và tên · Email · Mật khẩu · Nhập lại mật khẩu |
 | Nút chính | Đăng nhập |
-| Google | Đăng nhập bằng Google |
+| Google | Đăng nhập bằng Google (bấm khi chưa mở → câu ở mục 10) |
 | Divider | hoặc |
 | Link | Tạo tài khoản · (Quên mật khẩu? ẩn ở MVP) |
 | Thiếu email | Cần có email. |
@@ -87,7 +90,8 @@
 | Quên — OK dòng (Sau) | Nếu email có trong hệ thống, bạn sẽ nhận link trong vài phút. Kiểm tra cả hộp thư rác. |
 | Hiện/Ẩn | aria-label: Hiện mật khẩu / Ẩn mật khẩu |
 
-Không dùng: lỗi / sai / máy chủ / 400 / Thầy cô … giúp nhé.
+Không dùng: lỗi / sai / máy chủ / 400 / Thầy cô … giúp nhé / Vui lòng.  
+Câu báo tạo tài khoản, giới hạn, mạng, Google: xem **mục 10** (chốt 10/10).
 
 ## 4. A11y & form
 
@@ -95,7 +99,8 @@ Không dùng: lỗi / sai / máy chủ / 400 / Thầy cô … giúp nhé.
 - Password: `autocomplete="current-password"` (đăng nhập) / `new-password` (đăng ký); email: `username email` hoặc `email`.  
 - Paste được; không `onpaste` prevent.  
 - Hiện/Ẩn: nút riêng ≥44×44, `aria-pressed`, đổi `aria-label`.  
-- Ô không hợp lệ: `aria-invalid="true"`, `aria-describedby="{id}-why"`, viền `#D97706` khi không focus (NEW-02).  
+- Ô không hợp lệ: `aria-invalid="true"`, `aria-describedby="{id}-why"`, viền + chữ `#dc2626` khi không focus (NEW-02, đổi 10/10).  
+- Họ và tên: `type=text`, `autocomplete="name"`, placeholder “Ví dụ: Nguyễn Thị Lan” (vẫn có nhãn).  
 - Tóm tắt / auth fail: `role="alert" tabindex="-1"`, focus sau khi hiện; tóm tắt có link tới `#email` / `#password`.  
 - Google: không đổi màu chữ cái G; nền trắng, viền g300.  
 - Touch ≥44px; input ≥16px; không tràn ngang 375.
@@ -184,9 +189,9 @@ Chỉ để so sánh: **không đổi token, không đổi mặc định (Inter)
 
 **Đề xuất: giữ Inter.** Ở line-height 1.5, Inter hiển thị mọi dấu chồng gọn trong dòng và hỏi/ngã vẫn rõ ở 13–16px. BVP không sửa vấn đề nào đo được, mà đổi font sẽ phải đổi token khóa cho cả app.
 
-## 9. Logo cú (chờ Huy duyệt) · 09/10
+## 9. Logo cú · đã duyệt cách 2 · 09/10 (Huy)
 
-Chỉ xem trước: **không đổi mặc định (ô G), không giao Dev FE.** Khi chốt, đổi icon đi vào **PR FE-2** cùng nền B. `?logo=g|icon|mascot`, kết hợp được với `?state=`, `?bg=`, `?font=`, `?mvp=`.
+**đã duyệt cách 2 · 09/10 (Huy)** → `?logo=mascot` là **mặc định**; `?logo=icon` / `?logo=g` giữ để tham khảo. Chưa giao Dev FE; đổi logo đi vào **PR FE-2** cùng nền B. `?logo=g|icon|mascot`, kết hợp được với `?state=`, `?bg=`, `?font=`, `?mvp=`.
 
 - **Cách 1 `?logo=icon`:** `assets/owl-app-icon-112.svg` (ô bo góc xanh, trong suốt ở góc) hiển thị **56px** thay ô G 48px. Ảnh 112px = 2×.
 - **Cách 2 `?logo=mascot`:** `assets/owl-mascot-224.svg` (không ô, nền trong suốt) cao **112px** ở iPad, **84px** khi ≤480px, đặt trên tiêu đề.
@@ -203,4 +208,43 @@ Vị trí đo trên WebKit (thanh demo ẩn, màn = toàn trang), `?mvp=1&bg=b`,
 
 Nút chính nằm trên màn ở cả ba cách, kể cả 375×667. Cách 2 chỉ đẩy nút xuống thêm 16px ở 375 và 31px ở 820 so với G.
 
-**Đề xuất: Cách 1 (icon 56px).** Cú nhìn rõ, giữ đúng vai ô logo, và gần như không đẩy form xuống (4px). Cách 2 dễ thương hơn nhưng chiếm nhiều chỗ đầu thẻ và nhỏ lại ở 375.
+~~Đề xuất trước đó: Cách 1 (icon 56px).~~ Huy chọn **Cách 2 (cú lớn)** · 09/10.
+
+## 10. Câu chữ (chốt 10/10, PR #70)
+
+Dùng **đúng** các câu dưới đây. Không dùng “Vui lòng”. Mockup: `?err=` hoặc nút “Câu báo (PR #70)”.
+
+**Dòng dưới ô** (chữ đỏ `#dc2626`, viền ô đỏ, `aria-invalid` + `aria-describedby`):
+
+| Ô | Khi | Câu |
+|---|---|---|
+| Họ và tên | trống | Chưa nhập họ và tên. |
+| Email | đã có tài khoản | Email này đã có tài khoản. |
+| Email | chưa được mời (thử nghiệm) | GiaoAn AI đang thử nghiệm, email này chưa được mời. |
+| Mật khẩu | ngoài 8–128 ký tự | Mật khẩu cần từ 8 đến 128 ký tự. |
+| Nhập lại mật khẩu | trống | Chưa nhập lại mật khẩu. |
+| Nhập lại mật khẩu | không khớp | Mật khẩu nhập lại chưa khớp. |
+
+**Hộp báo trên đầu form** (`role=alert` `tabindex=-1`, focus khi hiện; viền trái `--red`, nền đỏ nhạt 5%):
+
+| Khi | Câu |
+|---|---|
+| Quá nhiều lần thử | Thử quá nhiều lần. Thử lại sau vài giây. |
+| Địa chỉ trang (origin) không hợp lệ | Địa chỉ trang không hợp lệ. Mở lại trang đăng nhập. |
+| Mất mạng | Chưa kết nối được. Thử lại. |
+| Tạo tài khoản không qua (có ô báo đỏ) | Chưa tạo được tài khoản. Kiểm tra các ô báo đỏ. |
+
+Tương phản: chữ `#dc2626` trên trắng 4.83:1 (đạt AA cho chữ 13px); hộp báo chữ g900 trên nền đỏ 5% ≈ 16:1.
+
+**Trạng thái** (`aria-busy` / `role=status`): `Đang tạo tài khoản…` (nút Tạo tài khoản) · `Đang đăng xuất…`.  
+**Google chưa mở** (dòng xám dưới nút Google, `role=status`): `Đăng nhập bằng Google sắp có. Dùng email để đăng nhập.`
+
+**Ô Họ và tên (10/10):** ô **đầu tiên** của Tạo tài khoản, trên Email. Nhãn “Họ và tên”, placeholder “Ví dụ: Nguyễn Thị Lan”, `autocomplete="name"`, 16px, cao 46px. Form cao thêm **85px** (301 → 386px). Có báo thiếu họ tên: thêm hộp báo + dòng dưới ô (form 408px).
+
+Đo trên WebKit 375×667, `?state=register&mvp=1&bg=b` (logo cú mặc định, thanh demo ẩn), mép trên / mép dưới nút **Tạo tài khoản**, mép dưới Google:
+
+| | Trước (không họ tên) | Có họ tên | Có họ tên + báo thiếu |
+|---|---|---|---|
+| 375×667 | 557 / 601 / 695 | 642 / **686** / 780 | 410 / 454 / 548 (trang tự cuộn tới hộp báo) |
+
+Ở 375×667, nút **Tạo tài khoản** giờ thấp hơn mép màn **19px** (chỉ lộ 25px đầu nút). Ở 375×812 và 820×1180 vẫn nằm trên màn.
