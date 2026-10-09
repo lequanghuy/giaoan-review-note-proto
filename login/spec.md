@@ -209,6 +209,8 @@ Nút chính nằm trên màn ở cả ba cách, kể cả 375×667. Cách 2 ch�
 
 ~~Đề xuất trước đó: Cách 1 (icon 56px).~~ Huy chọn **Cách 2 (cú lớn)** · 09/10.
 
+Thu cú 64px chỉ ở Tạo tài khoản trên màn thấp (≤480 rộng, ≤700 cao) · Huy duyệt 10/10. Prod (thẻ 343px) đã vừa mặt gấp nên ưu tiên thấp, gộp PR sửa nhỏ cùng .auth-alert ul list-style:disc và ô chọn appearance:none.
+
 ## 10. Câu chữ (chốt 10/10, PR #70)
 
 Dùng **đúng** các câu dưới đây. Không dùng “Vui lòng”. Mockup: `?err=` hoặc nút “Câu báo (PR #70)”.
