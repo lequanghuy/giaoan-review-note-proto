@@ -179,7 +179,7 @@ const LOGOS={g:'G (hiện tại)',icon:'Icon cú',mascot:'Cú lớn'};
 let logo=Q.get('logo'); if(!(logo in LOGOS)) logo='mascot'; /* Huy duyệt cách 2 · 09/10 */
 /* Câu chữ chốt 10/10 (PR #70): ?err= cho mock lỗi / trạng thái */
 const ERRS={'':'Không',name:'Thiếu họ tên',exists:'Email đã có TK',invite:'Chưa được mời',pwlen:'MK 8–128',pw2empty:'Thiếu nhập lại',pw2mismatch:'Nhập lại chưa khớp',rate:'Quá nhiều lần',origin:'Địa chỉ trang',network:'Mất kết nối',google:'Google sắp có'};
-const MSG={name:'Chưa nhập họ và tên.',exists:'Email này đã có tài khoản.',invite:'GiaoAn AI đang thử nghiệm, email này chưa được mời.',pwlen:'Mật khẩu cần từ 8 đến 128 ký tự.',pw2empty:'Chưa nhập lại mật khẩu.',pw2mismatch:'Mật khẩu nhập lại chưa khớp.',rate:'Thử quá nhiều lần. Thử lại sau vài giây.',origin:'Địa chỉ trang không hợp lệ. Mở lại trang đăng nhập.',network:'Chưa kết nối được. Thử lại.',create:'Chưa tạo được tài khoản. Kiểm tra các ô báo đỏ.',google:'Đăng nhập bằng Google sắp có. Dùng email để đăng nhập.',creating:'Đang tạo tài khoản\u2026',loggingOut:'Đang đăng xuất\u2026'};
+const MSG={name:'Chưa nhập họ và tên.',exists:'Email này đã có tài khoản.',invite:'GiaoAn AI đang thử nghiệm, email này chưa được mời.',pwlen:'Mật khẩu cần từ 8 đến 128 ký tự.',pw2empty:'Chưa nhập lại mật khẩu.',pw2mismatch:'Mật khẩu nhập lại chưa khớp.',rate:'Thử quá nhiều lần. Thử lại sau vài giây.',origin:'Địa chỉ trang không hợp lệ. Mở lại trang đăng nhập.',network:'Chưa kết nối được. Thử lại.',wrong:'Email hoặc mật khẩu chưa đúng.',create:'Chưa tạo được tài khoản. Kiểm tra các ô báo đỏ.',google:'Đăng nhập bằng Google sắp có. Dùng email để đăng nhập.',creating:'Đang tạo tài khoản\u2026',loggingOut:'Đang đăng xuất\u2026'};
 const FIELD_ERRS=['name','exists','invite','pwlen','pw2empty','pw2mismatch'];
 const TOP_ERRS=['rate','origin','network'];
 let err=Q.get('err')||''; if(!(err in ERRS)) err='';
@@ -252,10 +252,7 @@ function renderMain(opts={}){
   const pwInv=missing;
   const emailWhy=missing?'Cần có email.':(invalid?'Nhập email đúng dạng, ví dụ ten@truong.edu.vn.':'');
   const pwWhy=missing?'Cần có mật khẩu.':'';
-  const alert=wrong?`<div class="alert" role="alert" tabindex="-1" id="errSum" aria-labelledby="errTitle">
-      <h2 id="errTitle">Chưa đăng nhập được</h2>
-      <p>Email hoặc mật khẩu chưa khớp. Kiểm tra lại hoặc dùng Google.</p>
-    </div>`:(missing||invalid?`<div class="alert" role="alert" tabindex="-1" id="errSum" aria-labelledby="errTitle">
+  const alert=wrong?topAlert('wrong'):(missing||invalid?`<div class="alert" role="alert" tabindex="-1" id="errSum" aria-labelledby="errTitle">
       <h2 id="errTitle">Chưa điền đủ</h2>
       <ul>
         ${missing||invalid?`<li><a href="#email">Email</a></li>`:''}
