@@ -51,7 +51,7 @@
 | `main` | Form đăng nhập sạch |
 | `missing` | Thiếu email + mật khẩu (tóm tắt + dòng dưới ô) |
 | `invalid` | Email sai dạng |
-| `wrong` | Banner “Chưa đăng nhập được” |
+| `wrong` | Hộp báo đỏ trên đầu form “Email hoặc mật khẩu chưa đúng.” (mục 10) |
 | `loading` | Nút `aria-busy` “Đang đăng nhập…” |
 | `forgot` | Hỏi email, gửi link (**Sau, khi có dịch vụ mail**) |
 | `forgot-sent` | Xác nhận đã gửi, câu trung tính (**Sau, khi có dịch vụ mail**) |
@@ -82,8 +82,7 @@
 | Thiếu mật khẩu | Cần có mật khẩu. |
 | Email sai dạng | Nhập email đúng dạng, ví dụ ten@truong.edu.vn. |
 | Tóm tắt thiếu | Chưa điền đủ |
-| Auth fail (tiêu đề) | Chưa đăng nhập được |
-| Auth fail (dòng) | Email hoặc mật khẩu chưa khớp. Kiểm tra lại hoặc dùng Google. |
+| Auth fail (hộp báo) | Email hoặc mật khẩu chưa đúng. (mục 10) |
 | Loading | Đang đăng nhập… |
 | Quên — nút (Sau) | Gửi link |
 | Quên — OK tiêu đề (Sau) | Đã gửi link |
@@ -232,6 +231,7 @@ Dùng **đúng** các câu dưới đây. Không dùng “Vui lòng”. Mockup: 
 | Quá nhiều lần thử | Thử quá nhiều lần. Thử lại sau vài giây. |
 | Địa chỉ trang (origin) không hợp lệ | Địa chỉ trang không hợp lệ. Mở lại trang đăng nhập. |
 | Mất mạng | Chưa kết nối được. Thử lại. |
+| Đăng nhập: email hoặc mật khẩu không đúng (`?state=wrong`) | Email hoặc mật khẩu chưa đúng. |
 | Tạo tài khoản không qua (có ô báo đỏ) | Chưa tạo được tài khoản. Kiểm tra các ô báo đỏ. |
 
 Tương phản: chữ `#dc2626` trên trắng 4.83:1 (đạt AA cho chữ 13px); hộp báo chữ g900 trên nền đỏ 5% ≈ 16:1.
