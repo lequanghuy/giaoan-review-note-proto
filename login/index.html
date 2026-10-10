@@ -122,8 +122,8 @@ html.mvp .links,html.mvp .mvp{display:none}
 .logo-owl{display:block;width:56px;height:56px;margin-bottom:12px}
 .logo-mascot{display:block;width:auto;height:112px;margin-bottom:10px}
 @media(max-width:480px){.logo-mascot{height:84px;margin-bottom:8px}}
-/* Huy duyệt 10/10: chỉ Tạo tài khoản, màn thấp (≤480 rộng, ≤700 cao) → cú 64px (giữ tỉ lệ). */
-@media(max-width:480px) and (max-height:700px){.card:has(#regForm) .logo-mascot{height:64px}}
+/* Huy duyệt 10/10 (PR #73): chỉ Tạo tài khoản, màn cao ≤700px (mọi bề rộng) → cú 64px (giữ tỉ lệ). */
+@media(max-height:700px){.card:has(#regForm) .logo-mascot{height:64px}}
 /* So sánh font: chỉ đổi họ chữ, giữ nguyên màu / cỡ / token */
 html[data-font=bvp],html[data-font=bvp] body{font-family:"Be Vietnam Pro",system-ui,"Noto Sans",sans-serif}
 /* Mẫu dấu (?state=sample) */
