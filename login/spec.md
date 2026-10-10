@@ -209,7 +209,7 @@ Nút chính nằm trên màn ở cả ba cách, kể cả 375×667. Cách 2 ch�
 
 ~~Đề xuất trước đó: Cách 1 (icon 56px).~~ Huy chọn **Cách 2 (cú lớn)** · 09/10.
 
-Thu cú 64px chỉ ở Tạo tài khoản trên màn thấp (≤480 rộng, ≤700 cao) · Huy duyệt 10/10. Prod (thẻ 343px) đã vừa mặt gấp nên ưu tiên thấp, gộp PR sửa nhỏ cùng .auth-alert ul list-style:disc và ô chọn appearance:none.
+Thu cú 64px chỉ ở Tạo tài khoản khi màn cao ≤700px, mọi bề rộng · PR #73, 10/10 (Huy duyệt). Ở 820×600 nút Tạo tài khoản vẫn thấp hơn mép màn 47px; chấp nhận mức Low vì đây không phải cỡ iPad thật.
 
 ## 10. Câu chữ (chốt 10/10, PR #70)
 
