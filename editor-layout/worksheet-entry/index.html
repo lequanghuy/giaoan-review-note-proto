@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Vị trí Tạo phiếu bài tập · GiaoAn AI — mockup</title>
+<title>Tab Phiếu bài tập · GiaoAn AI — mockup</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
 :root{--blue:#2563eb;--blue-h:#1d4ed8;--blue-s:#eff6ff;--blue-b:#bfdbfe;--g50:#f9fafb;--g100:#f3f4f6;--g200:#e5e7eb;--g300:#d1d5db;--g400:#9ca3af;--g500:#6b7280;--g600:#4b5563;--g700:#374151;--g800:#1f2937;--g900:#111827;--green:#059669;--gs:#ecfdf5;--gb:#a7f3d0;--amber:#d97706}
@@ -48,43 +48,68 @@ main{flex:1;min-width:0;max-width:860px;margin:0 auto;padding:8px 36px 64px}@med
 .revise{margin-top:8px;font-size:14px;color:var(--g700)}.ta{height:72px;border:1px solid var(--g200);border-radius:8px;margin:6px 0 10px;background:#fff}
 .lbl{position:fixed;right:8px;bottom:8px;z-index:70;background:rgba(17,24,39,.85);color:#fff;font-size:12px;font-weight:600;padding:4px 8px;border-radius:6px}html:not(.bare) .lbl{display:none}
 .mark{outline:3px solid #f59e0b;outline-offset:3px;border-radius:10px}html:not(.mk) .mark{outline:0}
+
+/* ---- B final: segmented tabs ---- */
+.tabs{display:flex;gap:8px;margin:0 0 8px;flex-wrap:nowrap}
+.tab{display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
+.tab .s{display:none}
+.tab .n{margin-left:0;font-size:11px;font-weight:700;border-radius:999px;padding:0 6px;min-width:18px;line-height:18px;background:#fff;color:var(--blue-h);border:1px solid var(--blue-b)}
+.tab[aria-selected=false] .n{background:var(--blue-s)}
+.tab .gd{width:8px;height:8px;border-radius:50%;background:var(--blue);animation:pl 1.2s ease-in-out infinite}
+@keyframes pl{50%{opacity:.35}}@media (prefers-reduced-motion:reduce){.tab .gd{animation:none}}
+@media(max-width:480px){
+ .tabs{gap:0;padding:2px;border:1px solid var(--g200);border-radius:10px;background:#fff}
+ .tab{flex:1 1 0;min-width:0;padding:0 4px;border:0;border-radius:8px;font-size:13px}
+ .tab .l{display:none}.tab .s{display:inline}
+}
+.ws-hd{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:0 0 6px}.ws-hd h2{margin:0;font-size:16px;font-weight:600;color:var(--g900)}
+.note{margin:12px 0 0;font-size:13px;color:var(--g500)}
+.err{margin:0 0 14px;padding:12px 14px;border:1px solid #fecaca;background:#fef2f2;border-radius:10px;font-size:14px;color:var(--g800);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.err b{color:var(--red,#dc2626)}
+.stale{margin:0 0 14px;padding:12px 14px;border:1px solid #fde68a;background:#fffbeb;border-radius:10px;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.run{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--blue-b);background:var(--blue-s);border-radius:10px;font-size:14px;font-weight:600;color:var(--blue-h);margin:0 0 12px}
+.spin{width:16px;height:16px;border:2px solid var(--blue-b);border-top-color:var(--blue);border-radius:50%;animation:sp .8s linear infinite;flex:none}@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation:none}}
+.sk{height:14px;border-radius:4px;background:var(--g100);margin:10px 0}
 </style></head><body>
-<div class="proto"><span>Phương án:</span><span id="oB"></span><span>|</span><span>Phiếu:</span><span id="wB"></span></div>
+<div class="proto"><span>Trạng thái:</span><span id="sB"></span><span>|</span><span>Tab:</span><span id="tB"></span></div>
 <header class="top"><div class="b"><span class="mlc">Mục lục</span><span class="logo" aria-hidden="true">G</span><b class="brand-t">GiaoAn AI</b><span class="crumb">/ <a>Giáo án</a> / Định lí minh họa</span></div>
-<div class="r" id="topR"></div></header>
+<div class="r"><button class="btn btn-p" type="button">Xuất Word</button><span class="back-t">← Về danh sách</span><span>Đăng xuất</span></div></header>
 <div class="wrap"><aside aria-label="Mục lục" id="side"></aside><main id="m"></main></div>
 <div class="lbl" id="lbl"></div>
 <script>
-var Q=new URLSearchParams(location.search);var OPTS={a:'A · Nút ở đầu giáo án',b:'B · Tab Phiếu bài tập',c:'C · Ngay sau Luyện tập'};var WS={none:'Chưa có phiếu',ready:'Đã có phiếu'};
-var opt=OPTS[Q.get('opt')]?Q.get('opt'):'a',ws=WS[Q.get('ws')]?Q.get('ws'):'none',tab=Q.get('tab')==='ws'?'ws':'soan';
-if(Q.get('bare')==='1')document.documentElement.classList.add('bare');if(Q.get('mark')==='1')document.documentElement.classList.add('mk');
-var TOC=['Thông tin bài dạy','I. Mục tiêu','II. Thiết bị dạy học và học liệu','III. Tiến trình dạy học','1. Mở đầu','2. Hình thành kiến thức mới','3. Luyện tập','4. Vận dụng'];
-function fields(n){var s='';for(var i=0;i<n;i++)s+='<div class="f"></div>';return s}
-function sec(l,n){return '<div class="sec"><p class="l">'+l+'</p>'+fields(n)+'</div>'}
-function act(n,t,m,hl){return '<div class="act'+(hl?' hl':'')+'"><b>Hoạt động '+n+' &nbsp;'+t+'</b><span>'+m+' phút</span></div>'}
-function wsBtn(cls,extra){return ws==='ready'?'<button class="btn btn-o mark" type="button">Xem phiếu bài tập · 6 câu</button>':'<button class="btn '+(cls||'btn-o')+' mark" type="button" aria-describedby="wsHint">Tạo phiếu bài tập</button>'}
-function sheet(){return '<section class="card" id="sheet"><div class="hd"><h2>Phiếu bài tập</h2><span class="hint">6 câu · theo Luyện tập, Vận dụng</span></div>'+
- [1,2,3].map(function(i){return '<div class="q"><b>Câu '+i+'</b><div class="f" style="height:24px;border:0"></div></div>'}).join('')+
- '<p class="revise">Yêu cầu soạn lại phiếu</p><div class="ta"></div><button class="btn" type="button">Soạn lại phiếu</button></section>'}
-function tabs(){var t='<div class="tabs" role="tablist" aria-label="Chế độ xem"><button class="tab" role="tab" aria-selected="'+(tab==='soan')+'">Soạn</button><button class="tab" role="tab" aria-selected="false">Xem như giáo án</button><button class="tab" role="tab" aria-selected="false">So sánh</button>';
- if(opt==='b')t+='<button class="tab mark" role="tab" aria-selected="'+(tab==='ws')+'">Phiếu bài tập'+(ws==='ready'?'<span class="n">6</span>':'')+'</button>';return t+'</div>'}
-function chips(){var c=TOC.map(function(x,i){return '<button class="chip'+(i?'':' on')+'">'+x+'</button>'});if(opt!=='b')c.splice(1,0,'');var s=TOC.map(function(x,i){return '<button class="chip'+(i?'':' on')+'">'+x+'</button>'}).join('');
- if(opt==='c'||opt==='a')s+='<button class="chip ws">Phiếu bài tập</button>';return '<div class="chips">'+s+'</div>'}
-function planCard(){var hd='<div class="hd"><h2>Giáo án (Phụ lục IV)</h2>'+(opt==='a'?wsBtn():'')+'</div>';
- var h='<section class="card">'+hd+'<p class="ptitle"><b>Định lí minh họa</b> — lớp 8 — 45 phút — phiên bản 11</p>'+sec('Thông tin bài dạy',2)+sec('I. Mục tiêu',3)+sec('II. Thiết bị dạy học và học liệu',1)+
- '<div class="sec"><p class="l">III. Tiến trình dạy học</p>'+act(1,'Mở đầu',5)+act(2,'Hình thành kiến thức mới',18)+act(3,'Luyện tập',12,opt==='c')+act(4,'Vận dụng',10,opt==='c')+'</div>';
- if(opt==='c')h+='<div class="inl mark"><p><b>Phiếu bài tập</b> · lấy từ Luyện tập, Vận dụng.</p>'+wsBtn('btn-p')+'</div>';
- h+='<p class="revise">Yêu cầu soạn lại</p><div class="ta"></div><button class="btn" type="button">Soạn lại giáo án</button>'+(opt==='c'||opt==='a'||opt==='b'?'':'')+'</section>';return h}
-function wsTab(){if(ws==='ready')return sheet();return '<section class="card"><div class="empty"><h3>Chưa có phiếu bài tập</h3><p>GiaoAn AI soạn phiếu từ Luyện tập và Vận dụng của giáo án này.</p><ul><li>Giáo án được lưu trước khi tạo phiếu.</li><li>Sửa giáo án sau đó thì tạo lại phiếu.</li></ul><button class="btn btn-p mark" type="button">Tạo phiếu bài tập</button></div></section>'}
-function render(){document.getElementById('topR').innerHTML='<button class="btn btn-p" type="button">Xuất Word</button><span class="back-t">← Về danh sách</span><span>Đăng xuất</span>';
- var sd=TOC.map(function(x,i){return '<div class="t'+(i===0?' on':'')+(i>3?' s':'')+'">'+x+'</div>'}).join('');if(opt!=='b')sd+='<div class="t ws">Phiếu bài tập'+(ws==='ready'?' · 6 câu':'')+'</div>';
- document.getElementById('side').innerHTML=sd;
- var h=tabs()+(tab==='ws'?'':chips())+'<p class="meta"><span class="v">v11</span><span class="pill"><i></i>Đã soạn</span><span>Theo khung Phụ lục IV · GV tự thẩm định trước khi nộp.</span></p>';
- h+=tab==='ws'?wsTab():planCard()+(ws==='ready'?sheet():'');
- document.getElementById('m').innerHTML=h;document.getElementById('lbl').textContent=OPTS[opt]+' · '+WS[ws]+(tab==='ws'?' · mở tab':'');
+var Q=new URLSearchParams(location.search);
+var ST={empty:'Chưa có phiếu',generating:'Đang tạo',ready:'Đã có phiếu',error:'Lỗi tạo',stale:'Giáo án đã sửa',blocked:'Chưa lưu được'};
+var state=ST[Q.get('state')]?Q.get('state'):'empty',tab=Q.get('tab')==='soan'?'soan':'ws';
+if(Q.get('bare')==='1')document.documentElement.classList.add('bare');
+var N=6,TOC=['Thông tin bài dạy','I. Mục tiêu','II. Thiết bị dạy học và học liệu','III. Tiến trình dạy học','1. Mở đầu','2. Hình thành kiến thức mới','3. Luyện tập','4. Vận dụng'];
+function T(id,l,s,sel,extra,aria){return '<button class="tab" role="tab" id="tab-'+id+'" aria-controls="panel-'+id+'" aria-selected="'+sel+'" tabindex="'+(sel?0:-1)+'"'+(aria?' aria-label="'+aria+'"':'')+'><span class="l">'+l+'</span><span class="s" aria-hidden="true">'+s+'</span>'+(extra||'')+'</button>'}
+function tabs(){var has=state==='ready'||state==='stale',gen=state==='generating';
+ var badge=has?'<span class="n" aria-hidden="true">'+N+'</span>':gen?'<span class="gd" aria-hidden="true"></span>':'';
+ var aria='Phiếu bài tập'+(has?', '+N+' câu':gen?', đang tạo':'');
+ return '<div class="tabs" role="tablist" aria-label="Chế độ xem">'+T('soan','Soạn','Soạn',tab==='soan','','Soạn')+T('xem','Xem như giáo án','Xem',false,'','Xem như giáo án')+T('diff','So sánh','So sánh',false,'','So sánh')+T('ws','Phiếu bài tập','Phiếu',tab==='ws',badge,aria)+'</div>'}
+function chips(){return '<div class="chips">'+TOC.map(function(x,i){return '<button class="chip'+(i?'':' on')+'">'+x+'</button>'}).join('')+'</div>'}
+function f(n){var s='';for(var i=0;i<n;i++)s+='<div class="f"></div>';return s}
+function soan(){return chips()+'<section class="card" role="tabpanel" id="panel-soan" aria-labelledby="tab-soan"><div class="hd"><h2>Giáo án (Phụ lục IV)</h2></div><p class="ptitle"><b>Định lí minh họa</b> — lớp 8 — 45 phút — phiên bản 11</p><div class="sec"><p class="l">Thông tin bài dạy</p>'+f(2)+'</div><div class="sec"><p class="l">I. Mục tiêu</p>'+f(3)+'</div><div class="sec"><p class="l">III. Tiến trình dạy học</p>'+f(2)+'</div><p class="revise">Yêu cầu soạn lại</p><div class="ta"></div><button class="btn" type="button">Soạn lại giáo án</button></section>'}
+function qs(){var s='';for(var i=1;i<=3;i++)s+='<div class="q"><b>Câu '+i+'</b><div class="sk" style="width:90%"></div><div class="sk" style="width:60%"></div></div>';return s+'<p class="hint">… còn '+(N-3)+' câu</p>'}
+function sheet(){return '<div class="ws-hd"><h2>Phiếu bài tập · '+N+' câu</h2><span class="hint">Tạo lúc 08:41 · từ giáo án v11</span></div>'+qs()+'<p class="revise">Yêu cầu soạn lại phiếu</p><div class="ta"></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" type="button">Soạn lại phiếu</button></div><p class="note">Xuất Word gồm giáo án và phiếu này (kèm gợi ý đáp án).</p>'}
+function empty(msg){return '<div class="empty"><h3>Chưa có phiếu bài tập</h3><p>GiaoAn AI soạn phiếu từ Luyện tập và Vận dụng của giáo án này.</p>'+(msg||'')+'<button class="btn btn-p" type="button">Tạo phiếu bài tập</button><p class="note">Giáo án được lưu trước khi tạo phiếu.</p></div>'}
+function ws(){var h='<section class="card" role="tabpanel" id="panel-ws" aria-labelledby="tab-ws" tabindex="-1">';
+ if(state==='empty')h+=empty();
+ if(state==='blocked')h+='<div class="err" role="alert"><span>Chưa lưu được giáo án nên chưa tạo phiếu. Sửa các ô báo đỏ ở tab Soạn.</span><button class="btn" type="button">Về tab Soạn</button></div>'+empty();
+ if(state==='generating')h+='<div class="run" role="status" aria-live="polite"><span class="spin" aria-hidden="true"></span>Đang tạo phiếu bài tập · thường dưới 1 phút</div><div class="sk" style="width:70%"></div><div class="sk"></div><div class="sk" style="width:85%"></div><p class="note">Có thể chuyển tab khác, phiếu xong sẽ hiện ở đây.</p>';
+ if(state==='error')h+='<div class="err" role="alert"><span><b>Chưa tạo được phiếu.</b> Thử lại.</span><button class="btn btn-p" type="button">Thử lại</button></div><p class="hint">Giáo án không bị ảnh hưởng.</p>';
+ if(state==='ready')h+=sheet();
+ if(state==='stale')h+='<div class="stale" role="status"><span>Giáo án đã sửa sau khi tạo phiếu.</span><button class="btn btn-o" type="button">Tạo lại phiếu</button></div>'+sheet();
+ return h+'</section>'}
+function render(){var sd=TOC.map(function(x,i){return '<div class="t'+(i===0?' on':'')+(i>3?' s':'')+'">'+x+'</div>'}).join('');document.getElementById('side').innerHTML=sd;
+ document.getElementById('m').innerHTML=tabs()+'<p class="meta"><span class="v">v11</span><span class="pill"><i></i>Đã soạn</span><span>Theo khung Phụ lục IV · GV tự thẩm định trước khi nộp.</span></p>'+(tab==='ws'?ws():soan());
+ document.getElementById('lbl').textContent='B · '+ST[state]+(tab==='soan'?' · tab Soạn':'');
+ [].forEach.call(document.querySelectorAll('.tab'),function(b){b.onclick=function(){var id=b.id.slice(4);if(id==='ws'||id==='soan'){tab=id;set('tab',id);render();var p=document.getElementById('tab-'+id);p&&p.focus()}}});
+ document.querySelector('[role=tablist]').onkeydown=function(e){var t=[].slice.call(this.querySelectorAll('.tab')),i=t.indexOf(document.activeElement);if(i<0)return;var j=e.key==='ArrowRight'?(i+1)%t.length:e.key==='ArrowLeft'?(i+t.length-1)%t.length:e.key==='Home'?0:e.key==='End'?t.length-1:-1;if(j>=0){e.preventDefault();t[j].focus()}};
  bar()}
 function set(k,v){var u=new URL(location.href);u.searchParams.set(k,v);history.replaceState(null,'',u)}
-function bar(){['oB','wB'].forEach(function(id,j){var el=document.getElementById(id),M=j?WS:OPTS;el.innerHTML='';Object.keys(M).forEach(function(k){var b=document.createElement('button');b.textContent=M[k];b.setAttribute('aria-pressed',k===(j?ws:opt));b.onclick=function(){if(j){ws=k;set('ws',k)}else{opt=k;set('opt',k);tab='soan'}render()};el.appendChild(b)})});
- if(opt==='b'){var b=document.createElement('button');b.textContent=tab==='ws'?'Về tab Soạn':'Mở tab Phiếu';b.onclick=function(){tab=tab==='ws'?'soan':'ws';set('tab',tab);render()};document.getElementById('wB').appendChild(b)}}
+function bar(){var s=document.getElementById('sB'),t=document.getElementById('tB');s.innerHTML='';t.innerHTML='';Object.keys(ST).forEach(function(k){var b=document.createElement('button');b.textContent=ST[k];b.setAttribute('aria-pressed',k===state);b.onclick=function(){state=k;set('state',k);render()};s.appendChild(b)});
+ [['soan','Soạn'],['ws','Phiếu']].forEach(function(p){var b=document.createElement('button');b.textContent=p[1];b.setAttribute('aria-pressed',p[0]===tab);b.onclick=function(){tab=p[0];set('tab',tab);render()};t.appendChild(b)})}
 render();
 </script></body></html>

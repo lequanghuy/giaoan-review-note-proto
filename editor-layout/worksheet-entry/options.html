@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Vị trí Tạo phiếu bài tập · GiaoAn AI — mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--blue:#2563eb;--blue-h:#1d4ed8;--blue-s:#eff6ff;--blue-b:#bfdbfe;--g50:#f9fafb;--g100:#f3f4f6;--g200:#e5e7eb;--g300:#d1d5db;--g400:#9ca3af;--g500:#6b7280;--g600:#4b5563;--g700:#374151;--g800:#1f2937;--g900:#111827;--green:#059669;--gs:#ecfdf5;--gb:#a7f3d0;--amber:#d97706}
+*{box-sizing:border-box}html,body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--g50);color:var(--g800);line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font:inherit;cursor:pointer;touch-action:manipulation}:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.proto{position:sticky;top:0;z-index:60;background:#1f2937;color:#e5e7eb;padding:8px 12px;font-size:12px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.proto button{min-height:32px;padding:0 10px;border-radius:6px;border:1px solid #4b5563;background:#374151;color:#fff;font-size:12px}.proto button[aria-pressed=true]{background:var(--blue)}
+html.bare .proto{display:none}
+.top{position:sticky;top:0;z-index:40;height:48px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 12px;background:#fff;border-bottom:1px solid var(--g200);font-size:14px}
+.top .b{display:flex;align-items:center;gap:8px;min-width:0;white-space:nowrap;overflow:hidden}.logo{width:24px;height:24px;border-radius:6px;background:var(--blue);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex:none}
+.crumb{color:var(--g500);overflow:hidden;text-overflow:ellipsis}.crumb a{color:var(--blue)}
+.top .r{display:flex;gap:14px;align-items:center;color:var(--g700);font-weight:500;white-space:nowrap;flex:none}
+.btn{min-height:44px;padding:0 14px;border-radius:8px;border:1px solid var(--g300);background:#fff;color:var(--g800);font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn-p{background:var(--blue);border-color:var(--blue);color:#fff}.btn-o{border-color:var(--blue-b);color:var(--blue-h);background:var(--blue-s)}
+.mlc{display:none}
+@media(max-width:1099px){.mlc{display:inline}}
+@media(max-width:720px){.crumb,.back-t,.brand-t{display:none}.top .r{gap:10px}.btn{padding:0 10px;font-size:13px}}
+.wrap{display:flex}aside{display:none;width:236px;flex:none;background:#fff;border-right:1px solid var(--g200);padding:16px 12px;min-height:calc(100vh - 48px)}
+@media(min-width:1100px){aside{display:block}}
+aside .t{font-size:13px;color:var(--g700);padding:6px 8px;border-radius:6px}aside .t.on{background:var(--g100);font-weight:600}aside .t.s{font-size:11px;color:var(--g500);padding-left:16px}
+aside .t.ws{margin-top:8px;border-top:1px solid var(--g200);padding-top:12px;color:var(--blue-h);font-weight:600}
+main{flex:1;min-width:0;max-width:860px;margin:0 auto;padding:8px 36px 64px}@media(max-width:720px){main{padding:8px 12px 120px}}
+.tabs{display:flex;gap:8px;margin:0 0 8px;flex-wrap:wrap}.tab{min-height:44px;padding:0 14px;border-radius:8px;border:1px solid var(--g200);background:#fff;color:var(--g600);font-size:14px;font-weight:500}
+.tab[aria-selected=true]{background:var(--blue);border-color:var(--blue);color:#fff}
+.tab .n{margin-left:6px;font-size:11px;font-weight:700;border-radius:999px;padding:1px 6px;background:var(--gs);color:#047857}
+.chips{position:sticky;top:48px;z-index:20;display:flex;gap:8px;overflow-x:auto;background:var(--g50);padding:4px 0;margin:0 0 8px}@media(min-width:1100px){.chips{display:none}}
+.chip{min-height:44px;flex:none;border-radius:999px;border:1px solid var(--g200);background:#fff;padding:0 12px;font-size:13px;color:var(--g700)}.chip.on{border-color:var(--g900);font-weight:600}
+.chip.ws{border-color:var(--blue-b);background:var(--blue-s);color:var(--blue-h);font-weight:600}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:0 0 12px;font-size:13px;color:var(--g500)}
+.v{border-radius:4px;background:var(--g100);padding:2px 8px;font-size:12px;font-weight:600;color:var(--g700)}
+.pill{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:1px 9px 1px 7px;font-size:12px;font-weight:600;color:var(--g700);border:1px solid var(--gb);background:var(--gs)}.pill i{width:8px;height:8px;border-radius:50%;background:var(--green)}
+.card{background:#fff;border:1px solid var(--g200);border-radius:12px;padding:16px;margin:0 0 14px}
+.hd{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 10px;flex-wrap:wrap}.hd h2{margin:0;font-size:16px;font-weight:600;color:var(--g900)}
+.ptitle{margin:0 0 12px;font-size:14px;color:var(--g700)}.ptitle b{color:var(--g900)}
+.sec{margin:0 0 14px}.sec .l{font-size:14px;font-weight:700;color:var(--g900);margin:0 0 6px}
+.f{height:40px;border-radius:8px;border:1px solid var(--g200);background:#fff;margin:0 0 8px;position:relative}.f::after{content:"";position:absolute;left:12px;top:15px;height:10px;width:60%;border-radius:4px;background:var(--g100)}
+.act{border-top:1px solid var(--g200);padding:12px 0 4px;display:flex;justify-content:space-between;align-items:center}.act b{font-size:14px}.act span{font-size:13px;color:var(--g500)}
+.act.hl{background:var(--blue-s);margin:0 -16px;padding:12px 16px;border-top-color:var(--blue-b)}
+.inl{margin:6px 0 14px;padding:12px 14px;border:1px dashed var(--blue-b);background:var(--blue-s);border-radius:10px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.inl p{margin:0;font-size:14px;color:var(--g700)}.inl p b{color:var(--g900)}
+.hint{font-size:13px;color:var(--g500);margin:0}
+.empty{text-align:left;padding:8px 0}.empty h3{margin:0 0 4px;font-size:16px;color:var(--g900)}.empty p{margin:0 0 14px;font-size:14px;color:var(--g700)}
+.empty ul{margin:0 0 16px;padding-left:18px;font-size:14px;color:var(--g700)}
+.q{border-top:1px solid var(--g200);padding:10px 0}.q:first-child{border-top:0}.q b{font-size:14px}
+.revise{margin-top:8px;font-size:14px;color:var(--g700)}.ta{height:72px;border:1px solid var(--g200);border-radius:8px;margin:6px 0 10px;background:#fff}
+.lbl{position:fixed;right:8px;bottom:8px;z-index:70;background:rgba(17,24,39,.85);color:#fff;font-size:12px;font-weight:600;padding:4px 8px;border-radius:6px}html:not(.bare) .lbl{display:none}
+.mark{outline:3px solid #f59e0b;outline-offset:3px;border-radius:10px}html:not(.mk) .mark{outline:0}
+</style></head><body>
+<div class="proto"><span>Phương án:</span><span id="oB"></span><span>|</span><span>Phiếu:</span><span id="wB"></span></div>
+<header class="top"><div class="b"><span class="mlc">Mục lục</span><span class="logo" aria-hidden="true">G</span><b class="brand-t">GiaoAn AI</b><span class="crumb">/ <a>Giáo án</a> / Định lí minh họa</span></div>
+<div class="r" id="topR"></div></header>
+<div class="wrap"><aside aria-label="Mục lục" id="side"></aside><main id="m"></main></div>
+<div class="lbl" id="lbl"></div>
+<script>
+var Q=new URLSearchParams(location.search);var OPTS={a:'A · Nút ở đầu giáo án',b:'B · Tab Phiếu bài tập',c:'C · Ngay sau Luyện tập'};var WS={none:'Chưa có phiếu',ready:'Đã có phiếu'};
+var opt=OPTS[Q.get('opt')]?Q.get('opt'):'a',ws=WS[Q.get('ws')]?Q.get('ws'):'none',tab=Q.get('tab')==='ws'?'ws':'soan';
+if(Q.get('bare')==='1')document.documentElement.classList.add('bare');if(Q.get('mark')==='1')document.documentElement.classList.add('mk');
+var TOC=['Thông tin bài dạy','I. Mục tiêu','II. Thiết bị dạy học và học liệu','III. Tiến trình dạy học','1. Mở đầu','2. Hình thành kiến thức mới','3. Luyện tập','4. Vận dụng'];
+function fields(n){var s='';for(var i=0;i<n;i++)s+='<div class="f"></div>';return s}
+function sec(l,n){return '<div class="sec"><p class="l">'+l+'</p>'+fields(n)+'</div>'}
+function act(n,t,m,hl){return '<div class="act'+(hl?' hl':'')+'"><b>Hoạt động '+n+' &nbsp;'+t+'</b><span>'+m+' phút</span></div>'}
+function wsBtn(cls,extra){return ws==='ready'?'<button class="btn btn-o mark" type="button">Xem phiếu bài tập · 6 câu</button>':'<button class="btn '+(cls||'btn-o')+' mark" type="button" aria-describedby="wsHint">Tạo phiếu bài tập</button>'}
+function sheet(){return '<section class="card" id="sheet"><div class="hd"><h2>Phiếu bài tập</h2><span class="hint">6 câu · theo Luyện tập, Vận dụng</span></div>'+
+ [1,2,3].map(function(i){return '<div class="q"><b>Câu '+i+'</b><div class="f" style="height:24px;border:0"></div></div>'}).join('')+
+ '<p class="revise">Yêu cầu soạn lại phiếu</p><div class="ta"></div><button class="btn" type="button">Soạn lại phiếu</button></section>'}
+function tabs(){var t='<div class="tabs" role="tablist" aria-label="Chế độ xem"><button class="tab" role="tab" aria-selected="'+(tab==='soan')+'">Soạn</button><button class="tab" role="tab" aria-selected="false">Xem như giáo án</button><button class="tab" role="tab" aria-selected="false">So sánh</button>';
+ if(opt==='b')t+='<button class="tab mark" role="tab" aria-selected="'+(tab==='ws')+'">Phiếu bài tập'+(ws==='ready'?'<span class="n">6</span>':'')+'</button>';return t+'</div>'}
+function chips(){var c=TOC.map(function(x,i){return '<button class="chip'+(i?'':' on')+'">'+x+'</button>'});if(opt!=='b')c.splice(1,0,'');var s=TOC.map(function(x,i){return '<button class="chip'+(i?'':' on')+'">'+x+'</button>'}).join('');
+ if(opt==='c'||opt==='a')s+='<button class="chip ws">Phiếu bài tập</button>';return '<div class="chips">'+s+'</div>'}
+function planCard(){var hd='<div class="hd"><h2>Giáo án (Phụ lục IV)</h2>'+(opt==='a'?wsBtn():'')+'</div>';
+ var h='<section class="card">'+hd+'<p class="ptitle"><b>Định lí minh họa</b> — lớp 8 — 45 phút — phiên bản 11</p>'+sec('Thông tin bài dạy',2)+sec('I. Mục tiêu',3)+sec('II. Thiết bị dạy học và học liệu',1)+
+ '<div class="sec"><p class="l">III. Tiến trình dạy học</p>'+act(1,'Mở đầu',5)+act(2,'Hình thành kiến thức mới',18)+act(3,'Luyện tập',12,opt==='c')+act(4,'Vận dụng',10,opt==='c')+'</div>';
+ if(opt==='c')h+='<div class="inl mark"><p><b>Phiếu bài tập</b> · lấy từ Luyện tập, Vận dụng.</p>'+wsBtn('btn-p')+'</div>';
+ h+='<p class="revise">Yêu cầu soạn lại</p><div class="ta"></div><button class="btn" type="button">Soạn lại giáo án</button>'+(opt==='c'||opt==='a'||opt==='b'?'':'')+'</section>';return h}
+function wsTab(){if(ws==='ready')return sheet();return '<section class="card"><div class="empty"><h3>Chưa có phiếu bài tập</h3><p>GiaoAn AI soạn phiếu từ Luyện tập và Vận dụng của giáo án này.</p><ul><li>Giáo án được lưu trước khi tạo phiếu.</li><li>Sửa giáo án sau đó thì tạo lại phiếu.</li></ul><button class="btn btn-p mark" type="button">Tạo phiếu bài tập</button></div></section>'}
+function render(){document.getElementById('topR').innerHTML='<button class="btn btn-p" type="button">Xuất Word</button><span class="back-t">← Về danh sách</span><span>Đăng xuất</span>';
+ var sd=TOC.map(function(x,i){return '<div class="t'+(i===0?' on':'')+(i>3?' s':'')+'">'+x+'</div>'}).join('');if(opt!=='b')sd+='<div class="t ws">Phiếu bài tập'+(ws==='ready'?' · 6 câu':'')+'</div>';
+ document.getElementById('side').innerHTML=sd;
+ var h=tabs()+(tab==='ws'?'':chips())+'<p class="meta"><span class="v">v11</span><span class="pill"><i></i>Đã soạn</span><span>Theo khung Phụ lục IV · GV tự thẩm định trước khi nộp.</span></p>';
+ h+=tab==='ws'?wsTab():planCard()+(ws==='ready'?sheet():'');
+ document.getElementById('m').innerHTML=h;document.getElementById('lbl').textContent=OPTS[opt]+' · '+WS[ws]+(tab==='ws'?' · mở tab':'');
+ bar()}
+function set(k,v){var u=new URL(location.href);u.searchParams.set(k,v);history.replaceState(null,'',u)}
+function bar(){['oB','wB'].forEach(function(id,j){var el=document.getElementById(id),M=j?WS:OPTS;el.innerHTML='';Object.keys(M).forEach(function(k){var b=document.createElement('button');b.textContent=M[k];b.setAttribute('aria-pressed',k===(j?ws:opt));b.onclick=function(){if(j){ws=k;set('ws',k)}else{opt=k;set('opt',k);tab='soan'}render()};el.appendChild(b)})});
+ if(opt==='b'){var b=document.createElement('button');b.textContent=tab==='ws'?'Về tab Soạn':'Mở tab Phiếu';b.onclick=function(){tab=tab==='ws'?'soan':'ws';set('tab',tab);render()};document.getElementById('wB').appendChild(b)}}
+render();
+</script></body></html>
