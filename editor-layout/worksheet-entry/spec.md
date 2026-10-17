@@ -6,6 +6,7 @@
 > - **Một tên cho việc tạo lại:** `Tạo lại phiếu` (bỏ "Soạn lại phiếu"), kèm ghi chú `Phiếu mới thay phiếu hiện tại.` Ô ghi chú đổi nhãn thành `Yêu cầu cho phiếu mới · không bắt buộc`. Trạng thái "giáo án đã sửa" dùng cùng nút này.
 > - **Câu hỏi:** hiện 3 câu, rồi nút `Xem thêm 3 câu` (button có aria-expanded, mở xong thì focus vào câu 4).
 > - **Lỗi nói rõ nguyên nhân nếu biết:** `Chưa tạo được phiếu: mất kết nối.` · `Chưa tạo được phiếu: hết thời gian chờ.` Không rõ nguyên nhân thì dùng `Chưa tạo được phiếu.` Luôn có nút **Thử lại**.
+> - **18/10: Huy duyệt ẩn So sánh → 3 tab `Soạn · Xem · Phiếu`** (mục §2 cũ về 4 tab không còn áp dụng; ≤480 vẫn segmented nhãn ngắn). `Tạo phiếu bài tập` chỉ có ở tab Phiếu.
 > - Tab nằm trong segmented control mới (xem `../editor-v2/spec.md` §6). Mock: `../editor-v2/index.html?view=ws-ready|ws-blocked|ws-error`.
 
 
