@@ -1,5 +1,14 @@
 # Tab "Phiếu bài tập" (phương án B) · spec cho Dev FE
 
+> **Cập nhật 18/10 (critique, Huy duyệt) — các điểm dưới đây thắng nội dung cũ:**
+> - **Bỏ badge số câu trên tab.** Tab chỉ có chữ `Phiếu bài tập` / `Phiếu`. Số câu nằm ở tiêu đề thẻ: `Phiếu bài tập · 6 câu`, với phần `· 6 câu` màu g500. Lúc đang tạo cũng không có chấm trên tab, trạng thái chỉ hiện trong panel. aria-label của tab chỉ là "Phiếu bài tập".
+> - **Chưa lưu được:** ẩn nút Tạo phiếu, chỉ còn **Về tab Soạn**. Bên dưới vẫn có tiêu đề và lý do của trạng thái trống, nhưng không có nút.
+> - **Một tên cho việc tạo lại:** `Tạo lại phiếu` (bỏ "Soạn lại phiếu"), kèm ghi chú `Phiếu mới thay phiếu hiện tại.` Ô ghi chú đổi nhãn thành `Yêu cầu cho phiếu mới · không bắt buộc`. Trạng thái "giáo án đã sửa" dùng cùng nút này.
+> - **Câu hỏi:** hiện 3 câu, rồi nút `Xem thêm 3 câu` (button có aria-expanded, mở xong thì focus vào câu 4).
+> - **Lỗi nói rõ nguyên nhân nếu biết:** `Chưa tạo được phiếu: mất kết nối.` · `Chưa tạo được phiếu: hết thời gian chờ.` Không rõ nguyên nhân thì dùng `Chưa tạo được phiếu.` Luôn có nút **Thử lại**.
+> - Tab nằm trong segmented control mới (xem `../editor-v2/spec.md` §6). Mock: `../editor-v2/index.html?view=ws-ready|ws-blocked|ws-error`.
+
+
 Huy chọn B (Captain chuyển, 13/10/2026). Mock: `index.html?state=empty|generating|ready|error|stale|blocked&tab=ws|soan&bare=1`.
 Ảnh: `shots/B-{state}-{820x1180,1180x820,375x812,320x568}.png`, ảnh ghép `shots/B-cmp-{size}.png`.
 Chỉ là mock. Code hiện tại: `apps/web/src/components/editor/editor-view.tsx` (1a00979).

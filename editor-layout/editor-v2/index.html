@@ -1,0 +1,137 @@
+<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Editor v2 · GiaoAn AI — mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--blue:#2563eb;--blue-h:#1d4ed8;--blue-s:#eff6ff;--blue-b:#bfdbfe;--g50:#f9fafb;--g100:#f3f4f6;--g200:#e5e7eb;--g300:#d1d5db;--g400:#9ca3af;--g500:#6b7280;--g600:#4b5563;--g700:#374151;--g800:#1f2937;--g900:#111827;--green:#059669;--gs:#ecfdf5;--gb:#a7f3d0;--amber:#d97706;--as:#fffbeb;--ab:#fde68a;--red:#dc2626}
+*{box-sizing:border-box}html,body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--g50);color:var(--g800);line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input,textarea{font:inherit}button{cursor:pointer;touch-action:manipulation}:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.proto{background:#1f2937;color:#e5e7eb;padding:8px 12px;font-size:12px;display:flex;gap:6px;flex-wrap:wrap}.proto button{min-height:32px;padding:0 10px;border-radius:6px;border:1px solid #4b5563;background:#374151;color:#fff;font-size:12px}.proto button[aria-pressed=true]{background:var(--blue)}
+html.bare .proto{display:none}
+/* top bar */
+.top{position:sticky;top:0;z-index:40;height:52px;display:flex;align-items:center;gap:4px;padding:0 8px 0 4px;background:#fff;border-bottom:1px solid var(--g200);font-size:14px}
+.ib{min-height:44px;min-width:44px;padding:0 10px;border:0;background:transparent;border-radius:8px;color:var(--g700);font-weight:500;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.ib:hover{background:var(--g100)}
+.brand{display:flex;align-items:center;gap:8px;min-width:0;flex:1}
+.logo{width:24px;height:24px;border-radius:6px;background:var(--blue);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex:none}
+.crumb{display:flex;align-items:center;min-width:0;color:var(--g500)}.back-s{text-decoration:none}.crumb a{display:inline-flex;align-items:center;min-height:44px;padding:0 6px;color:var(--blue);text-decoration:none;border-radius:6px;white-space:nowrap}
+.ttl{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--g900);font-weight:600;padding:0 6px}
+.btn{min-height:44px;padding:0 14px;border-radius:8px;border:1px solid var(--g300);background:#fff;color:var(--g800);font-size:14px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
+.btn-p{background:var(--blue);border-color:var(--blue);color:#fff}.btn-o{border-color:var(--blue-b);color:var(--blue-h);background:var(--blue-s)}
+.av{width:32px;height:32px;border-radius:50%;background:var(--blue-s);color:var(--blue-h);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;border:1px solid var(--blue-b)}
+.menu{position:absolute;right:8px;top:50px;z-index:50;background:#fff;border:1px solid var(--g200);border-radius:10px;box-shadow:0 8px 24px rgba(17,24,39,.12);padding:6px;min-width:200px}
+.menu p{margin:0;padding:8px 10px;font-size:13px;color:var(--g500)}.menu button{display:flex;width:100%;min-height:44px;align-items:center;padding:0 10px;border:0;background:none;border-radius:6px;font-size:15px;color:var(--g800)}
+.mlc,.back-s{display:none}
+@media(max-width:1099px){.mlc{display:inline-flex}}
+@media(max-width:720px){.brand .logo,.crumb .home,.crumb .sep,.back-l,.crumb .back-l{display:none}.top{gap:2px}.top .back-s{padding:0 6px}.ttl{padding:0 4px}.back-s{display:inline-flex}.top .btn{padding:0 12px}}
+.wrap{display:flex}aside{display:none;width:236px;flex:none;background:#fff;border-right:1px solid var(--g200);padding:16px 12px;min-height:calc(100vh - 52px)}@media(min-width:1100px){aside{display:block}}
+aside .t{font-size:14px;color:var(--g700);padding:8px;border-radius:6px}aside .t.on{background:var(--g100);font-weight:600}aside .t.s{font-size:13px;color:var(--g500);padding-left:18px}
+main{flex:1;min-width:0;max-width:860px;margin:0 auto;padding:12px 32px 64px}@media(max-width:720px){main{padding:10px 12px 120px}}
+/* segmented tabs, all sizes */
+.seg{display:inline-flex;max-width:100%;padding:2px;border:1px solid var(--g200);border-radius:10px;background:#fff;margin:0 0 10px}
+.seg .tab{min-height:44px;padding:0 16px;border:0;border-radius:8px;background:transparent;color:var(--g600);font-size:14px;font-weight:500;white-space:nowrap}
+.seg .tab[aria-selected=true]{background:var(--blue);color:#fff;font-weight:600}
+.seg .s{display:none}
+@media(max-width:480px){.seg{display:flex}.seg .tab{flex:1 1 0;min-width:0;padding:0 4px;font-size:13px}.seg .l{display:none}.seg .s{display:inline}}
+/* chips */
+.chipw{position:sticky;top:52px;z-index:20;background:var(--g50);margin:0 -2px 8px;padding:4px 2px}
+@media(min-width:1100px){.chipw{display:none}}
+.chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 40px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 40px),transparent)}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;min-height:44px;padding:0 12px;border:0;border-radius:999px;background:transparent;font-size:13px;color:var(--g600);position:relative}
+.chip::before{content:"";position:absolute;inset:6px 0;border:1px solid var(--g200);border-radius:999px;background:#fff;z-index:-1}
+.chip{z-index:0}
+.chip[aria-current]{color:var(--g900);font-weight:600}.chip[aria-current]::before{background:var(--g100);border-color:var(--g200)}
+.chip .w{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--amber);margin-left:6px;vertical-align:middle}
+/* meta */
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:0 0 12px;font-size:13px;color:var(--g500)}
+.v{border-radius:4px;background:var(--g100);padding:2px 8px;font-size:12px;font-weight:600;color:var(--g700)}
+.pill{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:1px 9px 1px 7px;font-size:12px;font-weight:600;color:var(--g700);border:1px solid var(--gb);background:var(--gs)}.pill i{width:8px;height:8px;border-radius:50%;background:var(--green)}
+.pill.am{border-color:var(--ab);background:var(--as)}.pill.am i{background:var(--amber)}
+/* SGK bar */
+.sgk{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px;padding:4px 4px 4px 12px;background:#fff;border:1px solid var(--g200);border-left:4px solid var(--amber);border-radius:8px;font-size:15px;color:var(--g800)}
+.sgk .tx{flex:1;min-width:0;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sgk{flex-wrap:nowrap}.sgk .nv .ib{padding:0 8px}.sgk .nv{display:flex;align-items:center;gap:2px}
+.sgk .ib{color:var(--blue-h);font-weight:600}.sgk .pos{font-size:13px;color:var(--g500);min-width:34px;text-align:center;font-variant-numeric:tabular-nums}
+/* card + type scale */
+.card{background:#fff;border:1px solid var(--g200);border-radius:12px;padding:20px;margin:0 0 14px}@media(max-width:720px){.card{padding:16px}}
+.card>h2{margin:0 0 4px;font-size:18px;font-weight:600;color:var(--g900)}
+.sub{margin:0 0 4px;font-size:14px;color:var(--g600)}.sub b{color:var(--g900);font-weight:600}
+h3.sh{margin:24px 0 12px;font-size:17px;font-weight:600;color:var(--g900)}
+.fld{margin:0 0 14px;position:relative}
+.fld label{display:block;margin:0 0 6px;font-size:14px;font-weight:500;color:var(--g600)}
+.fld .hint{font-weight:400;color:var(--g500)}
+.in,.ta{display:block;width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--g300);border-radius:8px;background:#fff;font-size:16px;line-height:1.5;color:var(--g900)}
+.ta{resize:none;overflow:hidden;field-sizing:content}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:600px){.row2{grid-template-columns:1fr}}
+.fld.flag{padding-left:12px}.fld.flag::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:2px;background:var(--amber)}
+.fld.flag .tag{display:inline-flex;align-items:center;gap:4px;margin-left:8px;font-size:12px;font-weight:600;color:#92400e;background:var(--as);border:1px solid var(--ab);border-radius:999px;padding:0 8px;vertical-align:1px}
+.fld.cur .ta{border-color:var(--amber);box-shadow:0 0 0 3px rgba(217,119,6,.18)}
+.act{display:flex;align-items:center;gap:10px;width:100%;min-height:52px;padding:0 4px;border:0;border-top:1px solid var(--g200);background:none;text-align:left;font-size:15px;color:var(--g900)}
+.act .c{width:20px;color:var(--g500);transition:transform .15s}.act[aria-expanded=true] .c{transform:rotate(90deg)}
+.act b{font-weight:600}.act .nm{flex:1;min-width:0}.act .du{font-size:13px;color:var(--g600);background:var(--g100);border-radius:999px;padding:2px 10px;white-space:nowrap}
+.act .w{width:8px;height:8px;border-radius:50%;background:var(--amber)}
+.actb{padding:4px 4px 12px 34px}
+.step{display:inline-flex;align-items:stretch;border:1px solid var(--g300);border-radius:8px;overflow:hidden}.step button{width:44px;min-height:44px;border:0;background:var(--g50);font-size:20px;color:var(--g700)}
+.step input{width:64px;border:0;border-left:1px solid var(--g300);border-right:1px solid var(--g300);text-align:center;font-size:16px}
+.step+span{margin-left:8px;font-size:14px;color:var(--g600)}
+/* worksheet */
+.ws-hd{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin:0 0 4px}.ws-hd h2{margin:0;font-size:18px;font-weight:600;color:var(--g900)}.ws-hd .n{font-size:18px;font-weight:600;color:var(--g500)}
+.q{border-top:1px solid var(--g200);padding:12px 0}.q:first-of-type{border-top:0}.q b{font-size:15px}.q p{margin:4px 0 0;font-size:15px;color:var(--g800)}.q .an{font-size:14px;color:var(--g600)}
+.note{margin:6px 0 0;font-size:13px;color:var(--g500)}
+.err{margin:0 0 14px;padding:12px 14px;border:1px solid #fecaca;border-left:4px solid var(--red);background:#fef2f2;border-radius:8px;font-size:15px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.lbl{position:fixed;right:8px;bottom:8px;z-index:70;background:rgba(17,24,39,.85);color:#fff;font-size:12px;font-weight:600;padding:4px 8px;border-radius:6px}html:not(.bare) .lbl{display:none}
+.empty h3{margin:0 0 4px;font-size:17px;font-weight:600;color:var(--g900)}.empty p{margin:0 0 12px;font-size:15px;color:var(--g700)}
+@media(max-width:359px){.bk{display:none}.top .btn{padding:0 8px;font-size:13px}}
+</style></head><body>
+<div class="proto" id="pb"></div>
+<header class="top">
+ <button class="ib mlc" type="button" aria-label="Mục lục">☰</button>
+ <div class="brand"><span class="logo" aria-hidden="true">G</span>
+  <nav class="crumb" aria-label="Đường dẫn"><a class="home" href="#">GiaoAn AI</a><span class="sep">/</span><a class="back-l" href="#">Giáo án</a><span class="sep back-l">/</span><span class="ttl" id="ttl"></span></nav></div>
+ <a class="ib back-s" href="#" aria-label="Về danh sách giáo án">←<span class="bk"> Danh sách</span></a>
+ <button class="btn btn-p" type="button">Xuất Word</button>
+ <button class="ib" type="button" aria-haspopup="menu" aria-expanded="false" id="acct" aria-label="Tài khoản"><span class="av">L</span></button>
+</header>
+<div class="wrap"><aside aria-label="Mục lục" id="side"></aside><main id="m"></main></div>
+<div class="lbl" id="lbl"></div>
+<script>
+var Q=new URLSearchParams(location.search);
+var V={done:'Đã soạn',flagged:'Gần SGK','ws-ready':'Phiếu · đã có','ws-blocked':'Phiếu · chưa lưu được','ws-error':'Phiếu · lỗi'};
+var view=V[Q.get('view')]?Q.get('view'):'done';if(Q.get('bare')==='1')document.documentElement.classList.add('bare');
+var acct=Q.get('acct')==='1';
+var TITLE='Đơn thức đồng dạng';
+var FLAG=view==='flagged';var FL=['kn','nl2','hd2'];var cur=+(Q.get('f')||0);
+var TOC=[['Thông tin bài dạy',0],['I. Mục tiêu',0],['II. Thiết bị dạy học',0],['III. Tiến trình',0],['1. Mở đầu',1],['2. Hình thành kiến thức',1],['3. Luyện tập',1],['4. Vận dụng',1]];
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+function ta(id,label,lines,hint){var f=FLAG&&FL.indexOf(id)>=0;return '<div class="fld'+(f?' flag':'')+(f&&FL[cur]===id?' cur':'')+'" id="f-'+id+'"><label for="'+id+'">'+label+(hint?' <span class="hint">· '+hint+'</span>':'')+(f?'<span class="tag">Gần SGK</span>':'')+'</label><textarea class="ta" id="'+id+'" rows="'+lines.length+'">'+esc(lines.join('\n'))+'</textarea></div>'}
+function inp(id,label,val){return '<div class="fld"><label for="'+id+'">'+label+'</label><input class="in" id="'+id+'" value="'+val+'"/></div>'}
+function act(n,name,min,open,flag){var h='<button class="act" type="button" aria-expanded="'+open+'"><span class="c" aria-hidden="true">›</span><span class="nm"><b>Hoạt động '+n+'</b> &nbsp;'+name+'</span>'+(FLAG&&flag?'<span class="w" aria-label="Có đoạn gần SGK"></span>':'')+'<span class="du">'+min+' phút</span></button>';
+ if(open)h+='<div class="actb"><div class="fld"><label for="d'+n+'">Thời lượng</label><span class="step"><button type="button" aria-label="Bớt 1 phút">−</button><input id="d'+n+'" inputmode="numeric" pattern="[0-9]*" value="'+min+'"/><button type="button" aria-label="Thêm 1 phút">+</button></span><span>phút</span></div>'+ta('hd'+n,'a) Mục tiêu',['Học sinh nhận ra hai đơn thức đồng dạng qua phần biến.','Thu gọn được tổng các đơn thức đồng dạng.'])+'</div>';return h}
+function tabs(sel){function t(id,l,s){return '<button class="tab" role="tab" id="tab-'+id+'" aria-controls="panel-'+id+'" aria-selected="'+(sel===id)+'" tabindex="'+(sel===id?0:-1)+'" aria-label="'+l+'"><span class="l">'+l+'</span><span class="s" aria-hidden="true">'+s+'</span></button>'}
+ return '<div class="seg" role="tablist" aria-label="Chế độ xem">'+t('soan','Soạn','Soạn')+t('xem','Xem như giáo án','Xem')+t('diff','So sánh','So sánh')+t('ws','Phiếu bài tập','Phiếu')+'</div>'}
+function chips(){return '<div class="chipw"><div class="chips">'+TOC.map(function(c,i){var w=FLAG&&(i===1||i===5);return '<button class="chip" type="button"'+(i===0?' aria-current="location"':'')+'>'+c[0]+(w?'<span class="w" aria-label="có đoạn gần SGK"></span>':'')+'</button>'}).join('')+'</div></div>'}
+function meta(){return '<p class="meta"><span class="v">v4</span>'+(FLAG?'<span class="pill am"><i></i>3 đoạn gần SGK</span>':'<span class="pill"><i></i>Đã soạn</span>')+'<span>Theo khung Phụ lục IV · GV tự thẩm định trước khi nộp.</span></p>'}
+function sgk(){return '<div class="sgk" role="status"><span class="tx">3 đoạn gần với SGK.</span><span class="nv"><button class="ib" type="button" aria-label="Đoạn trước">‹</button><span class="pos" aria-live="polite">'+(cur+1)+'/3</span><button class="ib" type="button" aria-label="Đoạn sau">›</button><button class="ib" type="button">Xem</button></span></div>'}
+function soan(){var h=chips()+meta()+(FLAG?sgk():'')+'<section class="card" role="tabpanel" id="panel-soan" aria-labelledby="tab-soan"><h2>Giáo án (Phụ lục IV)</h2><p class="sub"><b>'+TITLE+'</b> — lớp 7 — 45 phút</p>';
+ h+='<h3 class="sh">Thông tin bài dạy</h3><div class="row2">'+inp('tr','Trường','Trường THCS minh họa')+inp('to','Tổ chuyên môn','Tổ Toán')+'</div>'+inp('gv','Giáo viên','Giáo viên minh họa');
+ h+='<h3 class="sh">I. Mục tiêu</h3>'+ta('kn','Kiến thức',['Nhận biết đơn thức đồng dạng.','Giải thích vì sao hai đơn thức có cùng phần biến thì đồng dạng.'],'mỗi dòng một ý')+ta('nl2','Năng lực',['Mô hình hóa tình huống bằng biểu thức đại số.','Trình bày lập luận ngắn khi thu gọn đơn thức.'],'mỗi dòng một ý')+ta('pc','Phẩm chất',['Hợp tác khi làm việc nhóm.','Trung thực khi nêu cách làm của mình.'],'mỗi dòng một ý');
+ h+='<h3 class="sh">II. Thiết bị dạy học và học liệu</h3>'+ta('hl','Học liệu',['Phiếu học tập do giáo viên soạn.','Thẻ từ, bảng nhóm.'],'mỗi dòng một mục');
+ h+='<h3 class="sh">III. Tiến trình dạy học</h3>'+act(1,'Mở đầu',5,false)+act(2,'Hình thành kiến thức mới',18,true,true)+act(3,'Luyện tập',12,false)+act(4,'Vận dụng',10,false);
+ return h+'</section>'}
+function qs(n){var s='';for(var i=1;i<=n;i++)s+='<div class="q"><b>Câu '+i+'</b><p>Thu gọn tổng các đơn thức đồng dạng cho trước.</p><p class="an">Gợi ý đáp án: cộng các hệ số, giữ phần biến.</p></div>';return s}
+function ws(){var h='<section class="card" role="tabpanel" id="panel-ws" aria-labelledby="tab-ws" tabindex="-1">';
+ if(view==='ws-ready')h+='<div class="ws-hd"><h2>Phiếu bài tập</h2><span class="n">· 6 câu</span></div><p class="sub">Tạo lúc 08:41 · từ giáo án v4</p>'+qs(3)+'<button class="btn" type="button" aria-expanded="false" style="margin:4px 0 16px">Xem thêm 3 câu</button><div class="fld"><label for="wsn">Yêu cầu cho phiếu mới <span class="hint">· không bắt buộc</span></label><textarea class="ta" id="wsn" rows="2"></textarea></div><button class="btn" type="button">Tạo lại phiếu</button><p class="note">Phiếu mới thay phiếu hiện tại.</p><p class="note">Xuất Word gồm giáo án và phiếu này (kèm gợi ý đáp án).</p>';
+ if(view==='ws-blocked')h+='<div class="err" role="alert"><span>Chưa lưu được giáo án nên chưa tạo phiếu. Sửa các ô báo đỏ ở tab Soạn.</span><button class="btn" type="button">Về tab Soạn</button></div><div class="empty"><h3>Chưa có phiếu bài tập</h3><p>GiaoAn AI soạn phiếu từ Luyện tập và Vận dụng của giáo án này.</p></div>';
+ if(view==='ws-error')h+='<div class="err" role="alert"><span><b>Chưa tạo được phiếu: mất kết nối.</b></span><button class="btn btn-p" type="button">Thử lại</button></div><p class="note">Giáo án không bị ảnh hưởng.</p>';
+ return h+'</section>'}
+function render(){document.getElementById('ttl').textContent=TITLE;document.getElementById('ttl').title=TITLE;
+ document.getElementById('side').innerHTML=TOC.map(function(c,i){return '<div class="t'+(i?'':' on')+(c[1]?' s':'')+'">'+c[0]+'</div>'}).join('');
+ var w=view.indexOf('ws')===0;document.getElementById('m').innerHTML=tabs(w?'ws':'soan')+(w?meta()+ws():soan());
+ var a=document.getElementById('acct');a.setAttribute('aria-expanded',acct);var old=document.querySelector('.menu');old&&old.remove();
+ if(acct){var mn=document.createElement('div');mn.className='menu';mn.setAttribute('role','menu');mn.innerHTML='<p>le.huy@truong.edu.vn</p><button role="menuitem" type="button">Đăng xuất</button>';document.body.appendChild(mn)}
+ document.getElementById('lbl').textContent='Editor v2 · '+V[view]+(acct?' · menu':'');
+ var pb=document.getElementById('pb');pb.innerHTML='';Object.keys(V).forEach(function(k){var b=document.createElement('button');b.textContent=V[k];b.setAttribute('aria-pressed',k===view);b.onclick=function(){view=k;FLAG=k==='flagged';set('view',k);render()};pb.appendChild(b)});
+ var b=document.createElement('button');b.textContent='Menu tài khoản';b.setAttribute('aria-pressed',acct);b.onclick=function(){acct=!acct;render()};pb.appendChild(b);
+ a.onclick=function(){acct=!acct;render()}}
+function set(k,v){var u=new URL(location.href);u.searchParams.set(k,v);history.replaceState(null,'',u)}
+render();
+</script></body></html>
