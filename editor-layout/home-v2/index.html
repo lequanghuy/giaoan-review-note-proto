@@ -1,0 +1,73 @@
+<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Giáo án của tôi · GiaoAn AI — mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--blue:#2563eb;--blue-h:#1d4ed8;--blue-s:#eff6ff;--blue-b:#bfdbfe;--g50:#f9fafb;--g100:#f3f4f6;--g200:#e5e7eb;--g300:#d1d5db;--g400:#9ca3af;--g500:#6b7280;--g600:#4b5563;--g700:#374151;--g800:#1f2937;--g900:#111827;--green:#059669;--gs:#ecfdf5;--gb:#a7f3d0;--amber:#d97706;--as:#fffbeb;--ab:#fde68a}
+*{box-sizing:border-box}html,body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--g50);color:var(--g800);line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit}button{cursor:pointer;touch-action:manipulation}:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.proto{background:#1f2937;padding:8px 12px;display:flex;gap:6px;flex-wrap:wrap}.proto button{min-height:32px;padding:0 10px;border-radius:6px;border:1px solid #4b5563;background:#374151;color:#fff;font-size:12px}.proto button[aria-pressed=true]{background:var(--blue)}html.bare .proto{display:none}
+.top{position:sticky;top:0;z-index:30;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 8px 0 16px;background:#fff;border-bottom:1px solid var(--g200)}
+.brand{display:flex;align-items:center;gap:8px;font-weight:700;color:var(--g900)}.logo{width:24px;height:24px;border-radius:6px;background:var(--blue);color:#fff;font-size:13px;display:flex;align-items:center;justify-content:center}
+.ib{min-height:44px;min-width:44px;padding:0 6px;border:0;background:transparent;border-radius:8px;display:inline-flex;align-items:center;gap:8px;color:var(--g700);font-size:14px}
+.av{width:32px;height:32px;border-radius:50%;background:var(--blue-s);color:var(--blue-h);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;border:1px solid var(--blue-b)}
+.em{max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}@media(max-width:600px){.em{display:none}}
+.menu{position:absolute;right:8px;top:50px;z-index:40;background:#fff;border:1px solid var(--g200);border-radius:10px;box-shadow:0 8px 24px rgba(17,24,39,.12);padding:6px;min-width:220px}.menu p{margin:0;padding:8px 10px;font-size:13px;color:var(--g500)}.menu button{display:flex;width:100%;min-height:44px;align-items:center;padding:0 10px;border:0;background:none;border-radius:6px;font-size:15px}
+main{max-width:960px;margin:0 auto;padding:20px 24px 64px}@media(max-width:600px){main{padding:16px 12px 64px}}
+.hd{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin:0 0 16px}.hd h1{margin:0;font-size:22px;font-weight:600;color:var(--g900)}.hd p{margin:2px 0 0;font-size:14px;color:var(--g500)}
+.btn{min-height:44px;padding:0 16px;border-radius:8px;border:1px solid var(--g300);background:#fff;color:var(--g800);font-size:15px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
+.btn-p{background:var(--blue);border-color:var(--blue);color:#fff}.btn-p:disabled{background:var(--g200);border-color:var(--g200);color:var(--g500);cursor:not-allowed}
+.bar{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:0 0 12px}
+.chips{display:flex;gap:4px}.chip{min-height:44px;padding:0 4px;border:0;background:none;position:relative;z-index:0;font-size:14px;color:var(--g600)}.chip span{display:inline-flex;align-items:center;height:32px;padding:0 12px;border:1px solid var(--g200);border-radius:999px;background:#fff}
+.chip[aria-pressed=true] span{background:var(--g100);color:var(--g900);font-weight:600}
+.srch{flex:1;min-width:200px;max-width:320px;min-height:44px;padding:0 12px;border:1px solid var(--g300);border-radius:8px;font-size:16px;background:#fff}@media(max-width:600px){.srch{max-width:none}}
+.empty{max-width:440px;margin:40px auto 0;text-align:center;background:#fff;border:1px solid var(--g200);border-radius:16px;padding:32px 24px}
+.empty img{width:112px;height:112px;display:block;margin:0 auto 12px}.empty h2{margin:0 0 6px;font-size:20px;font-weight:600;color:var(--g900)}.empty p{margin:0 0 20px;font-size:15px;color:var(--g600)}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--g200);border-radius:12px;overflow:hidden;font-size:15px}
+th{text-align:left;font-size:12px;font-weight:600;color:var(--g500);text-transform:uppercase;letter-spacing:.04em;padding:10px 14px;background:var(--g50);border-bottom:1px solid var(--g200)}
+td{padding:0 14px;height:56px;border-bottom:1px solid var(--g100)}td a{color:var(--g900);font-weight:600;text-decoration:none;display:flex;align-items:center;min-height:56px}
+.st{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:1px 9px 1px 7px;font-size:12px;font-weight:600;color:var(--g700);border:1px solid var(--gb);background:var(--gs)}.st i{width:8px;height:8px;border-radius:50%;background:var(--green)}
+.st.e{border-color:var(--blue-b);background:var(--blue-s)}.st.e i{background:var(--blue)}.st.a{border-color:var(--ab);background:var(--as)}.st.a i{background:var(--amber)}
+.mut{color:var(--g500);font-size:14px}
+.cards{display:none}
+@media(max-width:600px){table{display:none}.cards{display:block}.cards a{display:block;background:#fff;border:1px solid var(--g200);border-radius:12px;padding:12px 14px;margin:0 0 8px;text-decoration:none;color:var(--g800)}.cards b{display:block;color:var(--g900);font-size:16px;margin:0 0 4px}.cards .m{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--g500)}}
+/* dialog */
+.ov{position:fixed;inset:0;z-index:50;background:rgba(17,24,39,.45);display:flex;align-items:center;justify-content:center;padding:16px}
+.dlg{background:#fff;border-radius:16px;width:100%;max-width:520px;max-height:calc(100vh - 32px);overflow:auto;padding:24px}@media(max-width:600px){.dlg{padding:20px}}
+.dlg h2{margin:0 0 4px;font-size:20px;font-weight:600;color:var(--g900)}.dlg .sub{margin:0 0 18px;font-size:14px;color:var(--g600)}
+.fld{margin:0 0 14px}.fld label{display:block;margin:0 0 6px;font-size:14px;font-weight:500;color:var(--g600)}.fld .req{color:var(--g500);font-weight:400}
+.in,select{width:100%;min-height:48px;padding:0 12px;border:1px solid var(--g300);border-radius:8px;background:#fff;font-size:16px;color:var(--g900)}select{-webkit-appearance:none;appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2716%27 height=%2716%27 fill=%27none%27 stroke=%27%236b7280%27 stroke-width=%272%27%3E%3Cpath d=%27M4 6l4 4 4-4%27/%3E%3C/svg%3E") no-repeat right 12px center;padding-right:36px}.in::placeholder{color:var(--g400)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fixed{min-height:48px;display:flex;align-items:center;padding:0 12px;border:1px solid var(--g200);border-radius:8px;background:var(--g50);font-size:16px;color:var(--g700)}
+.opts{display:grid;gap:8px}.opt{display:flex;align-items:center;gap:10px;min-height:52px;padding:0 14px;border:1px solid var(--g200);border-radius:10px;font-size:16px}.opt.on{border-color:var(--blue);background:var(--blue-s);color:var(--blue-h);font-weight:600}
+.opt i{width:20px;height:20px;border-radius:50%;border:2px solid var(--g300);flex:none}.opt.on i{border:6px solid var(--blue)}
+.hint{margin:6px 0 0;font-size:13px;color:var(--g500)}
+.ft{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin:20px 0 0;padding:16px 0 0;border-top:1px solid var(--g200);flex-wrap:wrap}
+.quota{margin-right:auto;font-size:14px;color:var(--g600)}.pend{display:inline-block;margin-left:6px;font-size:11px;font-weight:700;color:#92400e;background:var(--as);border:1px solid var(--ab);border-radius:4px;padding:0 6px}
+.lbl{position:fixed;right:8px;bottom:8px;z-index:70;background:rgba(17,24,39,.85);color:#fff;font-size:12px;font-weight:600;padding:4px 8px;border-radius:6px}html:not(.bare) .lbl{display:none}
+</style></head><body>
+<div class="proto" id="pb"></div>
+<header class="top"><div class="brand"><span class="logo" aria-hidden="true">G</span>GiaoAn AI</div>
+<button class="ib" id="acct" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Tài khoản le.huy@truong.edu.vn"><span class="em">le.huy@truong.edu.vn</span><span class="av" aria-hidden="true">L</span></button></header>
+<main id="m"></main><div id="dl"></div><div class="lbl" id="lbl"></div>
+<script>
+var Q=new URLSearchParams(location.search);var V={empty:'Trống (lần đầu)',list:'Có giáo án',create:'Tạo · trống',"create-filled":'Tạo · đã nhập',"create-quota":'Tạo · lượt (chờ Huy)'};
+var view=V[Q.get('view')]?Q.get('view'):'empty';if(Q.get('bare')==='1')document.documentElement.classList.add('bare');var acct=Q.get('acct')==='1';
+var ITEMS=[['Đơn thức đồng dạng',7,'Đã soạn','','08:41 hôm nay'],['Phương trình bậc nhất một ẩn',8,'Đã sửa','e','Hôm qua'],['Hai đường thẳng song song',7,'Gần SGK','a','15/10'],['Định lí minh họa',8,'Đã soạn','','12/10']];
+function home(empty){var h='<div class="hd"><div><h1>Giáo án của tôi</h1><p>'+(empty?'0 tiết':ITEMS.length+' tiết')+'</p></div>'+(empty?'':'<button class="btn btn-p" type="button">+ Tạo tiết mới</button>')+'</div>';
+ if(empty)return h+'<section class="empty" aria-labelledby="eh"><img src="assets/owl-mascot-256.svg" alt="" width="112" height="112"/><h2 id="eh">Chưa có giáo án</h2><p>AI soạn theo khung Phụ lục IV. Bạn sửa rồi xuất Word.</p><button class="btn btn-p" type="button">+ Tạo tiết mới</button></section>';
+ h+='<div class="bar"><div class="chips" role="group" aria-label="Lọc trạng thái"><button class="chip" aria-pressed="true"><span>Tất cả</span></button><button class="chip" aria-pressed="false"><span>Đã soạn</span></button><button class="chip" aria-pressed="false"><span>Cần soát</span></button></div><input class="srch" type="search" placeholder="Tìm tiết…" aria-label="Tìm tiết"/></div>';
+ h+='<table><thead><tr><th>Tên tiết</th><th>Khối</th><th>Trạng thái</th><th>Cập nhật</th></tr></thead><tbody>'+ITEMS.map(function(r){return '<tr><td><a href="#">'+r[0]+'</a></td><td class="mut">Lớp '+r[1]+'</td><td><span class="st '+r[3]+'"><i></i>'+r[2]+'</span></td><td class="mut">'+r[4]+'</td></tr>'}).join('')+'</tbody></table>';
+ h+='<div class="cards">'+ITEMS.map(function(r){return '<a href="#"><b>'+r[0]+'</b><span class="m">Lớp '+r[1]+' · <span class="st '+r[3]+'"><i></i>'+r[2]+'</span> · '+r[4]+'</span></a>'}).join('')+'</div>';return h}
+function dlg(){var filled=view!=='create',q=view==='create-quota';
+ return '<div class="ov"><div class="dlg" role="dialog" aria-modal="true" aria-labelledby="dh"><h2 id="dh">Tạo tiết mới</h2><p class="sub">AI soạn theo khung Phụ lục IV.</p>'+
+ '<div class="row2"><div class="fld"><label>Môn</label><div class="fixed">Toán</div></div><div class="fld"><label for="k">Khối</label><select id="k"><option>6</option><option>7</option><option selected>8</option><option>9</option></select></div></div>'+
+ '<div class="fld"><label for="t">Tên bài / tiết</label><input class="in" id="t" placeholder="Ví dụ: Phương trình bậc nhất một ẩn" value="'+(filled?'Đơn thức đồng dạng':'')+'" aria-describedby="th"/>'+(filled?'':'<p class="hint" id="th">Nhập tên bài để tạo.</p>')+'</div>'+
+ '<div class="fld"><label for="d">Thời lượng</label><select id="d"><option>45 phút</option><option>90 phút</option></select></div>'+
+ '<div class="fld"><label>Loại bài</label><div class="opts" role="radiogroup" aria-label="Loại bài"><div class="opt on" role="radio" aria-checked="true" tabindex="0"><i></i>Bài mới</div><div class="opt" role="radio" aria-checked="false" tabindex="-1"><i></i>Luyện tập chung</div><div class="opt" role="radio" aria-checked="false" tabindex="-1"><i></i>Ôn tập</div><div class="opt" role="radio" aria-checked="false" tabindex="-1"><i></i>Thực hành trải nghiệm</div></div><p class="hint">Đủ 4 hoạt động, có kiến thức mới.</p></div>'+
+ '<div class="ft">'+(q?'<span class="quota">Dùng 1 lượt (còn 4)<span class="pend">Chờ Huy</span></span>':'')+'<button class="btn" type="button">Hủy</button><button class="btn btn-p" type="button"'+(filled?'':' disabled aria-describedby="th"')+'>Tạo &amp; mở editor</button></div></div></div>'}
+function render(){var c=view.indexOf('create')===0;document.getElementById('m').innerHTML=home(view==='empty'||c);document.getElementById('dl').innerHTML=c?dlg():'';
+ var a=document.getElementById('acct');a.setAttribute('aria-expanded',acct);var o=document.querySelector('.menu');o&&o.remove();if(acct){var mn=document.createElement('div');mn.className='menu';mn.setAttribute('role','menu');mn.innerHTML='<p>le.huy@truong.edu.vn</p><button role="menuitem" type="button">Đăng xuất</button>';document.body.appendChild(mn)}a.onclick=function(){acct=!acct;render()};
+ document.getElementById('lbl').textContent='Home v2 · '+V[view]+(acct?' · menu':'');
+ var pb=document.getElementById('pb');pb.innerHTML='';Object.keys(V).forEach(function(k){var b=document.createElement('button');b.textContent=V[k];b.setAttribute('aria-pressed',k===view);b.onclick=function(){view=k;var u=new URL(location.href);u.searchParams.set('view',k);history.replaceState(null,'',u);render()};pb.appendChild(b)})}
+render();
+</script></body></html>
