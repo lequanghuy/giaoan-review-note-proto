@@ -81,6 +81,11 @@ h3.sh{margin:24px 0 12px;font-size:17px;font-weight:600;color:var(--g900)}
 .lbl{position:fixed;right:8px;bottom:8px;z-index:70;background:rgba(17,24,39,.85);color:#fff;font-size:12px;font-weight:600;padding:4px 8px;border-radius:6px}html:not(.bare) .lbl{display:none}
 .empty h3{margin:0 0 4px;font-size:17px;font-weight:600;color:var(--g900)}.empty p{margin:0 0 12px;font-size:15px;color:var(--g700)}
 @media(max-width:359px){.bk{display:none}.top .btn{padding:0 8px;font-size:13px}}
+.pill.rd{border-color:#fecaca;background:#fef2f2}.pill.rd i{background:var(--red)}
+.sgk.lg .tx{white-space:normal;padding:8px 0}
+.blk{margin:0 0 12px;padding:12px 14px;border:1px solid #fecaca;border-left:4px solid var(--red);background:#fef2f2;border-radius:8px;font-size:15px;color:var(--g800);display:flex;flex-direction:column;gap:2px}
+.blk b{font-weight:600;color:#991b1b}
+.top .btn-p[aria-disabled=true]{background:var(--g200);border-color:var(--g200);color:var(--g600);cursor:not-allowed}
 </style></head><body>
 <div class="proto" id="pb"></div>
 <header class="top">
@@ -95,7 +100,7 @@ h3.sh{margin:24px 0 12px;font-size:17px;font-weight:600;color:var(--g900)}
 <div class="lbl" id="lbl"></div>
 <script>
 var Q=new URLSearchParams(location.search);
-var V={done:'Đã soạn',flagged:'Gần SGK','ws-ready':'Phiếu · đã có','ws-blocked':'Phiếu · chưa lưu được','ws-error':'Phiếu · lỗi'};
+var V={done:'Đã soạn',flagged:'Gần SGK','flagged-legacy':'Gần SGK (cũ)',blocked:'Bị chặn','ws-ready':'Phiếu · đã có','ws-blocked':'Phiếu · chưa lưu được','ws-error':'Phiếu · lỗi'};
 var view=V[Q.get('view')]?Q.get('view'):'done';if(Q.get('bare')==='1')document.documentElement.classList.add('bare');
 var acct=Q.get('acct')==='1';
 var TITLE='Đơn thức đồng dạng';
@@ -109,9 +114,9 @@ function act(n,name,min,open,flag){var h='<button class="act" type="button" aria
 function tabs(sel){function t(id,l,s){return '<button class="tab" role="tab" id="tab-'+id+'" aria-controls="panel-'+id+'" aria-selected="'+(sel===id)+'" tabindex="'+(sel===id?0:-1)+'" aria-label="'+l+'"><span class="l">'+l+'</span><span class="s" aria-hidden="true">'+s+'</span></button>'}
  return '<div class="seg" role="tablist" aria-label="Chế độ xem">'+t('soan','Soạn','Soạn')+t('xem','Xem như giáo án','Xem')+t('diff','So sánh','So sánh')+t('ws','Phiếu bài tập','Phiếu')+'</div>'}
 function chips(){return '<div class="chipw"><div class="chips">'+TOC.map(function(c,i){var w=FLAG&&(i===1||i===5);return '<button class="chip" type="button"'+(i===0?' aria-current="location"':'')+'>'+c[0]+(w?'<span class="w" aria-label="có đoạn gần SGK"></span>':'')+'</button>'}).join('')+'</div></div>'}
-function meta(){return '<p class="meta"><span class="v">v4</span>'+(FLAG?'<span class="pill am"><i></i>3 đoạn gần SGK</span>':'<span class="pill"><i></i>Đã soạn</span>')+'<span>Theo khung Phụ lục IV · GV tự thẩm định trước khi nộp.</span></p>'}
+function meta(){var pl=FLAG?'<span class="pill am"><i></i>3 đoạn gần SGK</span>':view==='flagged-legacy'?'<span class="pill am"><i></i>Gần SGK</span>':view==='blocked'?'<span class="pill rd"><i></i>Chưa xuất được</span>':'<span class="pill"><i></i>Đã soạn</span>';return '<p class="meta"><span class="v">v4</span>'+pl+'<span>Theo khung Phụ lục IV · GV tự thẩm định trước khi nộp.</span></p>'}
 function sgk(){return '<div class="sgk" role="status"><span class="tx">3 đoạn gần với SGK.</span><span class="nv"><button class="ib" type="button" aria-label="Đoạn trước">‹</button><span class="pos" aria-live="polite">'+(cur+1)+'/3</span><button class="ib" type="button" aria-label="Đoạn sau">›</button><button class="ib" type="button">Xem</button></span></div>'}
-function soan(){var h=chips()+meta()+(FLAG?sgk():'')+'<section class="card" role="tabpanel" id="panel-soan" aria-labelledby="tab-soan"><h2>Giáo án (Phụ lục IV)</h2><p class="sub"><b>'+TITLE+'</b> — lớp 7 — 45 phút</p>';
+function soan(){var h=chips()+meta()+(FLAG?sgk():'')+(view==='flagged-legacy'?'<div class="sgk lg" role="status"><span class="tx">Có đoạn gần với SGK. Soát lại trước khi nộp.</span></div>':'')+(view==='blocked'?'<div class="blk" role="alert" id="blkMsg"><b>Chưa xuất được Word: giáo án có tên SGK, NXB hoặc tên bài SGK.</b><span>Xoá tên đó (ngoài mục II) rồi lưu lại.</span></div>':'')+'<section class="card" role="tabpanel" id="panel-soan" aria-labelledby="tab-soan"><h2>Giáo án (Phụ lục IV)</h2><p class="sub"><b>'+TITLE+'</b> — lớp 7 — 45 phút</p>';
  h+='<h3 class="sh">Thông tin bài dạy</h3><div class="row2">'+inp('tr','Trường','Trường THCS minh họa')+inp('to','Tổ chuyên môn','Tổ Toán')+'</div>'+inp('gv','Giáo viên','Giáo viên minh họa');
  h+='<h3 class="sh">I. Mục tiêu</h3>'+ta('kn','Kiến thức',['Nhận biết đơn thức đồng dạng.','Giải thích vì sao hai đơn thức có cùng phần biến thì đồng dạng.'],'mỗi dòng một ý')+ta('nl2','Năng lực',['Mô hình hóa tình huống bằng biểu thức đại số.','Trình bày lập luận ngắn khi thu gọn đơn thức.'],'mỗi dòng một ý')+ta('pc','Phẩm chất',['Hợp tác khi làm việc nhóm.','Trung thực khi nêu cách làm của mình.'],'mỗi dòng một ý');
  h+='<h3 class="sh">II. Thiết bị dạy học và học liệu</h3>'+ta('hl','Học liệu',['Phiếu học tập do giáo viên soạn.','Thẻ từ, bảng nhóm.'],'mỗi dòng một mục');
@@ -123,7 +128,7 @@ function ws(){var h='<section class="card" role="tabpanel" id="panel-ws" aria-la
  if(view==='ws-blocked')h+='<div class="err" role="alert"><span>Chưa lưu được giáo án nên chưa tạo phiếu. Sửa các ô báo đỏ ở tab Soạn.</span><button class="btn" type="button">Về tab Soạn</button></div><div class="empty"><h3>Chưa có phiếu bài tập</h3><p>GiaoAn AI soạn phiếu từ Luyện tập và Vận dụng của giáo án này.</p></div>';
  if(view==='ws-error')h+='<div class="err" role="alert"><span><b>Chưa tạo được phiếu: mất kết nối.</b></span><button class="btn btn-p" type="button">Thử lại</button></div><p class="note">Giáo án không bị ảnh hưởng.</p>';
  return h+'</section>'}
-function render(){document.getElementById('ttl').textContent=TITLE;document.getElementById('ttl').title=TITLE;
+function render(){var xw=document.querySelector('.top .btn-p');if(view==='blocked'){xw.setAttribute('aria-disabled','true');xw.setAttribute('aria-describedby','blkMsg')}else{xw.removeAttribute('aria-disabled');xw.removeAttribute('aria-describedby')}document.getElementById('ttl').textContent=TITLE;document.getElementById('ttl').title=TITLE;
  document.getElementById('side').innerHTML=TOC.map(function(c,i){return '<div class="t'+(i?'':' on')+(c[1]?' s':'')+'">'+c[0]+'</div>'}).join('');
  var w=view.indexOf('ws')===0;document.getElementById('m').innerHTML=tabs(w?'ws':'soan')+(w?meta()+ws():soan());
  var a=document.getElementById('acct');a.setAttribute('aria-expanded',acct);var old=document.querySelector('.menu');old&&old.remove();

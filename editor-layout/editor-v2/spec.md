@@ -1,6 +1,6 @@
 # Editor v2 · spec (sửa theo critique, Huy duyệt 18/10/2026)
 
-Mock: `editor-v2/index.html?view=done|flagged|ws-ready|ws-blocked|ws-error&acct=1&bare=1`. Nền là layout prod PR #75 (1a00979).
+Mock: `editor-v2/index.html?view=done|flagged|flagged-legacy|blocked|ws-ready|ws-blocked|ws-error&acct=1&bare=1`. Nền là layout prod PR #75 (1a00979).
 Ảnh: `shots/v2-{view}-{820x1180,375x812,1180x820,320x568}.png`. Ảnh trước/sau: `shots/ba-{done,flagged,ws-ready,ws-blocked}-{820x1180,375x812}.png`.
 Chỉ là mock, chưa giao Dev FE.
 Token khóa: #2563eb, #1d4ed8, #eff6ff, #bfdbfe, g50–g900, #059669, #d97706, #dc2626. Font Inter. Không dark mode.
@@ -20,6 +20,41 @@ Token khóa: #2563eb, #1d4ed8, #eff6ff, #bfdbfe, g50–g900, #059669, #d97706, #
 - **Phụ thuộc API (Techlead xác nhận):**
   - Hiện chưa làm được: API chỉ trả `{verdict, reasonCodes, teacherMessage}`. Xem mục Ghi chú API.
   - Trước khi API có vị trí, chỉ hiện `Có đoạn gần với SGK.` cùng nút **Xem** dẫn tới mục III, và không có bộ đếm.
+
+## P1-1b · Ba trạng thái SGK (Techlead chốt 18/10)
+API mới (BE): `sgk: {count, items:[{path}]}`, với `path` dạng `activity:1:content`, `objectives:knowledge:0`… Server **không trả đoạn văn**. Nếu cần xem trước thì FE tự lấy chữ từ chính giáo án.
+
+| Trạng thái | Khi nào | Thanh / hộp | Pill | Đánh dấu ô |
+|---|---|---|---|---|
+| `flagged` (có vị trí) | verdict `flagged` và có `items` | `3 đoạn gần với SGK.` · `‹ 1/3 ›` · **Xem** (viền trái amber) | `3 đoạn gần SGK` (amber) | Vạch trái amber cùng tag `Gần SGK` trên từng ô trong `items` |
+| `flagged-legacy` | verdict `flagged` nhưng chưa có `items` (giáo án cũ) | `Có đoạn gần với SGK. Soát lại trước khi nộp.`, không có bộ đếm, không có Xem | `Gần SGK` (amber) | Không đánh dấu |
+| `blocked` | verdict/status `blocked` (khớp tên bộ SGK, NXB hoặc tên bài; mã `hard_*`) | Khung đỏ nhạt trên cùng, `role=alert`, id `blkMsg`: **Chưa xuất được Word: giáo án có tên SGK, NXB hoặc tên bài SGK.** / `Xoá tên đó (ngoài mục II) rồi lưu lại.` | `Chưa xuất được` (đỏ) | Không đánh dấu từng ô |
+
+Quy tắc:
+- **Xem / ›**:
+  - Từ `path` tìm ô tương ứng. Nếu ô nằm trong Hoạt động đang đóng thì mở ra (`aria-expanded=true`).
+  - `scrollIntoView({block:"center"})`, chừa chỗ cho top bar 52px và hàng chip.
+  - Focus vào ô (`preventScroll`), cập nhật `i/n`.
+  - Bấm Xem lần nữa thì sang ô kế tiếp, tới cuối thì quay về ô đầu. ‹ đi lùi.
+  - `n = 1` thì ẩn ‹ ›.
+  - `path` không khớp ô nào (do schema lệch) thì bỏ qua ô đó, và không tính vào `n` hiển thị.
+- **Sau mỗi lần lưu** (autosave hoặc lưu-trước-thao-tác):
+  - Lấy `sgk` mới từ kết quả lưu rồi vẽ lại các vạch, tag, chấm trên chip và bộ đếm.
+  - Giữ vị trí đang trỏ nếu ô đó vẫn còn trong `items`; nếu không thì về ô đầu.
+  - `count = 0` thì ẩn thanh và pill quay về `Đã soạn`.
+  - Không di chuyển focus của GV.
+- **Legacy**: không đoán vị trí ở phía client. Khi GV lưu lại, server quét theo từng ô và trả `items`, lúc đó chuyển sang `flagged`.
+- **Blocked**:
+  - Code hiện tại khi tạo giáo án:
+    - `editorSurface()` trả `"blocked"` và hiện thẻ `PlanGenerateFailure` (tiêu đề "Chưa soạn được giáo án", Thử lại, Sửa thông tin). Không hiện giáo án.
+    - Mock này **không đổi** màn đó; nó chỉ áp cho trường hợp đã có giáo án và lần lưu sau đó bị chặn.
+  - Khi lưu sau sửa (`save-plan.ts`):
+    - Guardrail chạy lại. Nếu kết quả là blocked thì giáo án vẫn mở (`jobType editPlan`), nhưng Xuất Word bị từ chối (`isExportAllowed` false).
+    - Lý do là `teacherMessage`: "Nội dung bị chặn vì khớp tên SGK/NXB/bài học. Không thể xuất Word/PDF." (`packages/guardrails/src/job-status.ts`).
+    - Câu đó được rút gọn thành copy ở bảng trên. Bỏ "PDF" vì chưa có xuất PDF.
+  - Nút Xuất Word dùng `aria-disabled=true` cùng `aria-describedby="blkMsg"` (để còn focus được và đọc lý do). Màu g200, chữ g600.
+  - Lưu lại mà hết bị chặn thì khung đỏ biến mất.
+  - FE nên hiển thị copy cố định theo `verdict`, không in nguyên `teacherMessage` từ server, vì câu `flagged` từ server vẫn có "vui lòng".
 
 ## P1-2 · Ô dạng danh sách (Kiến thức, Năng lực, Phẩm chất, Học liệu…)
 - Đổi `<input>` một dòng (nối bằng "; ") sang **textarea tự giãn** (`field-sizing:content`, fallback tự đặt chiều cao theo scrollHeight). Hiện đủ mọi dòng, không có thanh cuộn trong ô.
