@@ -1,50 +1,78 @@
-# Danh sách giáo án (home) v2 · spec
+# Danh sách giáo án (home) v2 · spec (đã áp BA review 18/10)
 
 Mock: `home-v2/index.html?view=empty|list|create|create-filled|create-quota&acct=1&bare=1`.
-- "Trước" là ảnh prod của Critiquito (`/workspace/critiques/prod-review/05*`, `06*`).
 - Ảnh đơn: `shots/h2-{view}-{820x1180,375x812,320x568}.png`.
-- Ảnh trước/sau: `shots/ba-{empty,list,create,create-quota}-{820x1180,375x812}.png`.
+- Ảnh trước/sau: `shots/ba-{empty,list,create,create-quota}-{820x1180,375x812}.png`. "Trước" của list là `/workspace/critiques/prod-editor/01_lesson-list_*`; của empty và create là `/workspace/critiques/prod-review/05*`, `06*`.
 - Chỉ là mock, chưa giao Dev FE.
 
 Token khóa: #2563eb, #1d4ed8, #eff6ff, #bfdbfe, g50–g900, #059669, #d97706. Font Inter. Không dark mode.
 
+**Danh từ:** dùng thống nhất **giáo án**, không dùng "tiết". Cụ thể: `{n} giáo án`, `+ Tạo giáo án`, cột `Tên bài`, form `Tạo giáo án mới`, nút `Tạo giáo án`, `Tìm giáo án…`. Dùng `Hủy` như prod; cần kiểm cả app (câu hỏi mở).
+
 ## 1. Header
-- Bên trái: logo và `GiaoAn AI`.
-- Bên phải: nút tài khoản. Nút có email (ẩn ở ≤600px) và avatar chữ cái đầu. Thuộc tính `aria-haspopup=menu`, `aria-expanded`, `aria-label="Tài khoản {email}"`.
-- Menu: `role=menu`, gồm dòng email (13 g500) và `Đăng xuất` (menuitem, 44px). Esc đóng menu và trả focus về nút. Giống editor v2.
-- Bỏ link `Đăng xuất` trần trên header.
+- Logo kèm `GiaoAn AI`. Bên phải là nút tài khoản (email ẩn ở ≤600px, avatar luôn hiện).
+- Nút có `aria-haspopup=menu`, `aria-expanded`, `aria-label="Tài khoản {email}"`.
+- Menu `role=menu`: dòng email và `Đăng xuất` (44px). Esc đóng menu và trả focus về nút. Giống editor v2.
 
-## 2. Trống lần đầu (`empty`)
-- Tiêu đề trang `Giáo án của tôi` (22/600), dòng phụ `0 tiết`. Bỏ "· Toán · Ngữ văn · Tiếng Anh".
-- Không có bảng, không có tiêu đề cột, không có chip lọc, không có ô tìm. Nút `+ Tạo tiết mới` ở góc trên bị ẩn để chỉ còn **một** CTA.
-- Thẻ giữa trang (max-width 440, radius 16, viền g200, padding 32/24, margin-top 40):
-  - Cú mascot `assets/owl-mascot-256.svg` (từ `/workspace/owl-icon/png/owl-mascot-512.png`, nền trong), hiển thị 112px, `alt=""`.
-  - Tiêu đề **Chưa có giáo án** (20/600, h2).
-  - Dòng phụ `AI soạn theo khung Phụ lục IV. Bạn sửa rồi xuất Word.` (15 g600). Không dùng "KHBĐ".
-  - Nút chính `+ Tạo tiết mới`.
+## 2. Trống (n = 0)
+- Tiêu đề `Giáo án của tôi`. **Không có dòng phụ.**
+- Không có bảng, tiêu đề cột, chip, ô tìm, nút góc trên.
+- Thẻ giữa trang:
+  - Cú mascot `assets/owl-mascot-256.svg` (bọc PNG nền trong), 112px, `alt=""`.
+  - `Chưa có giáo án`.
+  - `AI soạn theo khung Phụ lục IV. Bạn sửa rồi xuất Word.`
+  - Nút duy nhất `+ Tạo giáo án`.
 
-## 3. Có giáo án (`list`)
-- Dòng phụ `{n} tiết`. Nút `+ Tạo tiết mới` ở bên phải tiêu đề.
-- Ẩn chip lọc môn vì hiện chỉ có Toán; khi có ≥2 môn thì hiện lại.
-- Chip lọc trạng thái: `Tất cả · Đã soạn · Cần soát`.
-  - `aria-pressed`. Vùng chạm 44px, phần nhìn thấy 32px. Chữ 14.
-  - Chip đang chọn nền g100, chữ g900/600.
-- Ô tìm: cao 44, chữ **16px** (iOS không tự zoom), placeholder `Tìm tiết…`, `aria-label`.
-- ≥601px dùng bảng 4 cột: Tên tiết · Khối · Trạng thái (pill: Đã soạn xanh lá / Đã sửa xanh dương / Gần SGK amber) · Cập nhật. Cột Môn bị bỏ. Hàng cao 56, link ở tên tiết.
-- ≤600px dùng thẻ: tên (16/600) và một dòng `Lớp 7 · pill · thời gian`. Cả thẻ là link.
+## 3. Có giáo án
+- Dòng phụ `{n} giáo án`. Nút `+ Tạo giáo án` ở bên phải.
+- Không có chip môn và cột Môn khi chỉ có một môn.
+- Chip trạng thái `Tất cả · Đã soạn · Gần SGK`:
+  - Tên chip khớp pill.
+  - Vùng chạm 44px, `aria-pressed`. Chip đang chọn nền g100.
+- Ô tìm cao 44, chữ 16px.
+- Bảng (≥601px): Tên bài · Khối · Trạng thái · Cập nhật. Tên dài cắt `…` kèm `title`.
+- Thẻ (≤600px): dòng 1 là tên (16/600, tối đa 2 dòng) và pill. Dòng 2 xám (14 g500): `Lớp 9 · v3 · {cập nhật}`.
+- Dữ liệu mẫu: 6 giáo án, lấy nguyên văn tên bài KNTT, đúng lớp (`/workspace/muc-luc-toan-6-9-kntt.md`):
 
-## 4. Form tạo (`create`, `create-filled`)
-- Dòng phụ `AI soạn theo khung Phụ lục IV.` (bỏ "KHBĐ").
-- Môn: khung chỉ đọc `Toán`, vì chỉ có một môn. Khối: select.
-- Tên bài / tiết: **để trống**, placeholder `Ví dụ: Phương trình bậc nhất một ẩn`. Ô nhập 16px, cao 48.
-- Nút `Tạo & mở editor` bị `disabled` khi tên trống (sau khi bỏ khoảng trắng đầu cuối). Dòng nhắc `Nhập tên bài để tạo.` gắn qua `aria-describedby`. Có tên thì dòng nhắc biến mất và nút bật.
-- Thời lượng và Loại bài giữ như prod. Loại bài dùng `role=radiogroup` với các `radio`, mỗi lựa chọn cao 52.
-- Select tự vẽ (`appearance:none` kèm chevron g500) để WebKit không hiện nền xám.
+  | Tên bài | Lớp | Trạng thái |
+  |---|---|---|
+  | Đơn thức | 8 | Đã soạn |
+  | Giải hệ hai phương trình bậc nhất hai ẩn | 9 | Đã sửa |
+  | Hai đường thẳng song song và dấu hiệu nhận biết | 7 | Gần SGK |
+  | Định lí và chứng minh định lí | 7 | Đã soạn |
+  | Tập hợp | 6 | Gần SGK |
+  | Phân thức đại số | 8 | Đã soạn |
 
-## 5. Biến thể lượt dùng (`create-quota`) · **chờ Huy quyết**
-- Ở chân form, bên trái: `Dùng 1 lượt (còn 4)` kèm nhãn `Chờ Huy`. Nhãn chỉ có trong mock.
-- Chưa làm nếu Huy chưa duyệt. Còn mở: hết lượt thì làm gì, con số lấy từ đâu (BE).
+  Editor v2 cũng đổi tên bài mẫu thành `Đơn thức — lớp 8`.
 
-## 6. Kiểm tra (WebKit 320/375/820)
-- Không có cuộn ngang. Không có control nào thấp hơn 44px.
-- Focus: `outline 2px #2563eb, offset 2px`. Dialog có `aria-modal` và `aria-labelledby`.
+## 4. Form tạo
+- Tiêu đề `Tạo giáo án mới`, dòng phụ `AI soạn theo khung Phụ lục IV.`
+- Môn: chỉ đọc `Toán`. Khối: select.
+- `Tên bài`:
+  - Rỗng, `maxlength=120`.
+  - Placeholder đổi theo Khối:
+    - 6: `Ví dụ: Tập hợp`
+    - 7: `Ví dụ: Tổng các góc trong một tam giác`
+    - 8: `Ví dụ: Phân thức đại số`
+    - 9: `Ví dụ: Giải hệ hai phương trình bậc nhất hai ẩn`
+- Nút `Tạo giáo án` `disabled` khi tên rỗng sau trim. Dòng nhắc `Nhập tên bài để tạo.` gắn qua `aria-describedby`, ẩn khi đã có tên.
+- Gợi ý tên bài từ mục lục KNTT bằng combobox là **task riêng**, chờ Huy; không có trong v2.
+
+## 5. Biến thể lượt (`create-quota`) · **chờ Huy**
+- `Dùng 1 lượt (còn 4)`. Số lấy từ hạn mức BE-3, FE không tự tạo số.
+- BA đề xuất để sau UAT.
+
+## 6. AC (theo BA, mock đã đáp ứng)
+1. n = 0: không có bảng, chip, ô tìm, nút góc trên. Có đúng 1 nút `+ Tạo giáo án`. Ẩn dòng `0 …`. ✓
+2. Chỉ có 1 môn: không có chip môn, không có cột Môn. Có ≥2 môn thì chip hiện lại. Dev FE test bằng dữ liệu giả 2 môn.
+3. Form mở: Tên bài rỗng. Nút tạo `disabled` khi tên rỗng sau trim (thử `"   "`). Dòng nhắc gắn `aria-describedby`. Có tên thì nút bật ngay khi gõ (≤100 ms). ✓ (mock có `oninput`)
+4. Tên bài: `maxlength=120`. Danh sách cắt `…` kèm `title` đủ. Không cuộn ngang ở 320/375. ✓
+5. Chip `Gần SGK` = verdict `flagged`, gồm cả legacy. Chip `Đã soạn` = không flagged, gồm `Đã sửa`. Mẫu có 6 giáo án: Gần SGK 2, Đã soạn 4.
+6. Cập nhật: hôm nay `hh:mm`, hôm qua `Hôm qua`, trong năm `dd/mm`, khác năm `dd/mm/yyyy`, theo giờ Việt Nam. Áp cho cả bảng và dòng 2 của thẻ. Mẫu có `08:41` · `Hôm qua` · `15/10` · `12/05/2025`.
+7. Mọi control ≥44px. Ô nhập 16px. Focus 2px #2563eb, offset 2. Dialog có `aria-modal` và `aria-labelledby`. Esc đóng dialog và trả focus về nút mở. ✓ (đo WebKit 320/375/820)
+8. 100% tên bài mẫu khớp nguyên văn mục lục KNTT, đúng lớp. ✓
+
+## Câu hỏi mở
+- Dòng 2 của thẻ: lần trước dùng ví dụ `9 ngày trước`, nhưng AC 6 dùng ngày tuyệt đối. Mock theo AC 6.
+- `Hủy` hay `Huỷ` toàn app.
+- Pill `Đã sửa` cần `edited_at` ở server (GA-49).

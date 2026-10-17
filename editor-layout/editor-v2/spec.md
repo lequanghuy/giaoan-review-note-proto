@@ -1,6 +1,6 @@
 # Editor v2 · spec (sửa theo critique, Huy duyệt 18/10/2026)
 
-Mock: `editor-v2/index.html?view=done|flagged|flagged-legacy|blocked|ws-ready|ws-blocked|ws-error&acct=1&bare=1`. Nền là layout prod PR #75 (1a00979).
+Mock: `editor-v2/index.html?view=done|toc|xem|export-missing|flagged|flagged-legacy|blocked|ws-ready|ws-blocked|ws-error&acct=1&bare=1`. Nền là layout prod PR #75 (1a00979).
 Ảnh: `shots/v2-{view}-{820x1180,375x812,1180x820,320x568}.png`. Ảnh trước/sau: `shots/ba-{done,flagged,ws-ready,ws-blocked}-{820x1180,375x812}.png`.
 Chỉ là mock, chưa giao Dev FE.
 Token khóa: #2563eb, #1d4ed8, #eff6ff, #bfdbfe, g50–g900, #059669, #d97706, #dc2626. Font Inter. Không dark mode.
@@ -75,7 +75,7 @@ Quy tắc:
   - Hàng chip mờ dần ở mép phải (mask 40px). Ẩn thanh cuộn.
   - Gộp 3 chip con của Mục tiêu thành một chip `I. Mục tiêu`. Rút gọn còn `II. Thiết bị dạy học`, `III. Tiến trình`, `2. Hình thành kiến thức`.
   - Bỏ "phiên bản 11" khỏi dòng phụ, vì phiên bản đã có ở pill `v4`.
-- **6 · Tab chế độ:**
+- **6 · Tab chế độ (Huy duyệt 18/10: ẩn So sánh, mặc định 3 tab `Soạn · Xem · Phiếu`; ≥481px nhãn `Soạn · Xem như giáo án · Phiếu bài tập`). Mock còn `?tabs=4` chỉ để đối chiếu.**
   - Một segmented control ở mọi cỡ màn: khung trắng, viền g200, radius 10, padding 2. Tab đang chọn nền #2563eb, chữ trắng.
   - ≤480px các tab giãn đều và dùng nhãn ngắn. Không sticky.
   - Chip nhẹ hơn: chữ 13 g600, viền g200. Chip đang chọn nền g100, chữ g900/600. Vùng chạm vẫn 44px, phần nhìn thấy cao 32px.
@@ -104,3 +104,18 @@ Quy tắc:
 ## Câu hỏi mở
 1. Ở 375 tên giáo án chỉ còn khoảng 7 ký tự, vì phải chứa đủ 5 thứ. Có thể đưa tên xuống làm tiêu đề thẻ (đã có sẵn) và bỏ khỏi top bar ở ≤480px. Cần Huy chọn.
 2. Đếm "đoạn" theo ô hay theo câu? Mock đang đếm theo ô.
+
+## P3 · Critique editor live (18/10)
+Ảnh trước/sau: `shots/ba-{tochuc,regen,toc,xem,export-missing,tabs3}-{820x1180,375x812}.png` (trước = `/workspace/critiques/prod-editor/`). Biến thể: `shots/v2-regen-quota-*.png`.
+1. **d) Tổ chức thực hiện**: tiêu đề phụ 15/600; 4 bước `Giao nhiệm vụ`, `Thực hiện nhiệm vụ`, `Báo cáo, thảo luận`, `Kết luận, nhận định` đều là textarea tự giãn (như P1-2), nhãn 14 g600 phía trên. Bỏ dạng 1 dòng có nhãn bên trong và "…". a) b) c) cũng là textarea tự giãn.
+2. **Soạn lại an toàn** (khối cuối thẻ, nền g50, ngăn bằng viền trên):
+   - Sau mỗi lần soạn, ô `Yêu cầu soạn lại` **rỗng**; placeholder `Lần trước: {yêu cầu gần nhất}` (cắt 1 dòng nếu dài).
+   - `Soạn lại giáo án` `disabled` tới khi ô có chữ (sau trim); bật thì kiểu secondary.
+   - Dòng bên cạnh (`aria-describedby` của nút): `Tạo bản v{n+1} · giữ v{n}`. Biến thể `· dùng 1 lượt` **chờ Huy** (mock `&quota=1`).
+   - Soạn lại và mọi hành động phiếu chỉ ở tab Soạn/Phiếu tương ứng: khối soạn lại chỉ có ở tab Soạn; `Tạo phiếu bài tập` chỉ ở tab Phiếu (bỏ khỏi cuối giáo án).
+3. **Sheet Mục lục**: scrim `z-index:80`, sheet `90` (top bar 40, chip 20) nên Xuất Word nằm dưới lớp phủ, không bấm được. ≤720 là bottom sheet (max 78vh, radius 16 trên), ≥721 là panel phải 340px. Mục cấp 1: 16px, cao 48; mục con: **15px g600, cao 44**, lùi 24. `Đóng` là nút 44×44 (#1d4ed8 600). Padding dưới `calc(16px + env(safe-area-inset-bottom))`. `role=dialog aria-modal`, focus vào `Đóng` khi mở, Esc đóng, trả focus về ☰.
+4. **Chip mục lục chỉ ở tab Soạn** (Xem và Phiếu không có hàng chip).
+5. **Thiếu Trường/Tổ/Giáo viên khi xuất**: bấm Xuất Word mà 1–3 ô trống → thanh dưới tab (viền trái amber, `role=alertdialog`): `Chưa điền Trường, Tổ, Giáo viên.` (chỉ liệt kê ô trống, vd `Chưa điền Giáo viên.`) + `Điền ngay` (primary: mở tab Soạn, cuộn và focus ô trống đầu tiên) + `Vẫn xuất` (xuất như cũ). Không chặn cứng.
+6. (home, xem `home-v2/spec.md`).
+7. **3 tab mặc định** (đã duyệt), xem §6.
+Đo (WebKit 375/820): không cuộn ngang, không control <44px, không textarea bị cắt (tự giãn bằng JS, chạy lại sau khi font tải).
