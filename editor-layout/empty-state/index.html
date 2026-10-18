@@ -6,13 +6,13 @@ header{padding:24px 16px 0;max-width:1400px;margin:0 auto}h1{font-size:20px;marg
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;max-width:1400px;margin:0 auto;padding:16px}
 .tag{font-size:13px;font-weight:600;color:var(--blue);margin:0 0 4px}
 .empty{max-width:440px;margin:0 auto;text-align:center;background:#fff;border:1px solid var(--g200);border-radius:16px;padding:32px 24px}
-.empty img{width:160px;height:160px;display:block;margin:0 auto 12px}.empty h2{margin:0 0 6px;font-size:20px;font-weight:600}
+.empty img{width:112px;height:112px;display:block;margin:0 auto 12px}@media(min-width:640px){.empty img{width:160px;height:160px}}.btn .pi{flex:none}.empty h2{margin:0 0 6px;font-size:20px;font-weight:600}
 .empty p{margin:0 0 20px;font-size:15px;color:var(--g600)}
-.btn{min-height:44px;padding:0 16px;border-radius:8px;border:1px solid var(--blue);background:var(--blue);color:#fff;font:600 15px Inter,sans-serif;cursor:pointer}
+.btn{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 16px;border-radius:8px;border:1px solid var(--blue);background:var(--blue);color:#fff;font:600 15px Inter,sans-serif;cursor:pointer}
 .btn:focus-visible{outline:2px solid var(--blue);outline-offset:2px}</style></head><body>
 <header><h1>Empty state cho bảng/danh sách: 3 phương án</h1><p>Nét bo tròn giống hoạ tiết nền trang đăng nhập. Chỉ dùng màu đã khoá. Không dùng cú.</p></header>
 <main class="grid">
-<div><p class="tag">1 · Giáo án + dấu cộng</p><section class="empty"><img src="option-1-doc-plus.svg" alt=""><h2>Chưa có giáo án</h2><p>AI soạn theo khung Phụ lục IV. Bạn sửa rồi xuất Word.</p><button class="btn">+ Tạo giáo án</button></section></div>
-<div><p class="tag">2 · Trang trống + bút chì</p><section class="empty"><img src="option-2-pages-pencil.svg" alt=""><h2>Chưa có giáo án</h2><p>AI soạn theo khung Phụ lục IV. Bạn sửa rồi xuất Word.</p><button class="btn">+ Tạo giáo án</button></section></div>
-<div><p class="tag">3 · Sách mở + thước</p><section class="empty"><img src="option-3-book-ruler.svg" alt=""><h2>Chưa có giáo án</h2><p>AI soạn theo khung Phụ lục IV. Bạn sửa rồi xuất Word.</p><button class="btn">+ Tạo giáo án</button></section></div>
+<div><p class="tag">1 · Giáo án + dấu cộng · Đã chọn</p><section class="empty"><img src="option-1-doc-plus.svg" alt="" width="160" height="160"><h2>Chưa có giáo án</h2><p>AI soạn theo khung Phụ lục IV. Bạn sửa rồi xuất Word.</p><button class="btn"><svg class="pi" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg>Tạo giáo án</button></section></div>
+<div><p class="tag">2 · Trang trống + bút chì</p><section class="empty"><img src="option-2-pages-pencil.svg" alt=""><h2>Chưa có giáo án</h2><p>AI soạn theo khung Phụ lục IV. Bạn sửa rồi xuất Word.</p><button class="btn"><svg class="pi" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg>Tạo giáo án</button></section></div>
+<div><p class="tag">3 · Sách mở + thước</p><section class="empty"><img src="option-3-book-ruler.svg" alt=""><h2>Chưa có giáo án</h2><p>AI soạn theo khung Phụ lục IV. Bạn sửa rồi xuất Word.</p><button class="btn"><svg class="pi" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg>Tạo giáo án</button></section></div>
 </main></body></html>
