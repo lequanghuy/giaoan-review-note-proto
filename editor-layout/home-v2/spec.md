@@ -91,3 +91,6 @@ Token khóa: #2563eb, #1d4ed8, #eff6ff, #bfdbfe, g50–g900, #059669, #d97706. F
 - Mọi nút tạo giáo án (nút đầu trang, nút trong thẻ trống, nút gửi trong form) ghi **`Tạo`**, không có icon +. Thay cho `Tạo giáo án` + icon ở các mục trên.
 - Nút đầu trang và nút thẻ trống có `aria-label="Tạo giáo án"` (chứa nhãn hiển thị, đọc rõ ngữ cảnh). Nút gửi trong form nằm dưới tiêu đề `Tạo giáo án mới` nên giữ nhãn `Tạo`.
 - Lúc đang gửi vẫn là `Đang tạo…` (disabled + aria-busy). Tiêu đề form vẫn `Tạo giáo án mới`.
+
+## Bộ lọc (cập nhật 18/10, Huy chọn 11:25)
+- Thay hàng chip môn + chip trạng thái bằng **Kiểu C**: môn chọn từ nút trong heading (`Giáo án [Tất cả môn ▾]`), trạng thái là tab có số. 1 môn: heading `Giáo án của tôi`, không có nút. Chi tiết + 16 AC: `home-filters/spec.md` mục "Kiểu C — chốt 18/10".
