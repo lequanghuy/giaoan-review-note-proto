@@ -31,6 +31,8 @@ Chung cho cả 3: mỗi control đúng một `Tất cả` (Môn dùng `Tất c�
 
 # Kiểu C — chốt 18/10 (Huy chọn 11:25)
 
+> **Trạng thái: chờ quota (Huy, 11:27 18/10). Chưa giao Dev FE.**
+
 Mock: `index.html?opt=c` (live: bấm, phím đều chạy). Tham số: `&one=1` (1 môn), `&open=1`, `&mon=Ngữ văn`, `&mon=Hoạt động trải nghiệm, hướng nghiệp` (tên dài), `&mon=Ngữ văn&st=fl` (tab 0), `&focus=1`.
 Ảnh: `shots/opt-c-{one,many,open,selected,long,zero,focus,keyboard}-{820x1180,1180x820,375x812}.png`. Phương án A/B giữ để tham khảo, không làm.
 
@@ -73,3 +75,4 @@ Listbox đặt ngoài `<h1>` để tên heading chỉ là "Giáo án {môn}".
 14. iPad 820/1180 và phone 375: không cuộn ngang; bảng ≥601px, thẻ ≤600px như home v2; listbox không bị cắt bởi màn hình.
 15. Ô tìm giữ nguyên (44px, 16px, `Tìm giáo án…`) và lọc trong kết quả của môn + tab đang chọn.
 16. Môn đang chọn giữ khi đổi tab và ngược lại; không lưu qua phiên (mặc định `Tất cả môn`, tab `Tất cả`).
+17. Số trên tab và số mỗi môn trong listbox **chỉ tính ở FE** trên danh sách đã tải (`GET /jobs`, hiện tối đa 50). **Không đổi BE, không thêm API.** Nếu sau này danh sách phân trang, số tổng phía server là task BE riêng, làm sau.
