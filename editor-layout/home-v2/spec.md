@@ -7,7 +7,7 @@ Mock: `home-v2/index.html?view=empty|list|create|create-filled|create-quota&acct
 
 Token khóa: #2563eb, #1d4ed8, #eff6ff, #bfdbfe, g50–g900, #059669, #d97706. Font Inter. Không dark mode.
 
-**Danh từ:** dùng thống nhất **giáo án**, không dùng "tiết". Cụ thể: `{n} giáo án`, `+ Tạo giáo án`, cột `Tên bài`, form `Tạo giáo án mới`, nút `Tạo giáo án`, `Tìm giáo án…`. Dùng `Hủy` như prod; cần kiểm cả app (câu hỏi mở).
+**Danh từ:** dùng thống nhất **giáo án**, không dùng "tiết". Cụ thể: `{n} giáo án`, `Tạo giáo án` (dấu + là icon SVG aria-hidden), cột `Tên bài`, form `Tạo giáo án mới`, nút `Tạo giáo án`, `Tìm giáo án…`. Dùng `Huỷ` như prod; cần kiểm cả app (câu hỏi mở).
 
 ## 1. Header
 - Logo kèm `GiaoAn AI`. Bên phải là nút tài khoản (email ẩn ở ≤600px, avatar luôn hiện).
@@ -21,10 +21,10 @@ Token khóa: #2563eb, #1d4ed8, #eff6ff, #bfdbfe, g50–g900, #059669, #d97706. F
   - Cú mascot `assets/owl-mascot-256.svg` (bọc PNG nền trong), 112px, `alt=""`.
   - `Chưa có giáo án`.
   - `AI soạn theo khung Phụ lục IV. Bạn sửa rồi xuất Word.`
-  - Nút duy nhất `+ Tạo giáo án`.
+  - Nút duy nhất `Tạo giáo án`.
 
 ## 3. Có giáo án
-- Dòng phụ `{n} giáo án`. Nút `+ Tạo giáo án` ở bên phải.
+- Dòng phụ `{n} giáo án`. Nút `Tạo giáo án` ở bên phải.
 - Không có chip môn và cột Môn khi chỉ có một môn.
 - Chip trạng thái `Tất cả · Đã soạn · Gần SGK`:
   - Tên chip khớp pill.
@@ -63,7 +63,7 @@ Token khóa: #2563eb, #1d4ed8, #eff6ff, #bfdbfe, g50–g900, #059669, #d97706. F
 - BA đề xuất để sau UAT.
 
 ## 6. AC (theo BA, mock đã đáp ứng)
-1. n = 0: không có bảng, chip, ô tìm, nút góc trên. Có đúng 1 nút `+ Tạo giáo án`. Ẩn dòng `0 …`. ✓
+1. n = 0: không có bảng, chip, ô tìm, nút góc trên. Có đúng 1 nút `Tạo giáo án`. Ẩn dòng `0 …`. ✓
 2. Chỉ có 1 môn: không có chip môn, không có cột Môn. Có ≥2 môn thì chip hiện lại. Dev FE test bằng dữ liệu giả 2 môn.
 3. Form mở: Tên bài rỗng. Nút tạo `disabled` khi tên rỗng sau trim (thử `"   "`). Dòng nhắc gắn `aria-describedby`. Có tên thì nút bật ngay khi gõ (≤100 ms). ✓ (mock có `oninput`)
 4. Tên bài: `maxlength=120`. Danh sách cắt `…` kèm `title` đủ. Không cuộn ngang ở 320/375. ✓
@@ -74,5 +74,12 @@ Token khóa: #2563eb, #1d4ed8, #eff6ff, #bfdbfe, g50–g900, #059669, #d97706. F
 
 ## Câu hỏi mở
 - Dòng 2 của thẻ: lần trước dùng ví dụ `9 ngày trước`, nhưng AC 6 dùng ngày tuyệt đối. Mock theo AC 6.
-- `Hủy` hay `Huỷ` toàn app.
+- `Huỷ` hay `Huỷ` toàn app.
 - Pill `Đã sửa` cần `edited_at` ở server (GA-49).
+
+
+## Empty state (cập nhật 18/10)
+- Minh hoạ `assets/empty-lesson.svg` (phương án 1: trang giáo án + huy hiệu cộng #bfdbfe/#2563eb), thay cú. Không dùng icon app.
+- Ảnh 112px dưới 640px, 160px từ 640px. `alt=""`; SVG có `aria-hidden="true" focusable="false"`, không role="img".
+- Nét 2.5px cho viền trang, góc gấp, dòng xám. Chỉ nút là khối xanh đặc.
+- Nhãn nút thống nhất `Tạo giáo án`, dấu + là icon aria-hidden.
