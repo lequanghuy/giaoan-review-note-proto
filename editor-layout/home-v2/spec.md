@@ -79,7 +79,8 @@ Token khóa: #2563eb, #1d4ed8, #eff6ff, #bfdbfe, g50–g900, #059669, #d97706. F
 
 
 ## Empty state (cập nhật 18/10)
-- Minh hoạ `assets/empty-lesson.svg` (phương án 1: trang giáo án + huy hiệu cộng #bfdbfe/#2563eb), thay cú. Không dùng icon app.
-- Ảnh 112px dưới 640px, 160px từ 640px. `alt=""`; SVG có `aria-hidden="true" focusable="false"`, không role="img".
-- Nét 2.5px cho viền trang, góc gấp, dòng xám. Chỉ nút là khối xanh đặc.
-- Nhãn nút thống nhất `Tạo giáo án`, dấu + là icon aria-hidden.
+- Minh hoạ `assets/empty-class-lesson.svg`: icon **Class Lesson** từ Streamline **Plump Color** (`streamline-plump-color:class-lesson`), đổi màu sang #2563eb / #bfdbfe. Không dùng cú/icon app.
+- Giấy phép **CC BY 4.0**: app cần một dòng ghi công Streamline, ví dụ ở trang Giới thiệu/credits: "Icons: Streamline (streamlinehq.com), CC BY 4.0".
+- Icon nằm giữa nền tròn #eff6ff: khung 112px dưới 640px, 160px từ 640px (icon 64px / 96px).
+- `alt=""`; SVG có `aria-hidden="true" focusable="false"`, không role="img".
+- Nhãn nút thống nhất `Tạo giáo án`, dấu + là icon aria-hidden. Chỉ nút là khối xanh đặc.
