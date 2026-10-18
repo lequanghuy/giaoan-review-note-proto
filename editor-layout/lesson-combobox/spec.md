@@ -6,7 +6,7 @@ Dữ liệu: 151 bài KNTT Toán 6–9 từ `muc-luc-toan-6-9-kntt.md` (chỉ d�
 ## Phạm vi (tối thiểu)
 - Chỉ ô `Tên bài` đổi thành combobox. Không màn/bước mới. Các ô khác giữ nguyên.
 - Giá trị gửi vẫn là chuỗi tên bài (API không đổi). Gõ tự do ngoài danh sách vẫn hợp lệ.
-- Nút `Tạo giáo án` vẫn `disabled` khi tên rỗng sau trim; dòng nhắc `Nhập tên bài để tạo.` như cũ. `Huỷ` không đổi.
+- Nút `Tạo` vẫn `disabled` khi tên rỗng sau trim; dòng nhắc `Nhập tên bài để tạo.` như cũ. `Huỷ` không đổi.
 
 ## Hành vi
 - Mở danh sách khi đã gõ ≥1 ký tự (không mở khi focus ô rỗng).
@@ -32,7 +32,10 @@ Dữ liệu: 151 bài KNTT Toán 6–9 từ `muc-luc-toan-6-9-kntt.md` (chỉ d�
 ## AC
 1. Gõ `goc` ở Khối 7 → 4 bài, phần "góc" tô đậm, đọc "4 gợi ý…".
 2. Khối 6, gõ `phan so` khớp `Mở rộng phân số. Phân số bằng nhau` (bỏ dấu, hoa thường).
-3. Gõ tên không có → không danh sách, nhắc (b), nút Tạo bật, gửi đúng chữ đã gõ.
+3. Gõ tên không có → không danh sách, nhắc (b), nút `Tạo` bật, gửi đúng chữ đã gõ.
 4. Chọn bài lớp 7 rồi đổi Khối 8 → chữ giữ nguyên, ghi chú (d).
 5. ≤8 mục; dòng ≥44px; tối đa ~6 dòng thấy được; không cuộn ngang 320/375.
 6. Không gọi mạng khi gõ.
+
+## Cập nhật 18/10 (Huy duyệt mock 4 trạng thái lúc 11:01)
+- Nút gửi của form ghi **`Tạo`**, không có icon +. Lúc gửi vẫn `Đang tạo…`. Tiêu đề form vẫn `Tạo giáo án mới`. Áp cho cả nút đầu trang và thẻ trống ở home v2.

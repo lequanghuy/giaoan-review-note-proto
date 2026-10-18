@@ -84,3 +84,10 @@ Token khóa: #2563eb, #1d4ed8, #eff6ff, #bfdbfe, g50–g900, #059669, #d97706. F
 - Icon nằm giữa nền tròn #eff6ff: khung 112px dưới 640px, 160px từ 640px (icon 64px / 96px).
 - `alt=""`; SVG có `aria-hidden="true" focusable="false"`, không role="img".
 - Nhãn nút thống nhất `Tạo giáo án`, dấu + là icon aria-hidden. Chỉ nút là khối xanh đặc.
+
+- Nút "Tạo giáo án" trong form tạo, lúc đang gửi: "Đang tạo…" (disabled + aria-busy). (18/10)
+
+## Nút tạo (cập nhật 18/10, Huy duyệt 11:01)
+- Mọi nút tạo giáo án (nút đầu trang, nút trong thẻ trống, nút gửi trong form) ghi **`Tạo`**, không có icon +. Thay cho `Tạo giáo án` + icon ở các mục trên.
+- Nút đầu trang và nút thẻ trống có `aria-label="Tạo giáo án"` (chứa nhãn hiển thị, đọc rõ ngữ cảnh). Nút gửi trong form nằm dưới tiêu đề `Tạo giáo án mới` nên giữ nhãn `Tạo`.
+- Lúc đang gửi vẫn là `Đang tạo…` (disabled + aria-busy). Tiêu đề form vẫn `Tạo giáo án mới`.
