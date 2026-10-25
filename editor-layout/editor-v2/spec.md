@@ -63,12 +63,26 @@ Quy tắc:
   - `plan-diff.tsx` cũng đang `join("; ")`, nên đổi sang danh sách dòng.
   - Word export giữ như hiện tại (mỗi ý một dòng). Techlead cần kiểm lại `docx.ts`.
 
-## P1-3 · Top bar điện thoại (≤720px)
-- Thứ tự: `☰` (Mục lục, 44×44, aria-label "Mục lục"), tên giáo án (600, cắt có dấu "…", `title` = tên đủ), `← Danh sách` (link, aria-label "Về danh sách giáo án"), **Xuất Word**, rồi avatar mở menu tài khoản.
-- Menu tài khoản: nút có `aria-haspopup=menu` và `aria-expanded`. `role=menu` gồm dòng email (13 g500) và `Đăng xuất` (menuitem, 44px). Esc đóng menu và trả focus về avatar.
-- ≤359px: link về chỉ còn `←` (vẫn giữ aria-label), Xuất Word 13px.
-- Đo: tên giáo án còn khoảng 61px ở 375 và 76px ở 320. Không có cuộn ngang. Xem câu hỏi mở 1.
-- ≥721px: logo, breadcrumb `GiaoAn AI / Giáo án / tên`. Mỗi link ≥44px chiều cao. Xuất Word và avatar. Đăng xuất cũng nằm trong menu.
+## P1-3 · Header trang chi tiết · phương án A (Huy duyệt 25/10, thay bản 18/10)
+Nguồn: `editor-header/?opt=a` (commit f5b7b46). Bỏ `☰` ở mọi cỡ màn.
+- **≤720px, top bar:** `‹ Danh sách` (link, giữ nhãn ở mọi bề rộng kể cả 320, aria-label "Về danh sách giáo án"), tên giáo án (600, flex 1, cắt "…", `title` = tên đủ), avatar (vòng 32px, vùng bấm 44×44, `aria-haspopup=menu`, `aria-expanded`).
+- **Xuất Word cạnh tab (≤720):** cùng hàng với segmented tab, cách tab bằng vạch g200 1px + padding 8px. Nhãn `Word` khi <360px, `Xuất Word` từ 360px. Luôn có `aria-label="Xuất Word"`.
+- **≥721px:** logo · `GiaoAn AI / Giáo án / tên` (`Giáo án` là chữ thường g600, **không phải link**) · `‹ Danh sách` · Xuất Word · avatar. Link `GiaoAn AI` và `‹ Danh sách` cao ≥44px.
+- **Menu tài khoản:** `role=menu`: dòng email (13 g500) + `Đăng xuất` (menuitem, 44px). Esc đóng, trả focus về avatar.
+- **Mục lục:** chip đầu hàng chip (icon danh sách + `Mục lục`, viền xám như chip khác, không kiểu đang chọn), mở sheet Mục lục. ≥1100px có cột Mục lục bên trái nên ẩn chip này.
+- **Pill meta:** `v{n}` (nền g100) + `● Đã soạn` (xanh lá), như cũ.
+
+### AC header (H)
+1. ≤720px: thứ tự top bar là `‹ Danh sách` → tên → avatar; không còn nút `☰` ở cỡ màn nào.
+2. `‹ Danh sách` hiện cả chữ "Danh sách" ở 320, 375, 820, 1280.
+3. Tên giáo án dài bị cắt "…" trong top bar, có `title` = tên đủ; không đè lên phần tử khác.
+4. Avatar: vòng 32px, vùng bấm 44×44; menu có `Đăng xuất`.
+5. ≤720px: Xuất Word nằm cùng hàng với tab, cách tab ≥8px hoặc có vạch ngăn; nhãn `Word` ở <360px, `Xuất Word` từ 360px; `aria-label="Xuất Word"` ở mọi cỡ.
+6. ≥721px: Xuất Word ở top bar; `Giáo án` trong breadcrumb là chữ thường, không phải link; vẫn có `‹ Danh sách`.
+7. Tab đang chọn: nền #eff6ff, chữ #2563EB 700, viền 1px #2563EB. Chỉ Xuất Word và Điền ngay là nút nền đặc.
+8. Chip `Mục lục` là chip đầu, có icon, viền xám, không kiểu đang chọn; bấm mở sheet Mục lục, đóng sheet thì focus về chip.
+9. Pill `v{n}` và `● Đã soạn` hiện ở hàng meta.
+10. Mọi control ở header và hàng tab ≥44px; không cuộn ngang; không chồng lấn ở 320/375/820/1280.
 
 ## P2
 - **5 · Chip:**
@@ -76,7 +90,7 @@ Quy tắc:
   - Gộp 3 chip con của Mục tiêu thành một chip `I. Mục tiêu`. Rút gọn còn `II. Thiết bị dạy học`, `III. Tiến trình`, `2. Hình thành kiến thức`.
   - Bỏ "phiên bản 11" khỏi dòng phụ, vì phiên bản đã có ở pill `v4`.
 - **6 · Tab chế độ (Huy duyệt 18/10: ẩn So sánh, mặc định 3 tab `Soạn · Xem · Phiếu`; ≥481px nhãn `Soạn · Xem như giáo án · Phiếu bài tập`). Mock còn `?tabs=4` chỉ để đối chiếu.**
-  - Một segmented control ở mọi cỡ màn: khung trắng, viền g200, radius 10, padding 2. Tab đang chọn nền #2563eb, chữ trắng.
+  - Một segmented control ở mọi cỡ màn: khung trắng, viền g200, radius 10, padding 2. Tab đang chọn nền #eff6ff, chữ #2563eb 700, viền 1px #2563eb (25/10, xem P1-3).
   - ≤480px các tab giãn đều và dùng nhãn ngắn. Không sticky.
   - Chip nhẹ hơn: chữ 13 g600, viền g200. Chip đang chọn nền g100, chữ g900/600. Vùng chạm vẫn 44px, phần nhìn thấy cao 32px.
 - **7 · Cỡ chữ:**
@@ -113,9 +127,19 @@ Quy tắc:
    - `Soạn lại giáo án` `disabled` tới khi ô có chữ (sau trim); bật thì kiểu secondary.
    - Dòng bên cạnh (`aria-describedby` của nút): `Tạo bản v{n+1} · giữ v{n}`. Biến thể `· dùng 1 lượt` **chờ Huy** (mock `&quota=1`).
    - Soạn lại và mọi hành động phiếu chỉ ở tab Soạn/Phiếu tương ứng: khối soạn lại chỉ có ở tab Soạn; `Tạo phiếu bài tập` chỉ ở tab Phiếu (bỏ khỏi cuối giáo án).
-3. **Sheet Mục lục**: scrim `z-index:80`, sheet `90` (top bar 40, chip 20) nên Xuất Word nằm dưới lớp phủ, không bấm được. ≤720 là bottom sheet (max 78vh, radius 16 trên), ≥721 là panel phải 340px. Mục cấp 1: 16px, cao 48; mục con: **15px g600, cao 44**, lùi 24. `Đóng` là nút 44×44 (#1d4ed8 600). Padding dưới `calc(16px + env(safe-area-inset-bottom))`. `role=dialog aria-modal`, focus vào `Đóng` khi mở, Esc đóng, trả focus về ☰.
+3. **Sheet Mục lục**: scrim `z-index:80`, sheet `90` (top bar 40, chip 20) nên Xuất Word nằm dưới lớp phủ, không bấm được. ≤720 là bottom sheet (max 78vh, radius 16 trên), ≥721 là panel phải 340px. Mục cấp 1: 16px, cao 48; mục con: **15px g600, cao 44**, lùi 24. `Đóng` là nút 44×44 (#1d4ed8 600). Padding dưới `calc(16px + env(safe-area-inset-bottom))`. `role=dialog aria-modal`, focus vào `Đóng` khi mở, Esc đóng, trả focus về chip `Mục lục`.
 4. **Chip mục lục chỉ ở tab Soạn** (Xem và Phiếu không có hàng chip).
-5. **Thiếu Trường/Tổ/Giáo viên khi xuất**: bấm Xuất Word mà 1–3 ô trống → thanh dưới tab (viền trái amber, `role=alertdialog`): `Chưa điền Trường, Tổ, Giáo viên.` (chỉ liệt kê ô trống, vd `Chưa điền Giáo viên.`) + `Điền ngay` (primary: mở tab Soạn, cuộn và focus ô trống đầu tiên) + `Vẫn xuất` (xuất như cũ). Không chặn cứng.
+5. **Thiếu Trường/Tổ/Giáo viên khi xuất**: bấm Xuất Word mà 1–3 ô trống → thanh dưới tab (viền trái amber, `role=alertdialog`): `Chưa điền Trường, Tổ, Giáo viên.` (chỉ liệt kê ô trống, vd `Chưa điền Giáo viên.`) + `Điền ngay` (primary: mở tab Soạn, cuộn và focus ô trống đầu tiên) + `Vẫn xuất` (xuất như cũ). Không chặn cứng. Thanh **chỉ hiện sau khi bấm Xuất Word** (không hiện sẵn khi mở trang). Có nút **× Đóng** (44×44, aria-label "Đóng") ở góc phải; Esc cũng đóng; đóng xong focus về Xuất Word. Không có nút `Huỷ`.
+   - **AC thanh (B):**
+     1. Mở trang với Trường/Tổ/GV trống: chưa có thanh.
+     2. Bấm Xuất Word khi 1–3 ô trống: thanh hiện dưới tab, `role=alertdialog`, chỉ liệt kê ô trống, focus vào `Điền ngay`.
+     3. `Điền ngay` mở tab Soạn, cuộn và focus ô trống đầu tiên.
+     4. `Vẫn xuất` xuất như cũ và dòng `Tải về: tên file` vẫn hiện.
+     5. × Đóng có vùng bấm 44×44, aria-label "Đóng"; bấm × hoặc Esc thì thanh đóng và focus về Xuất Word.
+     6. Đủ cả 3 ô thì bấm Xuất Word xuất ngay, không hiện thanh.
 6. (home, xem `home-v2/spec.md`).
 7. **3 tab mặc định** (đã duyệt), xem §6.
 Đo (WebKit 375/820): không cuộn ngang, không control <44px, không textarea bị cắt (tự giãn bằng JS, chạy lại sau khi font tải).
+
+## Nhật ký thay đổi
+- 25/10/2026: Huy duyệt header phương án A + nút × Đóng (editor-header f5b7b46). Bỏ ☰, Mục lục thành chip đầu, Xuất Word cạnh tab ở điện thoại, tab chọn kiểu nhạt, `Giáo án` không còn là link, thanh "Chưa điền…" chỉ hiện sau khi bấm Xuất Word và có ×. Thêm AC H1–H10, B1–B6. Thay quy tắc ≤359px chỉ còn `←` (Huy chốt giữ nhãn).

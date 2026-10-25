@@ -34,7 +34,7 @@ body.kb .bot{display:none}.hasbot{padding-bottom:calc(76px + env(safe-area-inset
 @media(max-width:720px){.dk{display:none!important}}
 .note{font-size:12px;color:var(--g500);padding:8px 12px}
 </style></head><body>
-<nav class="sw" aria-label="Chọn kiểu"><a href="?opt=a">A · Xuất Word cạnh tab</a><a href="?opt=b">B · Thanh xuất dưới cùng</a><a href="?opt=c">C · Tiêu đề 2 tầng</a></nav>
+<nav class="sw" aria-label="Chọn kiểu"><a href="?opt=a">A · Xuất Word cạnh tab · ✓ Huy chọn 25/10</a><a href="?opt=b">B · Thanh xuất dưới cùng</a><a href="?opt=c">C · Tiêu đề 2 tầng</a></nav>
 <div id="app"></div>
 <script>
 var o=(new URLSearchParams(location.search).get('opt')||'a').toLowerCase();document.querySelectorAll('.sw a').forEach(function(a){if(a.getAttribute('href')==='?opt='+o)a.className='on'});
